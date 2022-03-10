@@ -1,0 +1,11 @@
+package mcl.compiler.syntax.helpers;
+
+import mcl.compiler.lexer.TokenType;
+
+import java.util.List;
+
+public final class TokenTypeLists
+{
+    public static final List<TokenType> MODIFIER_TOKEN_TYPES = List.of(TokenType.SAFE, TokenType.UNSAFE);
+    public static final List<TokenType> TYPE_DECLARATION_TOKEN_TYPES = List.of(TokenType.INT, TokenType.FLOAT, TokenType.IDENTIFIER);
+}
