@@ -5,7 +5,7 @@ import mcl.compiler.exceptions.MCLSyntaxException;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.syntax.SyntaxAnalyzer;
-import mcl.compiler.syntax.helpers.ParameterList;
+import mcl.compiler.syntax.helpers.ParameterDeclarationList;
 import mcl.compiler.syntax.helpers.TokenTypeLists;
 import mcl.compiler.syntax.nodes.AbstractSyntaxNode;
 
@@ -16,18 +16,18 @@ public abstract class AbstractNamedBlockNode extends AbstractBlockNode
 {
     private Token identifier;
     private boolean unsafe;
-    private ParameterList parameters;
+    private ParameterDeclarationList parameters;
     private Token returnType;
 
-    public AbstractNamedBlockNode(int indent, AbstractSyntaxNode parent, SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException
+    public AbstractNamedBlockNode(int indent, AbstractSyntaxNode parent, SyntaxAnalyzer syntax, boolean useChildSymbolTable) throws MCLSyntaxException, MCLSemanticException
     {
-        super(indent, parent, syntax);
+        super(indent, parent, syntax, useChildSymbolTable);
     }
 
     protected abstract List<TokenType> getSignatureFormat();
 
     @Override
-    protected void constructSignatureNodes(SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException
+    protected void constructSignatureNodes() throws MCLSyntaxException, MCLSemanticException
     {
         this.identifier = syntax.nextToken(TokenType.IDENTIFIER);
 
@@ -85,7 +85,7 @@ public abstract class AbstractNamedBlockNode extends AbstractBlockNode
     }
     private void readWithClause(SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException
     {
-        parameters = new ParameterList(this, syntax, unsafe);
+        parameters = new ParameterDeclarationList(this, syntax, unsafe);
     }
     private void readReturnClause(SyntaxAnalyzer syntax) throws MCLSyntaxException
     {
@@ -100,7 +100,7 @@ public abstract class AbstractNamedBlockNode extends AbstractBlockNode
     {
         return unsafe;
     }
-    public ParameterList getParameters()
+    public ParameterDeclarationList getParameters()
     {
         return parameters;
     }

@@ -1,3 +1,8 @@
 namespace mcl
-	func test with int message
-		print "message??"
+	event custom
+
+	listener custom
+		print "Custom Event Triggered!"
+
+	func call_custom_event
+		trigger custom

@@ -4,5 +4,5 @@ public enum SymbolType
 {
     FUNCTION,
     PARAMETER,
-    VARIABLE
+    EVENT
 }

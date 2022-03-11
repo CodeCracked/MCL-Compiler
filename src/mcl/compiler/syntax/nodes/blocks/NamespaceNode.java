@@ -4,35 +4,48 @@ import mcl.compiler.exceptions.MCLSemanticException;
 import mcl.compiler.exceptions.MCLSyntaxException;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
-import mcl.compiler.syntax.SymbolTable;
-import mcl.compiler.syntax.nodes.AbstractSyntaxNode;
 import mcl.compiler.syntax.SyntaxAnalyzer;
 import mcl.compiler.syntax.nodes.ParseTree;
+import mcl.compiler.syntax.nodes.definitions.EventDefinitionNode;
 
 import java.util.List;
 
-public class NamespaceNode extends AbstractSyntaxNode
+public class NamespaceNode extends AbstractBlockNode
 {
-    public static final List<TokenType> EXPECTED_TOKEN_TYPES = List.of(TokenType.FUNCTION);
+    public static final List<TokenType> BODY_TOKEN_TYPES = List.of(TokenType.EVENT, TokenType.LISTENER, TokenType.FUNCTION);
 
-    private String namespace;
+    private Token namespace;
 
     public NamespaceNode(ParseTree parent, SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException
     {
-        super(parent, parent.getNamespaceSymbolTable(syntax.peekNextToken(TokenType.IDENTIFIER).getToken()));
-        this.namespace = syntax.nextToken(TokenType.IDENTIFIER).getToken();
-        syntax.nextToken(TokenType.END_OF_LINE);
+        super(1, parent, syntax, false);
+    }
 
-        while (syntax.hasNextToken() && syntax.peekIndent() == 1)
+    @Override
+    protected void constructSignatureNodes() throws MCLSyntaxException, MCLSemanticException
+    {
+        this.namespace = syntax.nextToken(TokenType.IDENTIFIER);
+        this.symbolTable = ((ParseTree)parent).getNamespaceSymbolTable(this.namespace.getToken());
+        super.constructSignatureNodes();
+    }
+    @Override
+    protected List<TokenType> getBodyTokenTypes()
+    {
+        return BODY_TOKEN_TYPES;
+    }
+    @Override
+    protected void processBodyToken(Token token) throws MCLSyntaxException, MCLSemanticException
+    {
+        switch (token.getTokenType())
         {
-            syntax.popIndent();
-            Token nextToken = syntax.nextToken(EXPECTED_TOKEN_TYPES);
-            switch (nextToken.getTokenType())
-            {
-                case FUNCTION -> addChild(new FunctionNode(this, syntax));
-            }
+            case EVENT -> addChild(new EventDefinitionNode(this, syntax));
+            case LISTENER -> addChild(new ListenerDefinitionNode(this, syntax));
+            case FUNCTION -> addChild(new FunctionDefinitionNode(this, syntax));
         }
     }
 
-    public String getNamespace() { return namespace; }
+    public Token getNamespace()
+    {
+        return namespace;
+    }
 }

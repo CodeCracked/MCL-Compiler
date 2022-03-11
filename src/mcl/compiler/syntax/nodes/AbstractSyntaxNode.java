@@ -1,6 +1,7 @@
 package mcl.compiler.syntax.nodes;
 
 import mcl.compiler.syntax.SymbolTable;
+import mcl.compiler.syntax.SyntaxAnalyzer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,13 @@ public abstract class AbstractSyntaxNode
 
     protected AbstractSyntaxNode parent;
     protected int indexInParent = -1;
-    protected final SymbolTable symbolTable;
+    protected final SyntaxAnalyzer syntax;
+    protected SymbolTable symbolTable;
 
-    public AbstractSyntaxNode(AbstractSyntaxNode parent, SymbolTable symbolTable)
+    public AbstractSyntaxNode(AbstractSyntaxNode parent, SyntaxAnalyzer syntax, SymbolTable symbolTable)
     {
         this.parent = parent;
+        this.syntax = syntax;
         this.symbolTable = symbolTable;
     }
 

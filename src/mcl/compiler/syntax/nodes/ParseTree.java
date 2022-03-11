@@ -20,7 +20,7 @@ public class ParseTree extends AbstractSyntaxNode
 
     public ParseTree(SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException
     {
-        super(null, null);
+        super(null, syntax, null);
 
         while(syntax.hasNextToken())
         {

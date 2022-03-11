@@ -4,13 +4,14 @@ import java.util.regex.Pattern;
 
 public enum TokenType
 {
-    INDENT("Indent", "    |\\t"),
-    END_OF_LINE("End-of-line", "\\n"),
+    INDENT("Indent", "(    |\\t)"),
+    END_OF_LINE("End-of-line", "(\\n)"),
 
     // Keywords
     NAMESPACE("namespace"),
     TYPE("type"),
     FUNCTION("func"),
+    CALL("call"),
     EVENT("event"),
     LISTENER("listener"),
     TRIGGER("trigger"),
@@ -26,13 +27,13 @@ public enum TokenType
     PRINT("print"),
 
     // Literals
-    FLOAT_LITERAL("Float literal", "[0-9]+\\.[0-9]+", true),
-    INT_LITERAL("Int literal", "[0-9]+", true),
-    STRING_LITERAL("String literal", "\\\".*\\\"", true),
+    FLOAT_LITERAL("Float literal", "([0-9]+\\.[0-9]+)", true),
+    INT_LITERAL("Int literal", "([0-9]+)", true),
+    STRING_LITERAL("String literal", "(\\\".*\\\")", true),
 
     // Misc
-    SEPARATOR("','", ", *"),
-    IDENTIFIER("Identifier", "[a-z]+([a-zA-Z0-9]*)(_[a-zA-Z0-9]+)*", true),
+    SEPARATOR("','", "(,) *"),
+    IDENTIFIER("Identifier", "([a-z]+([a-zA-Z0-9]*)(_[a-zA-Z0-9]+)*)", true),
     ;
 
     private final String print;
@@ -41,7 +42,7 @@ public enum TokenType
 
     TokenType(String keyword)
     {
-        this(keyword, keyword, false);
+        this(keyword, "^(" + keyword + ")($|\\s)");
     }
     TokenType(String print, String regex)
     {

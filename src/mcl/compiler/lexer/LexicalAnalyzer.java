@@ -28,7 +28,7 @@ public class LexicalAnalyzer
                 Matcher matcher = tokenType.getRegex().matcher(source);
                 if (matcher.find() && matcher.start() == 0)
                 {
-                    String tokenContent = matcher.group();
+                    String tokenContent = matcher.group(1);
                     var lineLocation = sourceCollection.getLineLocation(line);
                     tokens.add(new Token(tokenType, tokenContent, lineLocation.getFile(), lineLocation.getLine(), currentChar - lineLocation.getStart()));
 
@@ -49,8 +49,9 @@ public class LexicalAnalyzer
 
             if (source.length() >= before)
             {
-                int nextSpace = source.indexOf(' ');
-                String token = nextSpace > 0 ? source.substring(0, nextSpace) : source;
+                Pattern whitespace = Pattern.compile("\s");
+                Matcher whitespaceMatcher = whitespace.matcher(source);
+                String token = whitespaceMatcher.find() ? source.substring(0, whitespaceMatcher.start()) : source;
                 throw new MCLLexicalException(token);
             }
             else before = source.length();

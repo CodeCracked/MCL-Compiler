@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ParameterList
+public class ParameterDeclarationList
 {
     public static class ParameterDeclaration
     {
@@ -46,7 +46,7 @@ public class ParameterList
 
     public final List<ParameterDeclaration> parameters;
 
-    public ParameterList(AbstractSyntaxNode owner, SyntaxAnalyzer syntax, boolean defaultUnsafe) throws MCLSyntaxException, MCLSemanticException
+    public ParameterDeclarationList(AbstractSyntaxNode owner, SyntaxAnalyzer syntax, boolean defaultUnsafe) throws MCLSyntaxException, MCLSemanticException
     {
         List<ParameterDeclaration> parameters = new ArrayList<>();
 

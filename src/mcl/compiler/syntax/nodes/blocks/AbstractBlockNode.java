@@ -13,22 +13,24 @@ public abstract class AbstractBlockNode extends AbstractSyntaxNode
 {
     private final int indent;
 
-    public AbstractBlockNode(int indent, AbstractSyntaxNode parent, SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException
+    public AbstractBlockNode(int indent, AbstractSyntaxNode parent, SyntaxAnalyzer syntax, boolean useChildSymbolTable) throws MCLSyntaxException, MCLSemanticException
     {
-        super(parent, parent.getSymbolTable().createChildTable());
+        super(parent, syntax, useChildSymbolTable ? parent.getSymbolTable().createChildTable() : parent.getSymbolTable());
         this.indent = indent;
-        constructSignatureNodes(syntax);
-        constructBodyNodes(syntax);
+        init();
+        constructSignatureNodes();
+        constructBodyNodes();
     }
 
     protected abstract List<TokenType> getBodyTokenTypes();
-    protected abstract void processBodyToken(Token token, SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException;
+    protected abstract void processBodyToken(Token token) throws MCLSyntaxException, MCLSemanticException;
 
-    protected void constructSignatureNodes(SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException
+    protected void init() {}
+    protected void constructSignatureNodes() throws MCLSyntaxException, MCLSemanticException
     {
         syntax.nextToken(TokenType.END_OF_LINE);
     }
-    protected void constructBodyNodes(SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException
+    protected void constructBodyNodes() throws MCLSyntaxException, MCLSemanticException
     {
         List<TokenType> bodyTokenTypes = getBodyTokenTypes();
         Token nextToken;
@@ -37,7 +39,7 @@ public abstract class AbstractBlockNode extends AbstractSyntaxNode
         {
             syntax.popIndent();
             nextToken = syntax.nextToken(bodyTokenTypes);
-            processBodyToken(nextToken, syntax);
+            processBodyToken(nextToken);
         }
     }
 
