@@ -90,4 +90,22 @@ public class ParameterDeclarationList
 
         this.parameters = Collections.unmodifiableList(parameters);
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("parameters{ ");
+        List<String> parameters = new ArrayList<>();
+        this.parameters.forEach(param ->
+        {
+            String p = param.getName() + "[" + param.getType().getToken();
+            if (param.isUnsafe()) p += ", unsafe]";
+            else p += ", safe]";
+            parameters.add(p);
+        });
+        sb.append(String.join(", ", parameters));
+        sb.append(" }");
+        return sb.toString();
+    }
 }

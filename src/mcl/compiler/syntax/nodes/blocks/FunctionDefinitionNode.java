@@ -43,4 +43,22 @@ public class FunctionDefinitionNode extends AbstractNamedBlockNode
             case PRINT -> addChild(new PrintNode(this, syntax));
         }
     }
+
+    @Override
+    public String debugDetails()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getIdentifier().getToken());
+
+        if (isUnsafe()) sb.append(", unsafe");
+        else sb.append(", safe");
+
+        if (getParameters() != null)
+        {
+            sb.append(", ");
+            sb.append(getParameters());
+        }
+
+        return sb.toString();
+    }
 }

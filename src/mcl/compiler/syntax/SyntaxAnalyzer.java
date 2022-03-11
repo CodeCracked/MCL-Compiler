@@ -20,6 +20,9 @@ public class SyntaxAnalyzer
         this.tokens = tokens;
 
         ParseTree parseTree = new ParseTree(this);
+        System.out.println("Parse Tree:");
+        parseTree.debugPrint(System.out);
+        System.out.println();
         return parseTree;
     }
 

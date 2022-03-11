@@ -31,7 +31,7 @@ public class EventDefinitionNode extends AbstractSyntaxNode
         if (nextToken.getTokenType() == TokenType.WITH)
         {
             parameters = new ParameterDeclarationList(this, syntax, unsafe);
-            nextToken = syntax.nextToken();
+            syntax.nextToken();
         }
 
         syntax.currentToken(TokenType.END_OF_LINE);
@@ -48,5 +48,23 @@ public class EventDefinitionNode extends AbstractSyntaxNode
     public ParameterDeclarationList getParameters()
     {
         return parameters;
+    }
+
+    @Override
+    public String debugDetails()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.identifier.getToken());
+
+        if (unsafe) sb.append(", unsafe");
+        else sb.append(", safe");
+
+        if (parameters != null)
+        {
+            sb.append(", ");
+            sb.append(parameters);
+        }
+
+        return sb.toString();
     }
 }

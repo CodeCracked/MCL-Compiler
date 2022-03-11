@@ -32,8 +32,8 @@ public class LexicalAnalyzer
                     var lineLocation = sourceCollection.getLineLocation(line);
                     tokens.add(new Token(tokenType, tokenContent, lineLocation.getFile(), lineLocation.getLine(), currentChar - lineLocation.getStart()));
 
-                    source = source.substring(matcher.end());
-                    currentChar += matcher.end();
+                    source = source.substring(matcher.end(1));
+                    currentChar += matcher.end(1);
 
                     Matcher spaceRemover = SPACES.matcher(source);
                     if (spaceRemover.find() && spaceRemover.start() == 0)

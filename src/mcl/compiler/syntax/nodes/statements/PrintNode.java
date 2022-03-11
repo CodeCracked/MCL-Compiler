@@ -31,4 +31,10 @@ public class PrintNode extends AbstractStatementNode
     {
         return message;
     }
+
+    @Override
+    public String debugDetails()
+    {
+        return message.getToken();
+    }
 }

@@ -1,8 +1,8 @@
 namespace mcl
-	event custom
+	event custom is unsafe with int test is safe
 
 	listener custom
 		print "Custom Event Triggered!"
 
 	func call_custom_event
-		trigger custom
+		trigger custom with 10

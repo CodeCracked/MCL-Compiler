@@ -44,6 +44,12 @@ public class NamespaceNode extends AbstractBlockNode
         }
     }
 
+    @Override
+    public String debugDetails()
+    {
+        return namespace.getToken();
+    }
+
     public Token getNamespace()
     {
         return namespace;

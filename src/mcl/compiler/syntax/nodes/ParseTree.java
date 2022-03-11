@@ -8,6 +8,7 @@ import mcl.compiler.syntax.SymbolTable;
 import mcl.compiler.syntax.SyntaxAnalyzer;
 import mcl.compiler.syntax.nodes.blocks.NamespaceNode;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,12 @@ public class ParseTree extends AbstractSyntaxNode
             Token token = syntax.nextToken(EXPECTED_TOKEN_TYPES);
             if (token.getTokenType() == TokenType.NAMESPACE) addChild(new NamespaceNode(this, syntax));
         }
+    }
+
+    @Override
+    public void debugPrint(PrintStream out, int depth)
+    {
+        forEachChild(child -> child.debugPrint(out, depth));
     }
 
     public SymbolTable getNamespaceSymbolTable(String namespace)
