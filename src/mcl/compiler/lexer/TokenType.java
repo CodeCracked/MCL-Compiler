@@ -22,6 +22,7 @@ public enum TokenType
     INT("int"),
     FLOAT("float"),
     RETURN("return"),
+    EQUALS("="),
 
     // Statements
     PRINT("print"),

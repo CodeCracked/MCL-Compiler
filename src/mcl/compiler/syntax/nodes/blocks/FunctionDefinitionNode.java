@@ -8,6 +8,7 @@ import mcl.compiler.syntax.SymbolType;
 import mcl.compiler.syntax.SyntaxAnalyzer;
 import mcl.compiler.syntax.nodes.statements.FunctionCallNode;
 import mcl.compiler.syntax.nodes.statements.PrintNode;
+import mcl.compiler.syntax.nodes.statements.ReturnStatementNode;
 import mcl.compiler.syntax.nodes.statements.TriggerEventNode;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 public class FunctionDefinitionNode extends AbstractNamedBlockNode
 {
     public static final List<TokenType> SIGNATURE_FORMAT = List.of(TokenType.IS, TokenType.WITH, TokenType.RETURN);
-    public static final List<TokenType> BODY_TOKEN_TYPES = List.of(TokenType.CALL, TokenType.TRIGGER, TokenType.PRINT);
+    public static final List<TokenType> BODY_TOKEN_TYPES = List.of(TokenType.CALL, TokenType.TRIGGER, TokenType.PRINT, TokenType.RETURN);
 
     public FunctionDefinitionNode(NamespaceNode parent, SyntaxAnalyzer syntax) throws MCLSyntaxException, MCLSemanticException
     {
@@ -41,6 +42,7 @@ public class FunctionDefinitionNode extends AbstractNamedBlockNode
             case CALL -> addChild(new FunctionCallNode(this, syntax));
             case TRIGGER -> addChild(new TriggerEventNode(this, syntax));
             case PRINT -> addChild(new PrintNode(this, syntax));
+            case RETURN -> addChild(new ReturnStatementNode(this, syntax));
         }
     }
 
