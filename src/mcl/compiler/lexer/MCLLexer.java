@@ -4,7 +4,6 @@ import mcl.compiler.exceptions.MCLLexicalError;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +11,7 @@ public class MCLLexer
 {
     //region Static
     private static final Set<Character> IGNORE_SET = Set.of(' ', '\t');
-    private static final Set<TokenBuilder> TOKEN_BUILDERS = new HashSet<>();
+    private static final List<TokenBuilder> TOKEN_BUILDERS = new ArrayList<>();
 
     public static void init()
     {
@@ -70,16 +69,16 @@ public class MCLLexer
             if (token != null)
             {
                 if (token.type() != TokenType.INTERNAL_ERROR) tokens.add(token);
-                else return unknownTokenResult(token.startPosition());
+                else return invalidTokenError(token.startPosition(), (String)token.value());
             }
-            else return unknownTokenResult(position);
+            else return invalidTokenError(position, "Unknown Token");
         }
 
         tokens.add(new Token(TokenType.EOF, position, position + 1));
         return new LexerResult(tokens);
     }
 
-    private LexerResult unknownTokenResult(int start)
+    private LexerResult invalidTokenError(int start, String error)
     {
         position = start;
         currentChar = position < source.getSource().length() ? source.getSource().charAt(position) : null;
@@ -90,6 +89,7 @@ public class MCLLexer
             unknownTokenBuilder.append(currentChar);
             advance();
         }
-        return new LexerResult(new MCLLexicalError(source.getCodeLocation(start), source.getCodeLocation(position), unknownTokenBuilder.toString()));
+
+        return new LexerResult(new MCLLexicalError(source.getCodeLocation(start), source.getCodeLocation(position), error, unknownTokenBuilder.toString()));
     }
 }

@@ -3,6 +3,10 @@ package mcl.compiler.lexer;
 import mcl.compiler.MCLKeywords;
 import mcl.compiler.source.MCLSourceCollection;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 public enum TokenType
 {
     INTERNAL_ERROR,
@@ -12,22 +16,22 @@ public enum TokenType
     IDENTIFIER,
     KEYWORD,
 
-    EQUALS("=="),
-    NOT_EQUALS("!="),
-    LESS_THAN('<'),
-    GREATER_THAN('>'),
-    LESS_OR_EQUAL("<="),
-    GREATER_OR_EQUAL(">="),
+    PLUS(2, '+'),
+    MINUS(2, '-'),
+    MUL(2, '*'),
+    DIV(2, '/'),
+    ASSIGN(2, '='),
 
-    PLUS('+'),
-    MINUS('-'),
-    MUL('*'),
-    DIV('/'),
-    ASSIGN('='),
+    EQUALS(1, "=="),
+    NOT_EQUALS(1, "!="),
+    LESS(2, '<'),
+    GREATER(2, '>'),
+    LESS_OR_EQUAL(1, "<="),
+    GREATER_OR_EQUAL(1, ">="),
 
-    LPAREN('('),
-    RPAREN(')'),
-    NEWLINE(MCLSourceCollection.LINE_SEPARATOR),
+    LPAREN(2, '('),
+    RPAREN(2, ')'),
+    NEWLINE(0, MCLSourceCollection.LINE_SEPARATOR),
     EOF
     ;
 
@@ -38,6 +42,10 @@ public enum TokenType
 
     public static void registerTokenBuilders()
     {
+        List<TokenType> types = Arrays.asList(TokenType.values());
+        types.sort(Comparator.comparingInt(a -> a.priority));
+        for (TokenType type : types) if (type.tokenBuilder != null) MCLLexer.registerTokenBuilder(type.tokenBuilder);
+
         MCLLexer.registerTokenBuilder(TokenType::numberTokenBuilder);
         MCLLexer.registerTokenBuilder(TokenType::textTokenBuilder);
     }
@@ -57,9 +65,10 @@ public enum TokenType
             numberBuilder.append(lexer.getCurrentChar());
             lexer.advance();
         }
-        if (lexer.getCurrentChar() != null && IDENTIFIER_CHARACTERS.indexOf(lexer.getCurrentChar()) != -1) return new Token(TokenType.INTERNAL_ERROR, startPosition, lexer.getPosition());
-
         String numberString = numberBuilder.toString().trim();
+
+        if (numberString.length() > 0 && lexer.getCurrentChar() != null && IDENTIFIER_CHARACTERS.indexOf(lexer.getCurrentChar()) != -1) return new Token(TokenType.INTERNAL_ERROR, "Invalid Number", startPosition, lexer.getPosition());
+
         if (numberString.length() == 0) return null;
         else if (dotCount == 0) return new Token(TokenType.INT, Integer.parseInt(numberString), startPosition, lexer.getPosition());
         else return new Token(TokenType.FLOAT, Float.parseFloat(numberString), startPosition, lexer.getPosition());
@@ -87,14 +96,19 @@ public enum TokenType
     }
     //endregion
 
-    TokenType() { }
-    TokenType(char symbol)
+    final int priority;
+    final TokenBuilder tokenBuilder;
+
+    TokenType() { this.priority = 0; this.tokenBuilder = null; }
+    TokenType(int priority, char symbol)
     {
-        MCLLexer.registerTokenBuilder((lexer, startPosition) -> symbolTokenBuilder(lexer, startPosition, symbol));
+        this.priority = priority;
+        this.tokenBuilder = (lexer, startPosition) -> symbolTokenBuilder(lexer, startPosition, symbol);
     }
-    TokenType(String symbol)
+    TokenType(int priority, String symbol)
     {
-        MCLLexer.registerTokenBuilder((lexer, startPosition) -> symbolTokenBuilder(lexer, startPosition, symbol));
+        this.priority = priority;
+        this.tokenBuilder = (lexer, startPosition) -> symbolTokenBuilder(lexer, startPosition, symbol);
     }
 
     //region Token Builders

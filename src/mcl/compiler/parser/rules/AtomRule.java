@@ -51,9 +51,9 @@ public class AtomRule implements GrammarRule
                 parser.advance();
                 return result.success(expression);
             }
-            else return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected ')'"));
+            else return result.failure(new MCLSyntaxError(parser, "Expected ')'"));
         }
 
-        return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected int, float, identifier, '+', '-', or '('"));
+        return result.failure(new MCLSyntaxError(parser, "Expected int, float, identifier, '+', '-', or '('"));
     }
 }

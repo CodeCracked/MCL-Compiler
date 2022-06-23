@@ -11,6 +11,8 @@ import java.util.Set;
 
 public final class ExpressionRule implements GrammarRule
 {
+    private final Set<Token> comparisonOperators = Set.of(Token.description(TokenType.KEYWORD, MCLKeywords.AND), Token.description(TokenType.KEYWORD, MCLKeywords.OR));
+
     @Override
     public ParseResult build(MCLParser parser)
     {
@@ -21,13 +23,13 @@ public final class ExpressionRule implements GrammarRule
 
             result.registerAdvancement();
             parser.advance();
-            if (parser.getCurrentToken().type() != TokenType.IDENTIFIER) return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected identifier"));
+            if (parser.getCurrentToken().type() != TokenType.IDENTIFIER) return result.failure(new MCLSyntaxError(parser, "Expected identifier"));
 
             Token identifier = parser.getCurrentToken();
             result.registerAdvancement();
             parser.advance();
 
-            if (parser.getCurrentToken().type() != TokenType.ASSIGN) return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected '='"));
+            if (parser.getCurrentToken().type() != TokenType.ASSIGN) return result.failure(new MCLSyntaxError(parser, "Expected '='"));
 
             result.registerAdvancement();
             parser.advance();
@@ -36,8 +38,8 @@ public final class ExpressionRule implements GrammarRule
             else return result.success(new VarAssignNode(type, identifier, valueExpression));
         }
 
-        AbstractNode node = result.register(GrammarRules.binaryOperationRule(parser, GrammarRules.FACTOR, Set.of(TokenType.PLUS, TokenType.MINUS)));
-        if (result.error() != null) return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected 'int', 'float', int, float, identifier, '+', '-', or '('"));
+        AbstractNode node = result.register(GrammarRules.binaryOperationRule(parser, GrammarRules.COMPARISON_EXPRESSION, comparisonOperators));
+        if (result.error() != null) return result.failure(new MCLSyntaxError(parser, "Expected 'int', 'float', 'not', int, float, identifier, '+', '-', or '('"));
 
         return result.success(node);
     }
