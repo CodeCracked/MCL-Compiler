@@ -22,15 +22,14 @@ public class MCLParser
         advance();
     }
 
-    public AbstractNode advance()
+    public void advance()
     {
         this.tokenIndex++;
         this.currentToken = tokenIndex < tokens.size() ? tokens.get(tokenIndex) : null;
-        return null;
     }
     public ParseResult parse()
     {
-        ParseResult result = GrammarRules.EXPRESSION.build(this);
+        ParseResult result = GrammarRules.PROGRAM_ROOT.build(this);
         if (result.error() == null && currentToken.type() != TokenType.EOF) return result.failure(new MCLSyntaxError(source.getCodeLocation(currentToken.startPosition()),
                 source.getCodeLocation(currentToken.endPosition()), "Expected '+', '-', '*', or '/'"));
         return result;

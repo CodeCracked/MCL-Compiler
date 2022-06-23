@@ -31,6 +31,8 @@ public enum TokenType
 
     LPAREN(2, '('),
     RPAREN(2, ')'),
+
+    INDENT(0, TokenType::indentBuilder),
     NEWLINE(0, MCLSourceCollection.LINE_SEPARATOR),
     EOF
     ;
@@ -50,6 +52,34 @@ public enum TokenType
         MCLLexer.registerTokenBuilder(TokenType::textTokenBuilder);
     }
 
+    private static Token indentBuilder(MCLLexer lexer, int startPosition)
+    {
+        int size = 0;
+        while (lexer.getCurrentChar() != null)
+        {
+            if (lexer.getCurrentChar() == '\t')
+            {
+                size++;
+                lexer.advance();
+            }
+            else if (lexer.getCurrentChar() == ' ')
+            {
+                int spaces = 0;
+                while (lexer.getCurrentChar() == ' ')
+                {
+                    spaces++;
+                    lexer.advance();
+                }
+
+                if (spaces % 4 == 0) size += spaces >> 2;
+                else return new Token(TokenType.INTERNAL_ERROR, "Invalid Indentation", startPosition, lexer.getPosition());
+            }
+            else break;
+        }
+
+        if (size > 0) return new Token(TokenType.INDENT, size, startPosition, lexer.getPosition());
+        else return null;
+    }
     private static Token numberTokenBuilder(MCLLexer lexer, int startPosition)
     {
         StringBuilder numberBuilder = new StringBuilder();
@@ -109,6 +139,11 @@ public enum TokenType
     {
         this.priority = priority;
         this.tokenBuilder = (lexer, startPosition) -> symbolTokenBuilder(lexer, startPosition, symbol);
+    }
+    TokenType(int priority, TokenBuilder tokenBuilder)
+    {
+        this.priority = priority;
+        this.tokenBuilder = tokenBuilder;
     }
 
     //region Token Builders

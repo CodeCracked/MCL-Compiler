@@ -8,12 +8,18 @@ import java.util.Set;
 
 public class GrammarRules
 {
+    public static final GrammarRule PROGRAM_ROOT = new ProgramRootRule();
+    public static final GrammarRule NAMESPACE = new NamespaceDeclarationRule();
     public static final GrammarRule EXPRESSION = new ExpressionRule();
     public static final GrammarRule COMPARISON_EXPRESSION = new ComparisonExpressionRule();
     public static final GrammarRule ARITHMETIC_EXPRESSION = new ArithmeticExpressionRule();
     public static final GrammarRule FACTOR = new FactorRule();
     public static final GrammarRule ATOM = new AtomRule();
 
+    public static GrammarRule blockStatement(int indent)
+    {
+        return new BlockStatementRule(indent);
+    }
     public static ParseResult binaryOperationRule(MCLParser parser, GrammarRule argumentRule, Set<Token> operations)
     {
         ParseResult result = new ParseResult();

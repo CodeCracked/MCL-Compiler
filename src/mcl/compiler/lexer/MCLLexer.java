@@ -50,14 +50,16 @@ public class MCLLexer
     public LexerResult makeTokens()
     {
         List<Token> tokens = new ArrayList<>();
+        boolean readIndentation = true;
 
         while (currentChar != null)
         {
-            if (IGNORE_SET.contains(currentChar))
+            if (!readIndentation && IGNORE_SET.contains(currentChar))
             {
                 advance();
                 continue;
             }
+            readIndentation = false;
 
             Token token = null;
             for (TokenBuilder builder : TOKEN_BUILDERS)
@@ -70,6 +72,8 @@ public class MCLLexer
             {
                 if (token.type() != TokenType.INTERNAL_ERROR) tokens.add(token);
                 else return invalidTokenError(token.startPosition(), (String)token.value());
+
+                if (token.type() == TokenType.NEWLINE) readIndentation = true;
             }
             else return invalidTokenError(position, "Unknown Token");
         }

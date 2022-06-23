@@ -28,7 +28,6 @@ public final class ExpressionRule implements GrammarRule
             Token identifier = parser.getCurrentToken();
             result.registerAdvancement();
             parser.advance();
-
             if (parser.getCurrentToken().type() != TokenType.ASSIGN) return result.failure(new MCLSyntaxError(parser, "Expected '='"));
 
             result.registerAdvancement();

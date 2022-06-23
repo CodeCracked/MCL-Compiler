@@ -19,7 +19,8 @@ public class Test
         }
         catch (MCLError e)
         {
-            System.err.println(e.getMessage());
+            //System.err.println(e.getMessage());
+            e.printStackTrace();
         }
         catch (Exception e)
         {

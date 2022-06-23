@@ -15,6 +15,7 @@ import mcl.compiler.source.MCLSourceCollection;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 public class MCLCompiler
 {
@@ -66,9 +67,9 @@ public class MCLCompiler
         if (symbolsError != null) throw symbolsError;
     }
 
-    public void pushSymbolTable(String name)
+    public void pushSymbolTable(UUID id)
     {
-        currentSymbolTable = currentSymbolTable.getOrCreateChildTable(name);
+        currentSymbolTable = currentSymbolTable.getOrCreateChildTable(id);
     }
     public void popSymbolTable()
     {

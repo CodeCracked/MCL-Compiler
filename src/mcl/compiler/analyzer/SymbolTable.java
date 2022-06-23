@@ -8,6 +8,7 @@ import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class SymbolTable
 {
@@ -16,7 +17,7 @@ public class SymbolTable
 
     private final MCLSourceCollection source;
     private final Map<String, Map<SymbolType, Symbol>> symbolMap;
-    private final Map<String, SymbolTable> childTables;
+    private final Map<UUID, SymbolTable> childTables;
 
     public SymbolTable(MCLSourceCollection source, SymbolTable parent)
     {
@@ -50,9 +51,9 @@ public class SymbolTable
         }
     }
 
-    public SymbolTable getOrCreateChildTable(String name)
+    public SymbolTable getOrCreateChildTable(UUID id)
     {
-        if (!childTables.containsKey(name)) childTables.put(name, new SymbolTable(source, this));
-        return childTables.get(name);
+        if (!childTables.containsKey(id)) childTables.put(id, new SymbolTable(source, this));
+        return childTables.get(id);
     }
 }

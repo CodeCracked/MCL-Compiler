@@ -30,7 +30,7 @@ public class MCLError extends Exception
                 String.format("File %s, Line %s Column %s\n", start.getFile(), start.getLine(), start.getColumn()) +
                 String.format("\n%s\n", start.getLineContents()) +
                 " ".repeat(Math.max(0, start.getColumn())) +
-                "^".repeat(Math.max(0, end.getColumn() - start.getColumn())) +
+                "^".repeat(Math.max(0, end.getLine() > start.getLine() ? 1 : end.getColumn() - start.getColumn())) +
                 '\n';
     }
 }
