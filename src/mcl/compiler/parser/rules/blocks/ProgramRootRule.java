@@ -1,4 +1,4 @@
-package mcl.compiler.parser.rules;
+package mcl.compiler.parser.rules.blocks;
 
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;

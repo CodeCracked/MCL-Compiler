@@ -34,10 +34,16 @@ public record Token(TokenType type, Object value, int startPosition, int endPosi
     {
         return this.type == tokenType && this.value.equals(value);
     }
+
     public boolean isKeyword(Set<String> keywords)
     {
         return this.type == TokenType.KEYWORD && keywords.contains((String)this.value);
     }
+    public boolean isKeyword(String keyword)
+    {
+        return this.type == TokenType.KEYWORD && keyword.equals(this.value);
+    }
+
 
     @Override
     public String toString()

@@ -1,4 +1,4 @@
-package mcl.compiler.parser.nodes;
+package mcl.compiler.parser.nodes.variables;
 
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;

@@ -5,8 +5,7 @@ import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
-import mcl.compiler.parser.nodes.VarAssignNode;
-import mcl.compiler.parser.nodes.VarDeclarationNode;
+import mcl.compiler.parser.nodes.variables.VarAssignNode;
 
 import java.util.Set;
 
@@ -19,32 +18,16 @@ public class StatementRule implements GrammarRule
     {
         ParseResult result = new ParseResult();
 
-        if (parser.getCurrentToken().isKeyword(MCLKeywords.TYPES)) return variableDeclaration(parser, result);
+        if (parser.getCurrentToken().isKeyword(MCLKeywords.VARIABLE_TYPES))
+        {
+            AbstractNode definition = result.register(GrammarRules.VARIABLE_DEFINITION.build(parser));
+            return result.success(definition);
+        }
         else if (parser.getCurrentToken().type() == TokenType.IDENTIFIER) return variableAssignDeclaration(parser, result);
 
         return result.failure(new MCLSyntaxError(parser, "Not a statement"));
     }
 
-    private ParseResult variableDeclaration(MCLParser parser, ParseResult result)
-    {
-        Token keyword = parser.getCurrentToken();
-        result.registerAdvancement();
-        parser.advance();
-
-        Token identifier = parser.getCurrentToken();
-        if (identifier.type() != TokenType.IDENTIFIER) return result.failure(new MCLSyntaxError(parser, "Expected identifier"));
-        result.registerAdvancement();
-        parser.advance();
-
-        if (parser.getCurrentToken().type() != TokenType.ASSIGN) return result.failure(new MCLSyntaxError(parser, "Expected assignment operator"));
-        result.registerAdvancement();
-        parser.advance();
-
-        AbstractNode value = result.register(GrammarRules.EXPRESSION.build(parser));
-        if (result.error() != null) return result;
-
-        return result.success(new VarDeclarationNode(keyword, identifier, value));
-    }
     private ParseResult variableAssignDeclaration(MCLParser parser, ParseResult result)
     {
         Token identifier = parser.getCurrentToken();
@@ -52,7 +35,7 @@ public class StatementRule implements GrammarRule
         parser.advance();
 
         Token operation = parser.getCurrentToken();
-        if (!operation.matches(assignOperations)) return result.failure(new MCLSyntaxError(parser, "Expected '='"));
+        if (!operation.matches(assignOperations)) return result.failure(new MCLSyntaxError(parser, "Expected assignment operator"));
         result.registerAdvancement();
         parser.advance();
 

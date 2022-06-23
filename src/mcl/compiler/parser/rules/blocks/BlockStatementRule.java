@@ -1,4 +1,4 @@
-package mcl.compiler.parser.rules;
+package mcl.compiler.parser.rules.blocks;
 
 import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.TokenType;
@@ -10,11 +10,16 @@ import java.util.List;
 
 public class BlockStatementRule implements GrammarRule
 {
-    private int requiredIndent;
+    private final int requiredIndent;
 
     public BlockStatementRule(int requiredIndent)
     {
         this.requiredIndent = requiredIndent;
+    }
+
+    protected ParseResult buildStatement(MCLParser parser)
+    {
+        return GrammarRules.STATEMENT.build(parser);
     }
 
     @Override
@@ -38,7 +43,7 @@ public class BlockStatementRule implements GrammarRule
             result.registerAdvancement();
             parser.advance();
 
-            AbstractNode statement = result.register(GrammarRules.STATEMENT.build(parser));
+            AbstractNode statement = result.register(buildStatement(parser));
             if (result.error() != null) return result;
 
             statements.add(statement);

@@ -6,7 +6,7 @@ import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
 import mcl.compiler.parser.nodes.NumberNode;
 import mcl.compiler.parser.nodes.UnaryOpNode;
-import mcl.compiler.parser.nodes.VarAccessNode;
+import mcl.compiler.parser.nodes.variables.VarAccessNode;
 
 public class AtomRule implements GrammarRule
 {

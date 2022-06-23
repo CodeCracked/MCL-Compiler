@@ -9,12 +9,12 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 
-public class NamespaceDeclarationNode extends AbstractNode
+public class NamespaceDefinitionNode extends AbstractNode
 {
     public final Token identifier;
     public final AbstractNode body;
 
-    public NamespaceDeclarationNode(Token keyword, Token identifier, AbstractNode body)
+    public NamespaceDefinitionNode(Token keyword, Token identifier, AbstractNode body)
     {
         super(keyword.startPosition(), body.endPosition());
         this.identifier = identifier;

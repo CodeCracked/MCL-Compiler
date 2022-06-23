@@ -1,5 +1,7 @@
 package mcl.compiler.analyzer;
 
+import mcl.compiler.MCLKeywords;
+
 import java.util.*;
 
 public class RuntimeType
@@ -9,6 +11,7 @@ public class RuntimeType
     public static final RuntimeType FLOAT = new RuntimeType("FLOAT", 1);
     public static final RuntimeType UNDEFINED = new RuntimeType("UNDEFINED", Integer.MAX_VALUE);
 
+    // region Configuration
     private static final Map<RuntimeType, Set<RuntimeType>> implicitCasts = new HashMap<>();
     static
     {
@@ -18,6 +21,15 @@ public class RuntimeType
         UNDEFINED.setImplicitCasts(UNDEFINED);
     }
 
+    private void setImplicitCasts(RuntimeType... casts)
+    {
+        Set<RuntimeType> set = new HashSet<>();
+        Collections.addAll(set, casts);
+        set.add(this);
+        implicitCasts.put(this, Collections.unmodifiableSet(set));
+    }
+    // endregion
+
     private final String name;
     private final int priority;
 
@@ -26,13 +38,11 @@ public class RuntimeType
         this.name = name;
         this.priority = priority;
     }
-
-    private void setImplicitCasts(RuntimeType... casts)
+    public static RuntimeType parse(String type)
     {
-        Set<RuntimeType> set = new HashSet<>();
-        Collections.addAll(set, casts);
-        set.add(this);
-        implicitCasts.put(this, Collections.unmodifiableSet(set));
+        if (type.equals(MCLKeywords.INT)) return INTEGER;
+        else if (type.equals(MCLKeywords.FLOAT)) return FLOAT;
+        else return UNDEFINED;
     }
 
     public RuntimeType getCombinedType(RuntimeType other)
@@ -42,6 +52,7 @@ public class RuntimeType
         else return UNDEFINED;
     }
 
+    // region Overrides
     @Override
     public int hashCode()
     {
@@ -60,4 +71,5 @@ public class RuntimeType
     {
         return name;
     }
+    // endregion
 }
