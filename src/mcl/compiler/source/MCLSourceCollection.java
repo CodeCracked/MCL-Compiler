@@ -1,4 +1,4 @@
-package mcl.compiler;
+package mcl.compiler.source;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,42 +10,6 @@ import java.util.stream.Collectors;
 
 public class MCLSourceCollection
 {
-    public static class LineLocation
-    {
-        protected final String file;
-        protected final int line;
-        protected final int start;
-
-        public LineLocation(String file, int line, int start)
-        {
-            this.file = file;
-            this.line = line;
-            this.start = start;
-        }
-
-        public String getFile() { return file; }
-        public int getLine() { return line; }
-        public int getStart() { return start; }
-    }
-    public static class CodeLocation extends LineLocation
-    {
-        private final int column;
-
-        public CodeLocation(LineLocation line, int position)
-        {
-            super(line.file, line.line, line.start);
-            this.column = position - line.start;
-        }
-
-        public int getColumn() { return column; }
-
-        @Override
-        public String toString()
-        {
-            return String.format("%s(Line %s Column %s)", file, line, column);
-        }
-    }
-
     public static final char LINE_SEPARATOR = '\n';
 
     private String source = "";

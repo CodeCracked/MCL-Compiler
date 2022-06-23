@@ -1,7 +1,8 @@
 package mcl.compiler.lexer;
 
-import mcl.compiler.MCLSourceCollection;
-import mcl.compiler.exceptions.MCLLexicalException;
+import mcl.compiler.MCLCompiler;
+import mcl.compiler.exceptions.MCLLexicalError;
+import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,9 +22,9 @@ public class MCLLexer
     private int position;
     private Character currentChar;
 
-    public MCLLexer(MCLSourceCollection source)
+    public MCLLexer(MCLCompiler compiler)
     {
-        this.source = source;
+        this.source = compiler.getSource();
         this.position = -1;
         this.currentChar = null;
 
@@ -32,6 +33,7 @@ public class MCLLexer
     }
 
     public MCLSourceCollection getSource() { return source; }
+    public int getPosition() { return position; }
     public Character getCurrentChar() { return currentChar; }
     public void advance()
     {
@@ -39,7 +41,7 @@ public class MCLLexer
         currentChar = position < source.getSource().length() ? source.getSource().charAt(position) : null;
     }
 
-    public List<Token<?>> makeTokens() throws MCLLexicalException
+    public LexerResult makeTokens()
     {
         List<Token<?>> tokens = new ArrayList<>();
 
@@ -68,10 +70,10 @@ public class MCLLexer
                     unknownTokenBuilder.append(currentChar);
                     advance();
                 }
-                throw new MCLLexicalException(unknownTokenBuilder.toString(), this, startPosition);
+                return new LexerResult(new MCLLexicalError(source.getCodeLocation(startPosition), source.getCodeLocation(position), unknownTokenBuilder.toString()));
             }
         }
 
-        return tokens;
+        return new LexerResult(tokens);
     }
 }
