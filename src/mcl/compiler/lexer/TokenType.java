@@ -1,7 +1,6 @@
 package mcl.compiler.lexer;
 
 import mcl.compiler.source.MCLSourceCollection;
-import mcl.compiler.exceptions.MCLLexicalError;
 
 public enum TokenType
 {
@@ -13,7 +12,8 @@ public enum TokenType
     DIV('/'),
     LPAREN('('),
     RPAREN(')'),
-    END_OF_LINE(MCLSourceCollection.LINE_SEPARATOR)
+    NEWLINE(MCLSourceCollection.LINE_SEPARATOR),
+    EOF
     ;
 
     //region Static

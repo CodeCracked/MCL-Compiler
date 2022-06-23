@@ -2,5 +2,5 @@ package mcl.compiler.parser;
 
 public interface GrammarRule
 {
-    AbstractNode build(MCLParser parser);
+    ParseResult build(MCLParser parser);
 }

@@ -44,7 +44,7 @@ public class MCLSourceCollection
             String trimmed = line.trim();
             if (trimmed.length() > 0)
             {
-                lineLocations.add(new LineLocation(file, i + 1, source.length()));
+                lineLocations.add(new LineLocation(file, line, i + 1, source.length()));
                 source += line + LINE_SEPARATOR;
             }
         }
@@ -69,9 +69,9 @@ public class MCLSourceCollection
             if (i == lineLocations.size() || lineLocations.get(i).start > codePosition)
             {
                 LineLocation lineLocation = lineLocations.get(i - 1);
-                return new CodeLocation(lineLocation, codePosition);
+                return new CodeLocation(this, lineLocation, codePosition);
             }
         }
-        return new CodeLocation(getLastLineLocation(), codePosition);
+        return new CodeLocation(this, getLastLineLocation(), codePosition);
     }
 }

@@ -2,11 +2,13 @@ package mcl.compiler.source;
 
 public class CodeLocation extends LineLocation
 {
-    private int column;
+    private final MCLSourceCollection source;
+    private final int column;
 
-    public CodeLocation(LineLocation line, int position)
+    public CodeLocation(MCLSourceCollection source, LineLocation line, int position)
     {
-        super(line.file, line.line, line.start);
+        super(line.file, line.lineContents, line.line, line.start);
+        this.source = source;
         this.column = position - line.start;
     }
 

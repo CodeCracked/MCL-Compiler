@@ -7,6 +7,7 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.MCLParser;
+import mcl.compiler.parser.ParseResult;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.io.File;
@@ -15,13 +16,11 @@ import java.util.List;
 
 public class MCLCompiler
 {
-    private MCLSourceCollection sourceCollection;
-
     public void compile(File source, File target) throws IOException, MCLError
     {
         // Generate Tokens
-        sourceCollection = new MCLSourceCollection(source);
-        MCLLexer lexer = new MCLLexer(this);
+        MCLSourceCollection sourceCollection = new MCLSourceCollection(source);
+        MCLLexer lexer = new MCLLexer(sourceCollection);
         LexerResult lexerResult = lexer.makeTokens();
         if (lexerResult.error() != null) throw lexerResult.error();
         List<Token<?>> tokens = lexerResult.tokens();
@@ -32,18 +31,18 @@ public class MCLCompiler
             Token<?> token = tokens.get(i);
             System.out.print(token);
 
-            if (i == tokens.size() - 1 || token.type() == TokenType.END_OF_LINE) System.out.println();
+            if (i == tokens.size() - 1 || token.type() == TokenType.NEWLINE) System.out.println();
             else System.out.print(", ");
         }
         System.out.println();
 
         // Generate Abstract Syntax Tree
-        MCLParser parser = new MCLParser(this, tokens);
-        AbstractNode ast = parser.parse();
+        MCLParser parser = new MCLParser(sourceCollection, tokens);
+        ParseResult parseResult = parser.parse();
+        if (parseResult.error() != null) throw parseResult.error();
+        AbstractNode ast = parseResult.node();
 
         // Debug Print AST
         System.out.println(ast);
     }
-
-    public MCLSourceCollection getSource() { return sourceCollection; }
 }

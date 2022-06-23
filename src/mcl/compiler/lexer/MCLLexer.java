@@ -1,6 +1,5 @@
 package mcl.compiler.lexer;
 
-import mcl.compiler.MCLCompiler;
 import mcl.compiler.exceptions.MCLLexicalError;
 import mcl.compiler.source.MCLSourceCollection;
 
@@ -22,9 +21,9 @@ public class MCLLexer
     private int position;
     private Character currentChar;
 
-    public MCLLexer(MCLCompiler compiler)
+    public MCLLexer(MCLSourceCollection source)
     {
-        this.source = compiler.getSource();
+        this.source = source;
         this.position = -1;
         this.currentChar = null;
 
@@ -74,6 +73,7 @@ public class MCLLexer
             }
         }
 
+        tokens.add(new Token<>(TokenType.EOF, position, position + 1));
         return new LexerResult(tokens);
     }
 }

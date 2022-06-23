@@ -26,9 +26,11 @@ public class MCLError extends Exception
     @Override
     public String toString()
     {
-        StringBuilder builder = new StringBuilder();
-        builder.append(String.format("%s: %s\n", errorName, details));
-        builder.append(String.format("File %s, Line %s Column %s\n", start.getFile(), start.getLine(), start.getColumn()));
-        return builder.toString();
+        return String.format("%s: %s\n", errorName, details) +
+                String.format("File %s, Line %s Column %s\n", start.getFile(), start.getLine(), start.getColumn()) +
+                String.format("\n%s\n", start.getLineContents()) +
+                " ".repeat(Math.max(0, start.getColumn())) +
+                "^".repeat(Math.max(0, end.getColumn() - start.getColumn())) +
+                '\n';
     }
 }
