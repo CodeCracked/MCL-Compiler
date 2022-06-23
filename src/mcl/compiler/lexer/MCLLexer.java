@@ -14,6 +14,10 @@ public class MCLLexer
     private static final Set<Character> IGNORE_SET = Set.of(' ', '\t');
     private static final Set<TokenBuilder> TOKEN_BUILDERS = new HashSet<>();
 
+    public static void init()
+    {
+        if (TOKEN_BUILDERS.size() == 0) TokenType.registerTokenBuilders();
+    }
     public static void registerTokenBuilder(TokenBuilder builder) { TOKEN_BUILDERS.add(builder); }
     //endregion
 
@@ -26,8 +30,6 @@ public class MCLLexer
         this.source = source;
         this.position = -1;
         this.currentChar = null;
-
-        if (TOKEN_BUILDERS.size() == 0) TokenType.registerTokenBuilders();
         advance();
     }
 
@@ -42,7 +44,7 @@ public class MCLLexer
 
     public LexerResult makeTokens()
     {
-        List<Token<?>> tokens = new ArrayList<>();
+        List<Token> tokens = new ArrayList<>();
 
         while (currentChar != null)
         {
@@ -52,28 +54,36 @@ public class MCLLexer
                 continue;
             }
 
-            Token<?> token = null;
+            Token token = null;
             for (TokenBuilder builder : TOKEN_BUILDERS)
             {
                 token = builder.buildToken(this, position);
                 if (token != null) break;
             }
 
-            if (token != null) tokens.add(token);
-            else
+            if (token != null)
             {
-                int startPosition = position;
-                StringBuilder unknownTokenBuilder = new StringBuilder();
-                while (currentChar != null && !IGNORE_SET.contains(currentChar))
-                {
-                    unknownTokenBuilder.append(currentChar);
-                    advance();
-                }
-                return new LexerResult(new MCLLexicalError(source.getCodeLocation(startPosition), source.getCodeLocation(position), unknownTokenBuilder.toString()));
+                if (token.type() != TokenType.INTERNAL_ERROR) tokens.add(token);
+                else return unknownTokenResult(token.startPosition());
             }
+            else return unknownTokenResult(position);
         }
 
-        tokens.add(new Token<>(TokenType.EOF, position, position + 1));
+        tokens.add(new Token(TokenType.EOF, position, position + 1));
         return new LexerResult(tokens);
+    }
+
+    private LexerResult unknownTokenResult(int start)
+    {
+        position = start;
+        currentChar = position < source.getSource().length() ? source.getSource().charAt(position) : null;
+
+        StringBuilder unknownTokenBuilder = new StringBuilder();
+        while (currentChar != null && !IGNORE_SET.contains(currentChar))
+        {
+            unknownTokenBuilder.append(currentChar);
+            advance();
+        }
+        return new LexerResult(new MCLLexicalError(source.getCodeLocation(start), source.getCodeLocation(position), unknownTokenBuilder.toString()));
     }
 }

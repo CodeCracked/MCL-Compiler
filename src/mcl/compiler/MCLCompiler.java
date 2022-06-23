@@ -16,6 +16,11 @@ import java.util.List;
 
 public class MCLCompiler
 {
+    public MCLCompiler()
+    {
+        MCLLexer.init();
+    }
+
     public void compile(File source, File target) throws IOException, MCLError
     {
         // Generate Tokens
@@ -23,12 +28,12 @@ public class MCLCompiler
         MCLLexer lexer = new MCLLexer(sourceCollection);
         LexerResult lexerResult = lexer.makeTokens();
         if (lexerResult.error() != null) throw lexerResult.error();
-        List<Token<?>> tokens = lexerResult.tokens();
+        List<Token> tokens = lexerResult.tokens();
 
         // Debug Print Tokens
         for (int i = 0; i < tokens.size(); i++)
         {
-            Token<?> token = tokens.get(i);
+            Token token = tokens.get(i);
             System.out.print(token);
 
             if (i == tokens.size() - 1 || token.type() == TokenType.NEWLINE) System.out.println();

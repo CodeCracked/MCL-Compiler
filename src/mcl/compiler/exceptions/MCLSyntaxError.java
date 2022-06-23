@@ -6,7 +6,7 @@ import mcl.compiler.source.MCLSourceCollection;
 
 public class MCLSyntaxError extends MCLError
 {
-    public MCLSyntaxError(MCLSourceCollection source, Token<?> token, String details)
+    public MCLSyntaxError(MCLSourceCollection source, Token token, String details)
     {
         this(source.getCodeLocation(token.startPosition()), source.getCodeLocation(token.endPosition()), details);
     }

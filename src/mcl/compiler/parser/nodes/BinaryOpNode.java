@@ -6,11 +6,13 @@ import mcl.compiler.parser.AbstractNode;
 public class BinaryOpNode extends AbstractNode
 {
     public final AbstractNode leftNode;
-    public final Token<?> operation;
+    public final Token operation;
     public final AbstractNode rightNode;
 
-    public BinaryOpNode(AbstractNode leftNode, Token<?> operation, AbstractNode rightNode)
+    public BinaryOpNode(AbstractNode leftNode, Token operation, AbstractNode rightNode)
     {
+        super(leftNode.startPosition(), rightNode.endPosition());
+
         this.leftNode = leftNode;
         this.operation = operation;
         this.rightNode = rightNode;
@@ -19,7 +21,7 @@ public class BinaryOpNode extends AbstractNode
     @Override
     public void debugPrint(int depth)
     {
-        System.out.print("    ".repeat(depth));
+        System.out.print("  ".repeat(depth));
         System.out.println(operation);
 
         leftNode.debugPrint(depth + 1);

@@ -1,7 +1,8 @@
-expr	: term ((PLUS|MINUS) term)*
+expr	: KEYWORD:(int|float) IDENTIFIER EQUALS expr
+		: factor ((PLUS|MINUS) factor)*
 
-term	: factor ((MUL|DIV) factor)*
+factor	: atom ((MUL|DIV) atom)*
 
-factor	: INT|FLOAT
+atom	: INT|FLOAT|IDENTIFIER
 		: (PLUS|MINUS) factor
 		: LPAREN expr RPAREN

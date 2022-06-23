@@ -5,11 +5,13 @@ import mcl.compiler.parser.AbstractNode;
 
 public class UnaryOpNode extends AbstractNode
 {
-    public final Token<?> operation;
+    public final Token operation;
     public final AbstractNode node;
 
-    public UnaryOpNode(Token<?> operation, AbstractNode node)
+    public UnaryOpNode(Token operation, AbstractNode node)
     {
+        super(operation.startPosition(), node.endPosition());
+
         this.operation = operation;
         this.node = node;
     }
@@ -17,7 +19,7 @@ public class UnaryOpNode extends AbstractNode
     @Override
     public void debugPrint(int depth)
     {
-        System.out.print("    ".repeat(depth));
+        System.out.print("  ".repeat(depth));
         System.out.println(operation);
 
         node.debugPrint(depth + 1);
