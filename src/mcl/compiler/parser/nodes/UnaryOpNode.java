@@ -1,6 +1,7 @@
 package mcl.compiler.parser.nodes;
 
 import mcl.compiler.MCLCompiler;
+import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
@@ -23,6 +24,12 @@ public class UnaryOpNode extends AbstractNode
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
         return node.createSymbols(compiler, source);
+    }
+
+    @Override
+    public RuntimeType getRuntimeType(MCLCompiler compiler)
+    {
+        return node.getRuntimeType(compiler);
     }
 
     @Override

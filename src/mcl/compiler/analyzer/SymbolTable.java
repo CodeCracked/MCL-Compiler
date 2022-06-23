@@ -2,6 +2,8 @@ package mcl.compiler.analyzer;
 
 import mcl.compiler.exceptions.MCLDuplicateSymbolError;
 import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.exceptions.MCLUndefinedSymbolError;
+import mcl.compiler.lexer.Token;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.HashMap;
@@ -30,6 +32,11 @@ public class SymbolTable
         if (symbolMap.containsKey(identifier) && symbolMap.get(identifier).containsKey(symbolType)) return symbolMap.get(identifier).get(symbolType);
         else if (parent != null) return parent.getSymbol(identifier, symbolType);
         else return null;
+    }
+    public MCLError checkSymbolDefinition(Token identifier, SymbolType symbolType)
+    {
+        if (getSymbol((String)identifier.value(), symbolType) != null) return null;
+        else return new MCLUndefinedSymbolError(source, identifier, symbolType);
     }
     public MCLError addSymbol(Symbol symbol)
     {

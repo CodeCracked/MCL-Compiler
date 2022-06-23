@@ -1,6 +1,7 @@
 package mcl.compiler.parser;
 
 import mcl.compiler.MCLCompiler;
+import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.source.MCLSourceCollection;
 
@@ -16,6 +17,7 @@ public abstract class AbstractNode
     }
 
     public abstract MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source);
+    public abstract RuntimeType getRuntimeType(MCLCompiler compiler);
     public abstract void debugPrint(int depth);
 
     public int startPosition() { return this.startPosition; }

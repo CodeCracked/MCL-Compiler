@@ -1,6 +1,7 @@
 package mcl.compiler.parser.nodes;
 
 import mcl.compiler.MCLCompiler;
+import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
@@ -29,6 +30,14 @@ public class BinaryOpNode extends AbstractNode
 
         error = rightNode.createSymbols(compiler, source);
         return error;
+    }
+
+    @Override
+    public RuntimeType getRuntimeType(MCLCompiler compiler)
+    {
+        RuntimeType left = leftNode.getRuntimeType(compiler);
+        RuntimeType right = rightNode.getRuntimeType(compiler);
+        return left.getCombinedType(right);
     }
 
     @Override

@@ -50,7 +50,8 @@ public class MCLParser
 
         if (token.type() == TokenType.PLUS || token.type() == TokenType.MINUS)
         {
-            result.register(parser.advance());
+            result.registerAdvancement();
+            parser.advance();
             AbstractNode factor = result.register(atomRule(parser));
             if (result.error() != null) return result;
             else return result.success(new UnaryOpNode(token, factor));
@@ -58,30 +59,34 @@ public class MCLParser
 
         else if (token.type() == TokenType.IDENTIFIER)
         {
-            result.register(parser.advance());
+            result.registerAdvancement();
+            parser.advance();
             return result.success(new VarAccessNode(token));
         }
 
         else if (token.type() == TokenType.INT || token.type() == TokenType.FLOAT)
         {
-            result.register(parser.advance());
+            result.registerAdvancement();
+            parser.advance();
             return result.success(new NumberNode(token));
         }
 
         else if (token.type() == TokenType.LPAREN)
         {
-            result.register(parser.advance());
+            result.registerAdvancement();
+            parser.advance();
             AbstractNode expression = result.register(expressionRule(parser));
             if (result.error() != null) return result;
             if (parser.getCurrentToken().type() == TokenType.RPAREN)
             {
-                result.register(parser.advance());
+                result.registerAdvancement();
+                parser.advance();
                 return result.success(expression);
             }
             else return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected ')'"));
         }
 
-        return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected int, float, '+', '-', or '('"));
+        return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected int, float, identifier, '+', '-', or '('"));
     }
     private static ParseResult factorRule(MCLParser parser)
     {
@@ -94,21 +99,27 @@ public class MCLParser
         {
             Token type = parser.getCurrentToken();
 
-            result.register(parser.advance());
+            result.registerAdvancement();
+            parser.advance();
             if (parser.getCurrentToken().type() != TokenType.IDENTIFIER) return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected identifier"));
 
             Token identifier = parser.getCurrentToken();
-            result.register(parser.advance());
+            result.registerAdvancement();
+            parser.advance();
 
             if (parser.getCurrentToken().type() != TokenType.EQUALS) return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected '='"));
 
-            result.register(parser.advance());
+            result.registerAdvancement();
+            parser.advance();
             AbstractNode valueExpression = result.register(expressionRule(parser));
             if (result.error() != null) return result;
             else return result.success(new VarAssignNode(type, identifier, valueExpression));
         }
 
-        return binaryOperationRule(parser, MCLParser::factorRule, Set.of(TokenType.PLUS, TokenType.MINUS));
+        AbstractNode node = result.register(binaryOperationRule(parser, MCLParser::factorRule, Set.of(TokenType.PLUS, TokenType.MINUS)));
+        if (result.error() != null) return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected 'int', 'float', int, float, identifier, '+', '-', or '('"));
+
+        return result.success(node);
     }
     private static ParseResult binaryOperationRule(MCLParser parser, GrammarRule argumentRule, Set<TokenType> operations)
     {
@@ -119,7 +130,8 @@ public class MCLParser
         while (parser.getCurrentToken() != null && operations.contains(parser.getCurrentToken().type()))
         {
             Token operation = parser.getCurrentToken();
-            result.register(parser.advance());
+            result.registerAdvancement();
+            parser.advance();
             AbstractNode right = result.register(argumentRule.build(parser));
             if (result.error() != null) return result;
 

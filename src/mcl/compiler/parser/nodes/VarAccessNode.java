@@ -1,6 +1,10 @@
 package mcl.compiler.parser.nodes;
 
 import mcl.compiler.MCLCompiler;
+import mcl.compiler.analyzer.RuntimeType;
+import mcl.compiler.analyzer.Symbol;
+import mcl.compiler.analyzer.SymbolType;
+import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
@@ -20,7 +24,15 @@ public class VarAccessNode extends AbstractNode
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
-        return null;
+        return compiler.getSymbolTable().checkSymbolDefinition(identifier, SymbolType.VARIABLE);
+    }
+
+    @Override
+    public RuntimeType getRuntimeType(MCLCompiler compiler)
+    {
+        Symbol symbol = compiler.getSymbolTable().getSymbol((String)identifier.value(), SymbolType.VARIABLE);
+        if (symbol instanceof VariableSymbol variable) return variable.type;
+        else return RuntimeType.UNDEFINED;
     }
 
     @Override

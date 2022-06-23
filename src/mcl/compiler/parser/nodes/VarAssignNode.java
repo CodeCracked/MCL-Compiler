@@ -1,6 +1,7 @@
 package mcl.compiler.parser.nodes;
 
 import mcl.compiler.MCLCompiler;
+import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
@@ -25,10 +26,20 @@ public class VarAssignNode extends AbstractNode
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
-        MCLError error = compiler.getSymbolTable().addSymbol(new VariableSymbol(identifier, keyword));
+        RuntimeType type = RuntimeType.UNDEFINED;
+        if (keyword.value().equals("int")) type = RuntimeType.INTEGER;
+        else if (keyword.value().equals("float")) type = RuntimeType.FLOAT;
+
+        MCLError error = compiler.getSymbolTable().addSymbol(new VariableSymbol(identifier, type));
         if (error != null) return error;
 
         return value.createSymbols(compiler, source);
+    }
+
+    @Override
+    public RuntimeType getRuntimeType(MCLCompiler compiler)
+    {
+        return RuntimeType.VOID;
     }
 
     @Override
