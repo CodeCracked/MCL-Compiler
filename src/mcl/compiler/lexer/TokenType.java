@@ -11,11 +11,20 @@ public enum TokenType
     FLOAT,
     IDENTIFIER,
     KEYWORD,
+
+    EQUALS("=="),
+    NOT_EQUALS("!="),
+    LESS_THAN('<'),
+    GREATER_THAN('>'),
+    LESS_OR_EQUAL("<="),
+    GREATER_OR_EQUAL(">="),
+
     PLUS('+'),
     MINUS('-'),
     MUL('*'),
     DIV('/'),
-    EQUALS('='),
+    ASSIGN('='),
+
     LPAREN('('),
     RPAREN(')'),
     NEWLINE(MCLSourceCollection.LINE_SEPARATOR),
@@ -83,6 +92,10 @@ public enum TokenType
     {
         MCLLexer.registerTokenBuilder((lexer, startPosition) -> symbolTokenBuilder(lexer, startPosition, symbol));
     }
+    TokenType(String symbol)
+    {
+        MCLLexer.registerTokenBuilder((lexer, startPosition) -> symbolTokenBuilder(lexer, startPosition, symbol));
+    }
 
     //region Token Builders
     private Token symbolTokenBuilder(MCLLexer lexer, int startPosition, char symbol)
@@ -93,6 +106,20 @@ public enum TokenType
             return new Token(this, startPosition, lexer.getPosition());
         }
         else return null;
+    }
+    private Token symbolTokenBuilder(MCLLexer lexer, int startPosition, String symbol)
+    {
+        char[] symbolChars = symbol.toCharArray();
+        for (char c : symbolChars)
+        {
+            if (c == lexer.getCurrentChar()) lexer.advance();
+            else
+            {
+                lexer.setPosition(startPosition);
+                return null;
+            }
+        }
+        return new Token(this, startPosition, lexer.getPosition());
     }
     //endregion
 }

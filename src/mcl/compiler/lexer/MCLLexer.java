@@ -36,6 +36,12 @@ public class MCLLexer
     public MCLSourceCollection getSource() { return source; }
     public int getPosition() { return position; }
     public Character getCurrentChar() { return currentChar; }
+
+    public void setPosition(int position)
+    {
+        this.position = position;
+        currentChar = position < source.getSource().length() ? source.getSource().charAt(position) : null;
+    }
     public void advance()
     {
         position++;

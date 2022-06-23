@@ -4,11 +4,17 @@ import java.util.Set;
 
 public final class MCLKeywords
 {
-    public static final String INT_KEYWORD = "int";
-    public static final String FLOAT_KEYWORD = "float";
+    public static final String INT = "int";
+    public static final String FLOAT = "float";
+    public static final String AND = "and";
+    public static final String OR = "or";
+    public static final String NOT = "not";
 
     public static Set<String> KEYWORDS = Set.of(
-            INT_KEYWORD,
-            FLOAT_KEYWORD
+            INT,
+            FLOAT,
+            AND,
+            OR,
+            NOT
     );
 }
