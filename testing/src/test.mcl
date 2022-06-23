@@ -1,3 +1,2 @@
-namespace mcl
-	func test return int
-		return 10
+1 + 2 * 3.1
+(1 + 2) * 3.1

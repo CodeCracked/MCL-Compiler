@@ -10,11 +10,11 @@ import java.util.stream.Collectors;
 
 public class MCLSourceCollection
 {
-    public class LineLocation
+    public static class LineLocation
     {
-        private String file;
-        private int line;
-        private int start;
+        protected final String file;
+        protected final int line;
+        protected final int start;
 
         public LineLocation(String file, int line, int start)
         {
@@ -23,19 +23,30 @@ public class MCLSourceCollection
             this.start = start;
         }
 
-        public String getFile()
+        public String getFile() { return file; }
+        public int getLine() { return line; }
+        public int getStart() { return start; }
+    }
+    public static class CodeLocation extends LineLocation
+    {
+        private final int column;
+
+        public CodeLocation(LineLocation line, int position)
         {
-            return file;
+            super(line.file, line.line, line.start);
+            this.column = position - line.start;
         }
-        public int getLine()
+
+        public int getColumn() { return column; }
+
+        @Override
+        public String toString()
         {
-            return line;
-        }
-        public int getStart()
-        {
-            return start;
+            return String.format("%s(Line %s Column %s)", file, line, column);
         }
     }
+
+    public static final char LINE_SEPARATOR = '\n';
 
     private String source = "";
     private List<LineLocation> lineLocations;
@@ -70,7 +81,7 @@ public class MCLSourceCollection
             if (trimmed.length() > 0)
             {
                 lineLocations.add(new LineLocation(file, i + 1, source.length()));
-                source += line + '\n';
+                source += line + LINE_SEPARATOR;
             }
         }
     }
@@ -86,5 +97,17 @@ public class MCLSourceCollection
     public LineLocation getLastLineLocation()
     {
         return lineLocations.get(lineLocations.size() - 1);
+    }
+    public CodeLocation getCodeLocation(int codePosition)
+    {
+        for (int i = 1; i <= lineLocations.size(); i++)
+        {
+            if (i == lineLocations.size() || lineLocations.get(i).start > codePosition)
+            {
+                LineLocation lineLocation = lineLocations.get(i - 1);
+                return new CodeLocation(lineLocation, codePosition);
+            }
+        }
+        return new CodeLocation(getLastLineLocation(), codePosition);
     }
 }
