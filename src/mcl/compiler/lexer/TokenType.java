@@ -20,7 +20,14 @@ public enum TokenType
     MINUS(2, '-'),
     MUL(2, '*'),
     DIV(2, '/'),
+    MOD(2, '%'),
+
     ASSIGN(2, '='),
+    ASSIGN_PLUS(1, "+="),
+    ASSIGN_MINUS(1, "-="),
+    ASSIGN_MUL(1, "*="),
+    ASSIGN_DIV(1, "/="),
+    ASSIGN_MOD(1, "%="),
 
     EQUALS(1, "=="),
     NOT_EQUALS(1, "!="),
@@ -161,7 +168,7 @@ public enum TokenType
         char[] symbolChars = symbol.toCharArray();
         for (char c : symbolChars)
         {
-            if (c == lexer.getCurrentChar()) lexer.advance();
+            if (lexer.getCurrentChar() != null && c == lexer.getCurrentChar()) lexer.advance();
             else
             {
                 lexer.setPosition(startPosition);

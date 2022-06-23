@@ -10,6 +10,7 @@ public class GrammarRules
 {
     public static final GrammarRule PROGRAM_ROOT = new ProgramRootRule();
     public static final GrammarRule NAMESPACE = new NamespaceDeclarationRule();
+    public static final GrammarRule STATEMENT = new StatementRule();
     public static final GrammarRule EXPRESSION = new ExpressionRule();
     public static final GrammarRule COMPARISON_EXPRESSION = new ComparisonExpressionRule();
     public static final GrammarRule ARITHMETIC_EXPRESSION = new ArithmeticExpressionRule();

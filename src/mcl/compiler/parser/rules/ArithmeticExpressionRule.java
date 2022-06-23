@@ -17,7 +17,7 @@ public class ArithmeticExpressionRule implements GrammarRule
         ParseResult result = new ParseResult();
 
         AbstractNode node = result.register(GrammarRules.binaryOperationRule(parser, GrammarRules.FACTOR, arithmeticOperators));
-        if (result.error() != null) return result.failure(new MCLSyntaxError(parser, "Expected 'int', 'float', int, float, identifier, '+', '-', or '('"));
+        if (result.error() != null) return result.failure(new MCLSyntaxError(parser, "Expected variable type, number, identifier, operation, or '('"));
 
         return result.success(node);
     }

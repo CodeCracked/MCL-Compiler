@@ -38,7 +38,7 @@ public class BlockStatementRule implements GrammarRule
             result.registerAdvancement();
             parser.advance();
 
-            AbstractNode statement = result.register(GrammarRules.EXPRESSION.build(parser));
+            AbstractNode statement = result.register(GrammarRules.STATEMENT.build(parser));
             if (result.error() != null) return result;
 
             statements.add(statement);

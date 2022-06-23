@@ -31,7 +31,7 @@ public class ComparisonExpressionRule implements GrammarRule
         }
         
         AbstractNode node = result.register(GrammarRules.binaryOperationRule(parser, GrammarRules.ARITHMETIC_EXPRESSION, comparisonOperators));
-        if (result.error() != null) return result.failure(new MCLSyntaxError(parser, "Expected 'int', 'float', int, float, identifier, '+', '-', or '('"));
+        if (result.error() != null) return result.failure(new MCLSyntaxError(parser, "Expected variable type, identifier, operator, or '('"));
         else return result.success(node);
     }
 }

@@ -19,6 +19,11 @@ public record Token(TokenType type, Object value, int startPosition, int endPosi
         return Collections.unmodifiableSet(descriptions);
     }
 
+    public boolean matches(Set<Token> descriptions)
+    {
+        for (Token description : descriptions) if (matches(description)) return true;
+        return false;
+    }
     public boolean matches(Token description)
     {
         if (this.type != description.type) return false;
@@ -28,6 +33,10 @@ public record Token(TokenType type, Object value, int startPosition, int endPosi
     public boolean matches(TokenType tokenType, Object value)
     {
         return this.type == tokenType && this.value.equals(value);
+    }
+    public boolean isKeyword(Set<String> keywords)
+    {
+        return this.type == TokenType.KEYWORD && keywords.contains((String)this.value);
     }
 
     @Override

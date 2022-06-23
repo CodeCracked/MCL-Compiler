@@ -1,9 +1,15 @@
-namespace	: KEYWORD:namespace IDENTIFIER NEWLINE block
+program		: (namespace)*
 
-block		: INDENT expr (NEWLINE INDENT expr)*
+namespace	: KEYWORD:namespace IDENTIFIER block
 
-expr		: KEYWORD:(int|float) IDENTIFIER EQUALS expr
-			: comp-expr ((KEYWORD:AND|OR) comp-expr)*
+function	: KEYWORD:func IDENTIFIER LPAREN (KEYWORD:(int|float) IDENTIFIER (COMMA KEYWORD:(int|float) IDENTIFIER)*)? RPAREN (KEYWORD:return KEYWORD:(int|float))?
+
+block		: (NEWLINE INDENT statement)*
+
+statement	: KEYWORD:(int|float) IDENTIFIER EQUALS expr
+			: IDENTIFIER EQUALS expr
+
+expr		: comp-expr ((KEYWORD:AND|OR) comp-expr)*
 
 
 comp-expr	: KEYWORD:not comp-expr
@@ -16,3 +22,6 @@ factor		: atom ((MUL|DIV) atom)*
 atom		: INT|FLOAT|IDENTIFIER
 			: (PLUS|MINUS) factor
 			: LPAREN expr RPAREN
+			
+test = not 5 == 4 and 3 == 3
+test = ((not (5 == 4)) and (3 == 3))

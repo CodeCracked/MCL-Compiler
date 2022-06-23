@@ -31,7 +31,7 @@ public class MCLParser
     {
         ParseResult result = GrammarRules.PROGRAM_ROOT.build(this);
         if (result.error() == null && currentToken.type() != TokenType.EOF) return result.failure(new MCLSyntaxError(source.getCodeLocation(currentToken.startPosition()),
-                source.getCodeLocation(currentToken.endPosition()), "Expected '+', '-', '*', or '/'"));
+                source.getCodeLocation(currentToken.endPosition()), "Expected 'namespace'"));
         return result;
     }
 

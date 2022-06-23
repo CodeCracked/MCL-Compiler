@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class FactorRule implements GrammarRule
 {
-    private final Set<Token> arithmeticOperators = Token.descriptions(TokenType.MUL, TokenType.DIV);
+    private final Set<Token> arithmeticOperators = Token.descriptions(TokenType.MUL, TokenType.DIV, TokenType.MOD);
 
     @Override
     public ParseResult build(MCLParser parser)

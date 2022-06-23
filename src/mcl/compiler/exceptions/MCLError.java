@@ -23,14 +23,28 @@ public class MCLError extends Exception
         return toString();
     }
 
+    private String getArrowsString(String line, int start, int end)
+    {
+        StringBuilder builder = new StringBuilder();
+
+        char[] lineChars = line.toCharArray();
+        for (int i = 0; i < start; i++)
+        {
+            if (lineChars[i] == '\t') builder.append("    ");
+            else builder.append(' ');
+        }
+        builder.append("^".repeat(end - start));
+
+        return builder.toString();
+    }
+
     @Override
     public String toString()
     {
         return String.format("%s: %s\n", errorName, details) +
                 String.format("File %s, Line %s Column %s\n", start.getFile(), start.getLine(), start.getColumn()) +
-                String.format("\n%s\n", start.getLineContents()) +
-                " ".repeat(Math.max(0, start.getColumn())) +
-                "^".repeat(Math.max(0, end.getLine() > start.getLine() ? 1 : end.getColumn() - start.getColumn())) +
+                String.format("\n%s\n", start.getLineContents().replace("\t", "    ")) +
+                getArrowsString(start.getLineContents(), start.getColumn(), end.getLine() > start.getLine() ? start.getColumn() + 1 : end.getColumn()) +
                 '\n';
     }
 }

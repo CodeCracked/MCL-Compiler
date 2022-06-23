@@ -54,6 +54,6 @@ public class AtomRule implements GrammarRule
             else return result.failure(new MCLSyntaxError(parser, "Expected ')'"));
         }
 
-        return result.failure(new MCLSyntaxError(parser, "Expected int, float, identifier, '+', '-', or '('"));
+        return result.failure(new MCLSyntaxError(parser, "Expected number, identifier, '+', '-', or '('"));
     }
 }
