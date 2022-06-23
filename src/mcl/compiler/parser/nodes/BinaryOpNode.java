@@ -1,7 +1,10 @@
 package mcl.compiler.parser.nodes;
 
+import mcl.compiler.MCLCompiler;
+import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
+import mcl.compiler.source.MCLSourceCollection;
 
 public class BinaryOpNode extends AbstractNode
 {
@@ -16,6 +19,16 @@ public class BinaryOpNode extends AbstractNode
         this.leftNode = leftNode;
         this.operation = operation;
         this.rightNode = rightNode;
+    }
+
+    @Override
+    public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        MCLError error = leftNode.createSymbols(compiler, source);
+        if (error != null) return error;
+
+        error = rightNode.createSymbols(compiler, source);
+        return error;
     }
 
     @Override

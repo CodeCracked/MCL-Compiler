@@ -3,8 +3,6 @@ package mcl.compiler.lexer;
 import mcl.compiler.MCLKeywords;
 import mcl.compiler.source.MCLSourceCollection;
 
-import java.util.Set;
-
 public enum TokenType
 {
     INTERNAL_ERROR,

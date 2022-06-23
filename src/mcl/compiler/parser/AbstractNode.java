@@ -1,5 +1,9 @@
 package mcl.compiler.parser;
 
+import mcl.compiler.MCLCompiler;
+import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.source.MCLSourceCollection;
+
 public abstract class AbstractNode
 {
     private final int startPosition;
@@ -11,6 +15,7 @@ public abstract class AbstractNode
         this.endPosition = endPosition;
     }
 
+    public abstract MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source);
     public abstract void debugPrint(int depth);
 
     public int startPosition() { return this.startPosition; }

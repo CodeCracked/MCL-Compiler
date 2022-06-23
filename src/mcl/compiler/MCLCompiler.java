@@ -1,5 +1,7 @@
 package mcl.compiler;
 
+import mcl.compiler.analyzer.MCLSemanticAnalyzer;
+import mcl.compiler.analyzer.SymbolTable;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.LexerResult;
 import mcl.compiler.lexer.MCLLexer;
@@ -16,6 +18,10 @@ import java.util.List;
 
 public class MCLCompiler
 {
+    private MCLSourceCollection sourceCollection;
+    private SymbolTable rootSymbolTable;
+    private SymbolTable currentSymbolTable;
+
     public MCLCompiler()
     {
         MCLLexer.init();
@@ -23,8 +29,12 @@ public class MCLCompiler
 
     public void compile(File source, File target) throws IOException, MCLError
     {
+        // Setup
+        sourceCollection = new MCLSourceCollection(source);
+        rootSymbolTable = new SymbolTable(sourceCollection, null);
+        currentSymbolTable = rootSymbolTable;
+
         // Generate Tokens
-        MCLSourceCollection sourceCollection = new MCLSourceCollection(source);
         MCLLexer lexer = new MCLLexer(sourceCollection);
         LexerResult lexerResult = lexer.makeTokens();
         if (lexerResult.error() != null) throw lexerResult.error();
@@ -49,5 +59,21 @@ public class MCLCompiler
 
         // Debug Print AST
         ast.debugPrint(0);
+
+        // Perform Symbol Analysis
+        MCLSemanticAnalyzer semanticAnalyzer = new MCLSemanticAnalyzer(this, sourceCollection, ast);
+        MCLError symbolsError = semanticAnalyzer.loadSymbolTables();
+        if (symbolsError != null) throw symbolsError;
     }
+
+    public void pushSymbolTable(String name)
+    {
+        currentSymbolTable = currentSymbolTable.getOrCreateChildTable(name);
+    }
+    public void popSymbolTable()
+    {
+        if (currentSymbolTable.parent != null) currentSymbolTable = currentSymbolTable.parent;
+    }
+    public SymbolTable getRootSymbolTable() { return rootSymbolTable; }
+    public SymbolTable getSymbolTable() { return currentSymbolTable; }
 }
