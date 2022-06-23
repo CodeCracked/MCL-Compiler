@@ -43,6 +43,6 @@ public class MCLCompiler
         AbstractNode ast = parseResult.node();
 
         // Debug Print AST
-        System.out.println(ast);
+        ast.debugPrint(0);
     }
 }

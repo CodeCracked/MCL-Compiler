@@ -5,11 +5,18 @@ import mcl.compiler.parser.AbstractNode;
 
 public class NumberNode extends AbstractNode
 {
-    private final Token<?> token;
+    public final Token<?> token;
 
     public NumberNode(Token<?> token)
     {
         this.token = token;
+    }
+
+    @Override
+    public void debugPrint(int depth)
+    {
+        System.out.print("    ".repeat(depth));
+        System.out.println(token);
     }
 
     @Override

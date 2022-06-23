@@ -3,8 +3,9 @@ package mcl.compiler.parser;
 import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
-import mcl.compiler.parser.nodes.BinOpNode;
+import mcl.compiler.parser.nodes.BinaryOpNode;
 import mcl.compiler.parser.nodes.NumberNode;
+import mcl.compiler.parser.nodes.UnaryOpNode;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.List;
@@ -47,12 +48,35 @@ public class MCLParser
     {
         ParseResult result = new ParseResult();
         Token<?> token = parser.getCurrentToken();
-        if (token.type() == TokenType.INT || token.type() == TokenType.FLOAT)
+
+        if (token.type() == TokenType.PLUS || token.type() == TokenType.MINUS)
+        {
+            result.register(parser.advance());
+            AbstractNode factor = result.register(factorRule(parser));
+            if (result.error() != null) return result;
+            else return result.success(new UnaryOpNode(token, factor));
+        }
+
+        else if (token.type() == TokenType.INT || token.type() == TokenType.FLOAT)
         {
             result.register(parser.advance());
             return result.success(new NumberNode(token));
         }
-        else return result.failure(new MCLSyntaxError(parser.getSource().getCodeLocation(token.startPosition()), parser.getSource().getCodeLocation(token.endPosition()), "Expected int or float"));
+
+        else if (token.type() == TokenType.LPAREN)
+        {
+            result.register(parser.advance());
+            AbstractNode expression = result.register(expressionRule(parser));
+            if (result.error() != null) return result;
+            if (parser.getCurrentToken().type() == TokenType.RPAREN)
+            {
+                result.register(parser.advance());
+                return result.success(expression);
+            }
+            else return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected ')'"));
+        }
+
+        return result.failure(new MCLSyntaxError(parser.getSource(), parser.getCurrentToken(), "Expected int or float"));
     }
     private static ParseResult termRule(MCLParser parser)
     {
@@ -75,7 +99,7 @@ public class MCLParser
             AbstractNode right = result.register(argumentRule.build(parser));
             if (result.error() != null) return result;
 
-            left = new BinOpNode(left, operation, right);
+            left = new BinaryOpNode(left, operation, right);
         }
 
         return result.success(left);
