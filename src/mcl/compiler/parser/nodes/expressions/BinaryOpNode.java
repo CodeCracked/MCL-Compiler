@@ -109,12 +109,12 @@ public class BinaryOpNode extends ExpressionNode
     }
 
     @Override
-    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, int depth)
+    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
     {
-        TranspileResult leftResult = ((ExpressionNode)leftNode).transpileExpression(transpiler, target, depth + 1);
+        TranspileResult leftResult = ((ExpressionNode)leftNode).castAndTranspile(transpiler, target, targetType, depth + 1);
         if (leftResult.error != null) return leftResult;
 
-        TranspileResult rightResult = ((ExpressionNode)rightNode).transpileExpression(transpiler, target, leftResult.nextAvailableDepthCode);
+        TranspileResult rightResult = ((ExpressionNode)rightNode).castAndTranspile(transpiler, target, targetType, leftResult.nextAvailableDepthCode);
         if (rightResult.error != null) return rightResult;
 
         MCLError error;
@@ -133,9 +133,11 @@ public class BinaryOpNode extends ExpressionNode
         {
             file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, leftResult.returnCode);
             file.printf("scoreboard players operation r%s mcl.expressions *= r%s mcl.expressions\n", depth, rightResult.returnCode);
+            // Divide By 1000
         });
         else if (operation.type() == TokenType.DIV) error = transpiler.appendToFile(target, file ->
         {
+            // Multiply by 1000
             file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, leftResult.returnCode);
             file.printf("scoreboard players operation r%s mcl.expressions /= r%s mcl.expressions\n", depth, rightResult.returnCode);
         });

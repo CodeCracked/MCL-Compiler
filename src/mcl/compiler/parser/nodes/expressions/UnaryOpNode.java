@@ -67,9 +67,9 @@ public class UnaryOpNode extends ExpressionNode
     }
 
     @Override
-    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, int depth)
+    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
     {
-        TranspileResult nodeResult = ((ExpressionNode)node).transpileExpression(transpiler, target, depth + 1);
+        TranspileResult nodeResult = ((ExpressionNode)node).castAndTranspile(transpiler, target, targetType, depth + 1);
         if (nodeResult.error != null) return nodeResult;
 
         MCLError error;

@@ -5,6 +5,7 @@ import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLTranspileError;
 import mcl.compiler.lexer.Token;
+import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
@@ -29,6 +30,13 @@ public class NumberNode extends ExpressionNode
     }
 
     @Override
+    public ExpressionNode implicitCast(RuntimeType targetType)
+    {
+        if (targetType.equals(RuntimeType.FLOAT) && token.value() instanceof Integer number) return new NumberNode(new Token(TokenType.FLOAT, (float)number, token.startPosition(), token.endPosition()));
+        else return this;
+    }
+
+    @Override
     public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer) { }
 
     @Override
@@ -38,12 +46,12 @@ public class NumberNode extends ExpressionNode
     }
 
     @Override
-    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, int depth)
+    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
     {
         MCLError error;
 
         Integer scoreboardValue = getScoreboardValue(transpiler);
-        if (scoreboardValue != null) error = transpiler.appendToFile(target, file -> file.printf("scoreboard players set r%s mcl.expressions %s\n", depth, scoreboardValue));
+        if (scoreboardValue != null) error = transpiler.appendToFile(target, file -> file.printf("scoreboard players set r%1$s mcl.expressions %2$s\n", depth, scoreboardValue));
         else error = new MCLTranspileError(transpiler.getSource(), token, "Invalid number type '" + token.value().getClass().getSimpleName() + "'");
 
         return new TranspileResult(error, depth, depth + 1);

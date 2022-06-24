@@ -9,7 +9,9 @@ import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class BlockStatementNode extends AbstractNode
@@ -35,17 +37,22 @@ public class BlockStatementNode extends AbstractNode
     @Override
     public MCLError transpile(MCLTranspiler transpiler, Path target)
     {
-        int blocks = 0;
+        Map<String, Integer> blockTypeCounts = new HashMap<>();
         Path mainFunction = target.resolve("main.mcfunction");
 
         for (AbstractNode statement : statements)
         {
             Path childTarget = mainFunction;
 
-            if (statement instanceof BlockDefinitionNode)
+            if (statement instanceof NamedBlockDefinitionNode block)
             {
-                childTarget = target.resolve("block_" + blocks);
-                blocks++;
+                childTarget = target.resolve(block.blockType);
+            }
+            else if (statement instanceof BlockDefinitionNode block)
+            {
+                if (!blockTypeCounts.containsKey(block.blockType)) blockTypeCounts.put(block.blockType, 1);
+                childTarget = target.resolve(block.blockType + "_" + blockTypeCounts.get(block.blockType));
+                blockTypeCounts.put(block.blockType, blockTypeCounts.get(block.blockType) + 1);
             }
 
             MCLError error = statement.transpile(transpiler, childTarget);

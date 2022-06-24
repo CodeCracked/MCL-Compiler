@@ -21,9 +21,16 @@ public class StatementRule implements GrammarRule
         if (parser.getCurrentToken().isKeyword(MCLKeywords.VARIABLE_TYPES))
         {
             AbstractNode definition = result.register(GrammarRules.VARIABLE_DEFINITION.build(parser));
+            if (result.error() != null) return result;
             return result.success(definition);
         }
         else if (parser.getCurrentToken().type() == TokenType.IDENTIFIER) return variableAssignDeclaration(parser, result);
+        else if (parser.getCurrentToken().isKeyword(MCLKeywords.FUNC))
+        {
+            AbstractNode function = result.register(GrammarRules.FUNCTION.build(parser));
+            if (result.error() != null) return result;
+            return result.success(function);
+        }
 
         return result.failure(new MCLSyntaxError(parser, "Not a statement"));
     }

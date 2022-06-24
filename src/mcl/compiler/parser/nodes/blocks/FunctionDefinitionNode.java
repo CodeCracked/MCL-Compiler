@@ -8,46 +8,35 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 import mcl.compiler.source.MCLSourceCollection;
-import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class FunctionDefinitionNode extends BlockDefinitionNode
+public class FunctionDefinitionNode extends NamedBlockDefinitionNode
 {
-    public final Token identifier;
     public final List<VariableSignatureNode> parameters;
     public final RuntimeType returnType;
 
     public FunctionDefinitionNode(Token keyword, Token identifier, List<VariableSignatureNode> parameters, Token returnType, AbstractNode body)
     {
-        super(keyword.startPosition(), body.endPosition(), body);
+        super(keyword.startPosition(), body.endPosition(), identifier, body);
 
-        this.identifier = identifier;
         this.parameters = Collections.unmodifiableList(parameters);
         this.returnType = returnType != null ? RuntimeType.parse((String)returnType.value()) : RuntimeType.VOID;
     }
 
     @Override
-    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
+    public void walkChildren(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
     {
         for (VariableSignatureNode parameter : parameters)
         {
             parentChildConsumer.accept(this, parameter);
             parameter.walk(parentChildConsumer);
         }
-
-        parentChildConsumer.accept(this, body);
-        body.walk(parentChildConsumer);
     }
 
-    @Override
-    protected Path getDefinitionFolder(Path target)
-    {
-        return target.resolve((String)identifier.value());
-    }
     @Override
     protected MCLError createDefinitionSymbol(MCLCompiler compiler, MCLSourceCollection source)
     {

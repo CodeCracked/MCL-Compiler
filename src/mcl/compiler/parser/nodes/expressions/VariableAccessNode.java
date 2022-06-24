@@ -42,14 +42,13 @@ public class VariableAccessNode extends ExpressionNode
     }
 
     @Override
-    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, int depth)
+    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
     {
         VariableSymbol symbol = (VariableSymbol)transpiler.getCompiler().getSymbolTable().getSymbol((String)identifier.value(), SymbolType.VARIABLE);
         MCLError error;
 
-        if (symbol.type == RuntimeType.INTEGER) error = transpiler.appendToFile(target, file -> file.printf("execute store result score r%s mcl.expressions run data get storage mcl:variables CallStack[0].%s 1\n", depth, symbol.tableLocation));
-        else if (symbol.type == RuntimeType.FLOAT) error = transpiler.appendToFile(target, file -> file.printf("execute store result score r%s mcl.expressions run data get storage mcl:variables CallStack[0].%s 0.%s1\n", depth, symbol.tableLocation, "0".repeat(transpiler.getCompiler().config.floatDecimalPlaces - 1)));
-        else error = new MCLTranspileError(transpiler.getSource(), identifier, "Invalid variable value type '" + symbol.type.toString() + "'");
+        error = transpiler.appendToFile(target, file -> file.printf("execute store result score r%1$s %2$s run data get storage %3$s CallStack[0].%4$s %5$s\n",
+                depth, transpiler.getConfig().expressionsObjective(), transpiler.getConfig().variablesStorage(), symbol.tableLocation, symbol.type.scaleUp(transpiler.getCompiler().config)));
 
         return new TranspileResult(error, depth, depth + 1);
     }

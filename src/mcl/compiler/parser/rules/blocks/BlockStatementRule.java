@@ -17,11 +17,6 @@ public class BlockStatementRule implements GrammarRule
         this.requiredIndent = requiredIndent;
     }
 
-    protected ParseResult buildStatement(MCLParser parser)
-    {
-        return GrammarRules.STATEMENT.build(parser);
-    }
-
     @Override
     public ParseResult build(MCLParser parser)
     {
@@ -32,18 +27,20 @@ public class BlockStatementRule implements GrammarRule
 
         while (parser.getCurrentToken().type() == TokenType.NEWLINE)
         {
+            // Clear Newline
             result.registerAdvancement();
             parser.advance();
             if (parser.getCurrentToken().type() != TokenType.INDENT) break;
 
+            // Check Indent
             int indent = (int)parser.getCurrentToken().value();
             if (indent < requiredIndent) break;
             else if (indent > requiredIndent) return result.failure(new MCLSyntaxError(parser, "Expected indent of size " + requiredIndent));
-
             result.registerAdvancement();
             parser.advance();
 
-            AbstractNode statement = result.register(buildStatement(parser));
+            // Build Statement
+            AbstractNode statement = result.register(GrammarRules.STATEMENT.build(parser));
             if (result.error() != null) return result;
 
             statements.add(statement);

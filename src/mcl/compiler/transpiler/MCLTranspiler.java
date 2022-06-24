@@ -1,5 +1,6 @@
 package mcl.compiler.transpiler;
 
+import mcl.compiler.CompilerConfig;
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLFileAppendError;
@@ -55,8 +56,16 @@ public class MCLTranspiler
             return new MCLFileAppendError(e);
         }
     }
+    public String applyConfig(String format, Object... params)
+    {
+        return String.format(format, params)
+                .replace("mcl.expressions", compiler.config.expressionsObjective())
+                .replace("mcl.constants", compiler.config.constantsObjective())
+                .replace("mcl:variables", compiler.config.variablesStorage());
+    }
 
     public MCLCompiler getCompiler() { return compiler; }
+    public CompilerConfig getConfig() { return compiler.config; }
     public MCLSourceCollection getSource() { return source; }
     public Path getRootFolder() { return rootFolder; }
     public Path getDataFolder() { return dataFolder; }

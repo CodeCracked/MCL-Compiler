@@ -1,6 +1,8 @@
 package mcl.compiler.parser.nodes.expressions;
 
+import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.exceptions.MCLTranspileError;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.transpiler.MCLTranspiler;
 
@@ -27,13 +29,33 @@ public abstract class ExpressionNode extends AbstractNode
         super(startPosition, endPosition);
     }
 
-    protected abstract TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, int depth);
     public abstract ExpressionNode simplify();
+    public ExpressionNode implicitCast(RuntimeType targetType) { return this; }
+
+    public final MCLError transpile(MCLTranspiler transpiler, Path target, RuntimeType targetType)
+    {
+        return castAndTranspile(transpiler, target, targetType, 0).error;
+    }
+    protected final TranspileResult castAndTranspile(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
+    {
+        ExpressionNode simplified = implicitCast(targetType);
+        TranspileResult result = simplified.transpileExpression(transpiler, target, targetType, depth);
+        if (result.error != null) return result;
+
+        MCLError error = null;
+        if (targetType.equals(RuntimeType.FLOAT) && simplified.getRuntimeType(transpiler.getCompiler()).equals(RuntimeType.INTEGER)) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("execute store result storage mcl:variables scaling float %s run scoreboard players get r%s mcl.expressions\n", targetType.scaleUp(transpiler.getCompiler().config), depth);
+            file.printf("execute store result score r%s mcl.expressions run data get storage mcl:variables scaling 1\n", depth);
+        });
+
+        return new TranspileResult(error, result.returnCode, result.nextAvailableDepthCode);
+    }
+    protected abstract TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth);
 
     @Override
     public final MCLError transpile(MCLTranspiler transpiler, Path target)
     {
-        TranspileResult result = transpileExpression(transpiler, target, 0);
-        return result.error;
+        return new MCLTranspileError(transpiler.getSource(), this, "Cannot transpile ExpressionNode with (MCLTranspiler, Path)! Use transpile(MCLTranspiler, Path, RuntimeType) instead");
     }
 }

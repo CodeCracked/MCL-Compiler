@@ -9,23 +9,34 @@ import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 public abstract class BlockDefinitionNode extends AbstractNode
 {
     public final UUID symbolTableID;
     public final AbstractNode body;
+    public final String blockType;
 
-    public BlockDefinitionNode(int startPosition, int endPosition, AbstractNode body)
+    public BlockDefinitionNode(int startPosition, int endPosition, AbstractNode body, String blockName)
     {
         super(startPosition, endPosition);
 
         this.symbolTableID = UUID.randomUUID();
         this.body = body;
+        this.blockType = blockName;
     }
 
-    protected abstract Path getDefinitionFolder(Path target);
+    protected Path getDefinitionFolder(Path target) { return target; }
+    protected void walkChildren(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer) {  }
     protected MCLError createDefinitionSymbol(MCLCompiler compiler, MCLSourceCollection source) { return null; }
     protected MCLError createContextSymbols(MCLCompiler compiler, MCLSourceCollection source) { return null; }
+
+    @Override
+    public final void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
+    {
+        parentChildConsumer.accept(this, body);
+        body.walk(parentChildConsumer);
+    }
 
     @Override
     public final MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)

@@ -1,15 +1,16 @@
 package mcl.compiler.analyzer;
 
+import mcl.compiler.CompilerConfig;
 import mcl.compiler.MCLKeywords;
 
 import java.util.*;
 
 public class RuntimeType
 {
-    public static final RuntimeType VOID = new RuntimeType("VOID", 0);
-    public static final RuntimeType INTEGER = new RuntimeType("INTEGER", 0);
-    public static final RuntimeType FLOAT = new RuntimeType("FLOAT", 1);
-    public static final RuntimeType UNDEFINED = new RuntimeType("UNDEFINED", Integer.MAX_VALUE);
+    public static final RuntimeType VOID = new RuntimeType("VOID", "!!!MCL_INTERNAL_ERROR!!!", 0);
+    public static final RuntimeType INTEGER = new RuntimeType("INTEGER", "int", 0);
+    public static final RuntimeType FLOAT = new RuntimeType("FLOAT", "float", 1);
+    public static final RuntimeType UNDEFINED = new RuntimeType("UNDEFINED", "!!!MCL_INTERNAL_ERROR!!!", Integer.MAX_VALUE);
 
     // region Configuration
     private static final Map<RuntimeType, Set<RuntimeType>> implicitCasts = new HashMap<>();
@@ -31,11 +32,13 @@ public class RuntimeType
     // endregion
 
     private final String name;
+    private final String minecraftName;
     private final int priority;
 
-    private RuntimeType(String name, int priority)
+    private RuntimeType(String name, String minecraftName, int priority)
     {
         this.name = name;
+        this.minecraftName = minecraftName;
         this.priority = priority;
     }
     public static RuntimeType parse(String type)
@@ -51,6 +54,20 @@ public class RuntimeType
         else if (implicitCasts.get(this).contains(other)) return this.priority > other.priority ? this : other;
         else return UNDEFINED;
     }
+
+    public String scaleUp(CompilerConfig config)
+    {
+        if (this.equals(INTEGER)) return "1";
+        else if (this.equals(FLOAT)) return config.floatScaleUp();
+        else return "!!!MCL_INTERNAL_ERROR!!!";
+    }
+    public String scaleDown(CompilerConfig config)
+    {
+        if (this.equals(INTEGER)) return "1";
+        else if (this.equals(FLOAT)) return config.floatScaleDown();
+        else return "!!!MCL_INTERNAL_ERROR!!!";
+    }
+    public String getMinecraftName() { return minecraftName; }
 
     // region Overrides
     @Override

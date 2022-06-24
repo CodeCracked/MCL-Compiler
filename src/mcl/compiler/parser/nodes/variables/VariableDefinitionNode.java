@@ -4,6 +4,7 @@ import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.parser.AbstractNode;
+import mcl.compiler.parser.nodes.expressions.ExpressionNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
@@ -50,7 +51,8 @@ public class VariableDefinitionNode extends AbstractNode
         if (error != null) return error;
 
         // Transpile Value Node
-        error = value.transpile(transpiler, target);
+        if (value instanceof ExpressionNode expression) error = expression.transpile(transpiler, target, signature.type);
+        else error = value.transpile(transpiler, target);
         if (error != null) return error;
 
         // Transpile Variable Assignment

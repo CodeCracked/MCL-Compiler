@@ -24,7 +24,7 @@ public class NamespaceDefinitionRule implements GrammarRule
         result.registerAdvancement();
         parser.advance();
 
-        AbstractNode body = result.register(GrammarRules.NAMESPACE_BODY.build(parser));
+        AbstractNode body = result.register(GrammarRules.blockStatement(1).build(parser));
         if (result.error() != null) return result;
 
         return result.success(new NamespaceDefinitionNode(keyword, identifier, body));

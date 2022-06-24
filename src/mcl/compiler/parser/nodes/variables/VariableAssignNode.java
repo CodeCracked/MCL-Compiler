@@ -7,7 +7,9 @@ import mcl.compiler.analyzer.SymbolType;
 import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
+import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.AbstractNode;
+import mcl.compiler.parser.nodes.expressions.ExpressionNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
@@ -54,14 +56,30 @@ public class VariableAssignNode extends AbstractNode
         if (error != null) return error;
 
         // Transpile Value Node
-        error = value.transpile(transpiler, target);
+        if (value instanceof ExpressionNode expression) error = expression.transpile(transpiler, target, symbol.type);
+        else error = value.transpile(transpiler, target);
         if (error != null) return error;
 
+        // Calculate Scaling Strings
+        String scaleDown = symbol.type.scaleDown(transpiler.getCompiler().config);
+        String scaleUp = symbol.type.scaleUp(transpiler.getCompiler().config);
+
         // Transpile Variable Assignment
+        if (operation.type() == TokenType.ASSIGN) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("execute store result storage mcl:variables CallStack[0].%s %s %s run scoreboard players get r0 mcl.expressions\n", symbol.tableLocation, symbol.type.getMinecraftName(), scaleDown);
+        });
+        else if (operation.type() == TokenType.ASSIGN_PLUS) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("execute store result score r1 mcl.expressions run data get storage mcl:variables CallStack[0].%s %s\n", symbol.tableLocation, scaleUp);
+            file.printf("scoreboard players operation r1 mcl.expressions += r0 mcl.expressions\n");
+            file.printf("execute store result storage mcl:variables CallStack[0].%s %s %s run scoreboard players get r1 mcl.expressions\n", symbol.tableLocation, symbol.type.getMinecraftName(), scaleDown);
+        });
+        if (error != null) return error;
+
+        // Print Footer Comment
         error = transpiler.appendToFile(target, file ->
         {
-            if (symbol.type == RuntimeType.INTEGER) file.printf("execute store result storage mcl:variables CallStack[0].%s int 1 run scoreboard players get r0 mcl.expressions\n", symbol.tableLocation);
-            else if (symbol.type == RuntimeType.FLOAT) file.printf("execute store result storage mcl:variables CallStack[0].%s float 0.%s1 run scoreboard players get r0 mcl.expressions\n", symbol.tableLocation, "0".repeat(transpiler.getCompiler().config.floatDecimalPlaces - 1));
             file.println("# END VAR_ASSIGN " + identifier.value());
             file.println();
         });

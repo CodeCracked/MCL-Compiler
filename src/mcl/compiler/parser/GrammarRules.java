@@ -14,7 +14,6 @@ public class GrammarRules
 {
     public static final GrammarRule PROGRAM_ROOT = new ProgramRootRule();
     public static final GrammarRule NAMESPACE = new NamespaceDefinitionRule();
-    public static final GrammarRule NAMESPACE_BODY = new NamespaceBodyRule();
     public static final GrammarRule FUNCTION = new FunctionDefinitionRule();
     public static final GrammarRule VARIABLE_SIGNATURE = new VariableSignatureRule();
     public static final GrammarRule STATEMENT = new StatementRule();
