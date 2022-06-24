@@ -1,6 +1,7 @@
 package mcl.compiler.parser.nodes.expressions;
 
 import mcl.compiler.MCLCompiler;
+import mcl.compiler.MCLKeywords;
 import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLTranspileError;
@@ -37,12 +38,14 @@ public class UnaryOpNode extends ExpressionNode
             {
                 if (operation.type() == TokenType.PLUS) return new NumberNode(new Token(TokenType.INT, Math.abs(number), startPosition(), endPosition()));
                 else if (operation.type() == TokenType.MINUS) return new NumberNode(new Token(TokenType.INT, -number, startPosition(), endPosition()));
+                else if (operation.isKeyword(MCLKeywords.NOT)) return new NumberNode(new Token(TokenType.INT, number > 0 ? 0 : 1, startPosition(), endPosition()));
                 else return this;
             }
             else if (numberNode.token.value() instanceof Float number)
             {
                 if (operation.type() == TokenType.PLUS) return new NumberNode(new Token(TokenType.FLOAT, Math.abs(number), startPosition(), endPosition()));
                 else if (operation.type() == TokenType.MINUS) return new NumberNode(new Token(TokenType.FLOAT, -number, startPosition(), endPosition()));
+                else if (operation.isKeyword(MCLKeywords.NOT)) return new NumberNode(new Token(TokenType.INT, number > 0 ? 0 : 1, startPosition(), endPosition()));
                 else return this;
             }
             else return this;
@@ -80,6 +83,11 @@ public class UnaryOpNode extends ExpressionNode
         {
             file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, nodeResult.returnCode);
             file.printf("execute if score r%s matches ..0 run scoreboard players operation r%s mcl.expressions *= -1 mcl.constants\n", depth, depth);
+        });
+        else if (operation.isKeyword(MCLKeywords.NOT)) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
+            file.printf("execute if score r%s matches ..0 run scoreboard players set r%s mcl.expressions 1\n", nodeResult.returnCode, depth);
         });
         else error = new MCLTranspileError(transpiler.getSource(), operation, "Invalid unary operation '" + operation.type() + "'");
 

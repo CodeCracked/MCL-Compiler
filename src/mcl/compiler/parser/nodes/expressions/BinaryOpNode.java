@@ -1,6 +1,7 @@
 package mcl.compiler.parser.nodes.expressions;
 
 import mcl.compiler.MCLCompiler;
+import mcl.compiler.MCLKeywords;
 import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLTranspileError;
@@ -11,10 +12,13 @@ import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.nio.file.Path;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 public class BinaryOpNode extends ExpressionNode
 {
+    private static final Set<Token> complexOperators = Token.descriptions(TokenType.EQUALS, TokenType.NOT_EQUALS, TokenType.GREATER, TokenType.LESS, TokenType.GREATER_OR_EQUAL, TokenType.LESS_OR_EQUAL);
+
     public AbstractNode leftNode;
     public final Token operation;
     public AbstractNode rightNode;
@@ -138,7 +142,18 @@ public class BinaryOpNode extends ExpressionNode
         else if (operation.type() == TokenType.MOD) error = transpiler.appendToFile(target, file ->
         {
             file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, leftResult.returnCode);
-            file.printf("scoreboard players operation r%s mcl.expressions %= r%s mcl.expressions\n", depth, rightResult.returnCode);
+            file.printf("scoreboard players operation r%s mcl.expressions %%= r%s mcl.expressions\n", depth, rightResult.returnCode);
+        });
+        else if (operation.isKeyword(MCLKeywords.AND)) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
+            file.printf("execute if score r%s mcl.expressions matches 1.. if score r%s mcl.expressions matches 1.. run scoreboard players set r%s mcl.expressions 1\n", leftResult.returnCode, rightResult.returnCode, depth);
+        });
+        else if (operation.isKeyword(MCLKeywords.OR)) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
+            file.printf("execute if score r%s mcl.expressions matches 1.. run scoreboard players set r%s mcl.expressions 1\n", leftResult.returnCode, depth);
+            file.printf("execute if score r%s mcl.expressions matches 1.. run scoreboard players set r%s mcl.expressions 1\n", rightResult.returnCode, depth);
         });
 
         else if (operation.type() == TokenType.EQUALS) error = transpiler.appendToFile(target, file ->
@@ -178,9 +193,9 @@ public class BinaryOpNode extends ExpressionNode
             file.printf("execute if score r%s mcl.expressions >= r%s mcl.expressions run scoreboard players set r%s mcl.expressions 1\n", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth);
         });
 
-        else error = new MCLTranspileError(transpiler.getSource(), operation, "Invalid unary operation '" + operation.type() + "'");
+        else error = new MCLTranspileError(transpiler.getSource(), operation, "Invalid binary operation '" + operation.type() + "'");
 
-        return new TranspileResult(error, depth, rightResult.nextAvailableDepthCode + 1);
+        return new TranspileResult(error, depth, rightResult.nextAvailableDepthCode + (operation.matches(complexOperators) ? 1 : 0));
     }
 
     @Override

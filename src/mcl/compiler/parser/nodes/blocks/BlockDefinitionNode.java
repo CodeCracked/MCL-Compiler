@@ -5,7 +5,9 @@ import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
+import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 public abstract class BlockDefinitionNode extends AbstractNode
@@ -21,6 +23,7 @@ public abstract class BlockDefinitionNode extends AbstractNode
         this.body = body;
     }
 
+    protected abstract Path getDefinitionFolder(Path target);
     protected MCLError createDefinitionSymbol(MCLCompiler compiler, MCLSourceCollection source) { return null; }
     protected MCLError createContextSymbols(MCLCompiler compiler, MCLSourceCollection source) { return null; }
 
@@ -41,6 +44,18 @@ public abstract class BlockDefinitionNode extends AbstractNode
         compiler.popSymbolTable();
 
         return null;
+    }
+
+    @Override
+    public MCLError transpile(MCLTranspiler transpiler, Path target)
+    {
+        Path definitionFolder = getDefinitionFolder(target);
+
+        transpiler.getCompiler().pushSymbolTable(symbolTableID);
+        MCLError error = body.transpile(transpiler, definitionFolder);
+        transpiler.getCompiler().popSymbolTable();
+
+        return error;
     }
 
     @Override

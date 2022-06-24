@@ -44,6 +44,11 @@ public class FunctionDefinitionNode extends BlockDefinitionNode
     }
 
     @Override
+    protected Path getDefinitionFolder(Path target)
+    {
+        return target.resolve((String)identifier.value());
+    }
+    @Override
     protected MCLError createDefinitionSymbol(MCLCompiler compiler, MCLSourceCollection source)
     {
         return compiler.getSymbolTable().addSymbol(new FunctionSymbol(identifier, returnType));
@@ -57,18 +62,6 @@ public class FunctionDefinitionNode extends BlockDefinitionNode
             if (error != null) return error;
         }
         return null;
-    }
-
-    @Override
-    public MCLError transpile(MCLTranspiler transpiler, Path target)
-    {
-        Path definitionFolder = target.resolve((String)identifier.value());
-
-        transpiler.getCompiler().pushSymbolTable(symbolTableID);
-        MCLError error = body.transpile(transpiler, definitionFolder);
-        transpiler.getCompiler().popSymbolTable();
-
-        return error;
     }
 
     @Override
