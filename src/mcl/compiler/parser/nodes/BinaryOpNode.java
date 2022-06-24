@@ -7,6 +7,8 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 
+import java.util.function.BiConsumer;
+
 public class BinaryOpNode extends AbstractNode
 {
     public final AbstractNode leftNode;
@@ -20,6 +22,16 @@ public class BinaryOpNode extends AbstractNode
         this.leftNode = leftNode;
         this.operation = operation;
         this.rightNode = rightNode;
+    }
+
+    @Override
+    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
+    {
+        parentChildConsumer.accept(this, leftNode);
+        leftNode.walk(parentChildConsumer);
+
+        parentChildConsumer.accept(this, rightNode);
+        rightNode.walk(parentChildConsumer);
     }
 
     @Override

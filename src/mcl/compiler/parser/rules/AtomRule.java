@@ -6,7 +6,7 @@ import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
 import mcl.compiler.parser.nodes.NumberNode;
 import mcl.compiler.parser.nodes.UnaryOpNode;
-import mcl.compiler.parser.nodes.variables.VarAccessNode;
+import mcl.compiler.parser.nodes.variables.VariableAccessNode;
 
 public class AtomRule implements GrammarRule
 {
@@ -29,7 +29,7 @@ public class AtomRule implements GrammarRule
         {
             result.registerAdvancement();
             parser.advance();
-            return result.success(new VarAccessNode(token));
+            return result.success(new VariableAccessNode(token));
         }
 
         else if (token.type() == TokenType.INT || token.type() == TokenType.FLOAT)

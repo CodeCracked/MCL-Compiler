@@ -5,7 +5,7 @@ import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
-import mcl.compiler.parser.nodes.variables.VarAssignNode;
+import mcl.compiler.parser.nodes.variables.VariableAssignNode;
 
 import java.util.Set;
 
@@ -42,6 +42,6 @@ public class StatementRule implements GrammarRule
         AbstractNode value = result.register(GrammarRules.EXPRESSION.build(parser));
         if (result.error() != null) return result;
 
-        return result.success(new VarAssignNode(identifier, operation, value));
+        return result.success(new VariableAssignNode(identifier, operation, value));
     }
 }

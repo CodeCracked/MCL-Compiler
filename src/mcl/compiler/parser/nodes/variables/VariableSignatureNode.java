@@ -8,6 +8,8 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 
+import java.util.function.BiConsumer;
+
 public class VariableSignatureNode extends AbstractNode
 {
     public final RuntimeType type;
@@ -20,6 +22,9 @@ public class VariableSignatureNode extends AbstractNode
         this.type = RuntimeType.parse((String)type.value());
         this.identifier = identifier;
     }
+
+    @Override
+    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer) { }
 
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)

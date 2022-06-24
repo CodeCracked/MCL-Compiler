@@ -8,6 +8,7 @@ import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class BlockStatementNode extends AbstractNode
 {
@@ -17,6 +18,16 @@ public class BlockStatementNode extends AbstractNode
     {
         super(start, statements.size() > 0 ? statements.get(statements.size() - 1).endPosition() : start + 1);
         this.statements = Collections.unmodifiableList(statements);
+    }
+
+    @Override
+    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
+    {
+        for (AbstractNode statement : statements)
+        {
+            parentChildConsumer.accept(this, statement);
+            statement.walk(parentChildConsumer);
+        }
     }
 
     @Override

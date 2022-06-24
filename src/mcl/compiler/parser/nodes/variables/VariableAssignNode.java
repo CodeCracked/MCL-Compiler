@@ -8,19 +8,28 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 
-public class VarAssignNode extends AbstractNode
+import java.util.function.BiConsumer;
+
+public class VariableAssignNode extends AbstractNode
 {
     public final Token identifier;
     public final Token operation;
     public final AbstractNode value;
 
-    public VarAssignNode(Token identifier, Token operation, AbstractNode valueNode)
+    public VariableAssignNode(Token identifier, Token operation, AbstractNode valueNode)
     {
         super(identifier.startPosition(), identifier.endPosition());
 
         this.identifier = identifier;
         this.operation = operation;
         this.value = valueNode;
+    }
+
+    @Override
+    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
+    {
+        parentChildConsumer.accept(this, value);
+        value.walk(parentChildConsumer);
     }
 
     @Override

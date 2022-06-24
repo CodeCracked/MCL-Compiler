@@ -1,4 +1,4 @@
-package mcl.compiler.parser.rules;
+package mcl.compiler.parser.rules.variables;
 
 import mcl.compiler.MCLKeywords;
 import mcl.compiler.exceptions.MCLSyntaxError;

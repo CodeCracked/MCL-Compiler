@@ -6,6 +6,8 @@ import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 
+import java.util.function.BiConsumer;
+
 public class VariableDefinitionNode extends AbstractNode
 {
     public final VariableSignatureNode signature;
@@ -17,6 +19,16 @@ public class VariableDefinitionNode extends AbstractNode
 
         this.signature = (VariableSignatureNode)signature;
         this.value = valueNode;
+    }
+
+    @Override
+    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
+    {
+        parentChildConsumer.accept(this, signature);
+        signature.walk(parentChildConsumer);
+
+        parentChildConsumer.accept(this, value);
+        value.walk(parentChildConsumer);
     }
 
     @Override

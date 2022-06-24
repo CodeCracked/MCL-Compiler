@@ -10,16 +10,21 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 
-public class VarAccessNode extends AbstractNode
+import java.util.function.BiConsumer;
+
+public class VariableAccessNode extends AbstractNode
 {
     private final Token identifier;
 
-    public VarAccessNode(Token identifier)
+    public VariableAccessNode(Token identifier)
     {
         super(identifier.startPosition(), identifier.endPosition());
 
         this.identifier = identifier;
     }
+
+    @Override
+    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer) { }
 
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)

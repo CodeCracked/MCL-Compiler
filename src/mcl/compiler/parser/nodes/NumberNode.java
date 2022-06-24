@@ -7,6 +7,8 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 
+import java.util.function.BiConsumer;
+
 public class NumberNode extends AbstractNode
 {
     public final Token token;
@@ -16,6 +18,9 @@ public class NumberNode extends AbstractNode
         super(token.startPosition(), token.endPosition());
         this.token = token;
     }
+
+    @Override
+    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer) { }
 
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)

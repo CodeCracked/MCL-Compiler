@@ -8,6 +8,7 @@ import mcl.compiler.parser.rules.blocks.FunctionDefinitionRule;
 import mcl.compiler.parser.rules.blocks.NamespaceDefinitionRule;
 import mcl.compiler.parser.rules.blocks.ProgramRootRule;
 import mcl.compiler.parser.rules.variables.VariableDefinitionRule;
+import mcl.compiler.parser.rules.variables.VariableSignatureRule;
 
 import java.util.Set;
 

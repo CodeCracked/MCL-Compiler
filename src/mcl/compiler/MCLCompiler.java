@@ -11,6 +11,8 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.MCLParser;
 import mcl.compiler.parser.ParseResult;
 import mcl.compiler.source.MCLSourceCollection;
+import mcl.compiler.transpiler.FileUtils;
+import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,15 +58,25 @@ public class MCLCompiler
         MCLParser parser = new MCLParser(sourceCollection, tokens);
         ParseResult parseResult = parser.parse();
         if (parseResult.error() != null) throw parseResult.error();
-        AbstractNode ast = parseResult.node();
+        AbstractNode syntaxTree = parseResult.node();
 
         // Debug Print AST
-        ast.debugPrint(0);
+        syntaxTree.debugPrint(0);
+        System.out.println();
 
         // Perform Symbol Analysis
-        MCLSemanticAnalyzer semanticAnalyzer = new MCLSemanticAnalyzer(this, sourceCollection, ast);
+        MCLSemanticAnalyzer semanticAnalyzer = new MCLSemanticAnalyzer(this, sourceCollection, syntaxTree);
         MCLError symbolsError = semanticAnalyzer.loadSymbolTables();
         if (symbolsError != null) throw symbolsError;
+
+        // Transpile AST into Minecraft Function Files
+        MCLTranspiler transpiler = new MCLTranspiler(sourceCollection, syntaxTree, target);
+        MCLError transpileError = transpiler.transpile();
+        if (transpileError != null)
+        {
+            FileUtils.delete(target, false);
+            throw transpileError;
+        }
     }
 
     public void pushSymbolTable(UUID id)

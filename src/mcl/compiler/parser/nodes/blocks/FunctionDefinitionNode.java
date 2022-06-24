@@ -12,6 +12,7 @@ import mcl.compiler.source.MCLSourceCollection;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 public class FunctionDefinitionNode extends AbstractNode
 {
@@ -30,6 +31,19 @@ public class FunctionDefinitionNode extends AbstractNode
         this.parameters = Collections.unmodifiableList(parameters);
         this.returnType = returnType != null ? RuntimeType.parse((String)returnType.value()) : RuntimeType.VOID;
         this.body = body;
+    }
+
+    @Override
+    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
+    {
+        for (VariableSignatureNode parameter : parameters)
+        {
+            parentChildConsumer.accept(this, parameter);
+            parameter.walk(parentChildConsumer);
+        }
+
+        parentChildConsumer.accept(this, body);
+        body.walk(parentChildConsumer);
     }
 
     @Override

@@ -1,27 +1,30 @@
 program		: (namespace)*
 
-namespace	: KEYWORD:namespace IDENTIFIER block
+namespace	: KEYWORD:namespace IDENTIFIER n_block
 
-function	: KEYWORD:func IDENTIFIER LPAREN (KEYWORD:(int|float) IDENTIFIER (COMMA KEYWORD:(int|float) IDENTIFIER)*)? RPAREN (KEYWORD:return KEYWORD:(int|float))?
+n_block		: (NEWLINE INDENT:1 (function|var_def))*
 
-block		: (NEWLINE INDENT statement)*
+function	: KEYWORD:func IDENTIFIER LPAREN (var_sig (COMMA var_sig)*)? RPAREN (KEYWORD:return KEYWORD:(int|float))?
 
-statement	: KEYWORD:(int|float) IDENTIFIER EQUALS expr
-			: IDENTIFIER EQUALS expr
+var_sig		: KEYWORD:(int|float) IDENTIFIER
+
+block		: (NEWLINE INDENT:2 statement)*
+
+statement	: var_sig ASSIGN expr
+			: var_def
+			
+var_def		: IDENTIFIER (ASSIGN|ASSIGN_PLUS|ASSIGN_MINUS|ASSIGN_MUL|ASSIGN_DIV|ASSIGN_MOD) expr
 
 expr		: comp-expr ((KEYWORD:AND|OR) comp-expr)*
 
 
 comp-expr	: KEYWORD:not comp-expr
-			: arith-expr ((EQUALS|NOT_EQUALS|LESS|GREATER|LESS_OR_EQUAL|GREATER_OR_EQUAL) arith-expr)*
+			: arith-expr ((ASSIGN|NOT_ASSIGN|LESS|GREATER|LESS_OR_EQUAL|GREATER_OR_EQUAL) arith-expr)*
 
 arith-expr	: factor ((PLUS|MINUS) factor)*
 
-factor		: atom ((MUL|DIV) atom)*
+factor		: atom ((MUL|DIV|MOD) atom)*
 
 atom		: INT|FLOAT|IDENTIFIER
 			: (PLUS|MINUS) factor
 			: LPAREN expr RPAREN
-			
-test = not 5 == 4 and 3 == 3
-test = ((not (5 == 4)) and (3 == 3))
