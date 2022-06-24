@@ -35,9 +35,20 @@ public class BlockStatementNode extends AbstractNode
     @Override
     public MCLError transpile(MCLTranspiler transpiler, Path target)
     {
+        int blocks = 0;
+        Path mainFunction = target.resolve("main.mcfunction");
+
         for (AbstractNode statement : statements)
         {
-            MCLError error = statement.transpile(transpiler, target);
+            Path childTarget = mainFunction;
+
+            if (statement instanceof BlockDefinitionNode)
+            {
+                childTarget = target.resolve("block_" + blocks);
+                blocks++;
+            }
+
+            MCLError error = statement.transpile(transpiler, childTarget);
             if (error != null) return error;
         }
         return null;

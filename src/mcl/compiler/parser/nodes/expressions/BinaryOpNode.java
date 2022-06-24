@@ -3,11 +3,14 @@ package mcl.compiler.parser.nodes.expressions;
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.exceptions.MCLTranspileError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
+import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
 public class BinaryOpNode extends ExpressionNode
@@ -99,6 +102,85 @@ public class BinaryOpNode extends ExpressionNode
 
         error = rightNode.createSymbols(compiler, source);
         return error;
+    }
+
+    @Override
+    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, int depth)
+    {
+        TranspileResult leftResult = ((ExpressionNode)leftNode).transpileExpression(transpiler, target, depth + 1);
+        if (leftResult.error != null) return leftResult;
+
+        TranspileResult rightResult = ((ExpressionNode)rightNode).transpileExpression(transpiler, target, leftResult.nextAvailableDepthCode);
+        if (rightResult.error != null) return rightResult;
+
+        MCLError error;
+
+        if (operation.type() == TokenType.PLUS) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, leftResult.returnCode);
+            file.printf("scoreboard players operation r%s mcl.expressions += r%s mcl.expressions\n", depth, rightResult.returnCode);
+        });
+        else if (operation.type() == TokenType.MINUS) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, leftResult.returnCode);
+            file.printf("scoreboard players operation r%s mcl.expressions -= r%s mcl.expressions\n", depth, rightResult.returnCode);
+        });
+        else if (operation.type() == TokenType.MUL) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, leftResult.returnCode);
+            file.printf("scoreboard players operation r%s mcl.expressions *= r%s mcl.expressions\n", depth, rightResult.returnCode);
+        });
+        else if (operation.type() == TokenType.DIV) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, leftResult.returnCode);
+            file.printf("scoreboard players operation r%s mcl.expressions /= r%s mcl.expressions\n", depth, rightResult.returnCode);
+        });
+        else if (operation.type() == TokenType.MOD) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, leftResult.returnCode);
+            file.printf("scoreboard players operation r%s mcl.expressions %= r%s mcl.expressions\n", depth, rightResult.returnCode);
+        });
+
+        else if (operation.type() == TokenType.EQUALS) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", rightResult.nextAvailableDepthCode, leftResult.returnCode);
+            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
+            file.printf("execute if score r%s mcl.expressions = r%s mcl.expressions run scoreboard players set r%s mcl.expressions 1\n", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth);
+        });
+        else if (operation.type() == TokenType.NOT_EQUALS) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", rightResult.nextAvailableDepthCode, leftResult.returnCode);
+            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
+            file.printf("execute unless score r%s mcl.expressions = r%s mcl.expressions run scoreboard players set r%s mcl.expressions 1\n", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth);
+        });
+        else if (operation.type() == TokenType.LESS) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", rightResult.nextAvailableDepthCode, leftResult.returnCode);
+            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
+            file.printf("execute if score r%s mcl.expressions < r%s mcl.expressions run scoreboard players set r%s mcl.expressions 1\n", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth);
+        });
+        else if (operation.type() == TokenType.LESS_OR_EQUAL) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", rightResult.nextAvailableDepthCode, leftResult.returnCode);
+            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
+            file.printf("execute if score r%s mcl.expressions <= r%s mcl.expressions run scoreboard players set r%s mcl.expressions 1\n", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth);
+        });
+        else if (operation.type() == TokenType.GREATER) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", rightResult.nextAvailableDepthCode, leftResult.returnCode);
+            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
+            file.printf("execute if score r%s mcl.expressions > r%s mcl.expressions run scoreboard players set r%s mcl.expressions 1\n", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth);
+        });
+        else if (operation.type() == TokenType.GREATER_OR_EQUAL) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", rightResult.nextAvailableDepthCode, leftResult.returnCode);
+            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
+            file.printf("execute if score r%s mcl.expressions >= r%s mcl.expressions run scoreboard players set r%s mcl.expressions 1\n", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth);
+        });
+
+        else error = new MCLTranspileError(transpiler.getSource(), operation, "Invalid unary operation '" + operation.type() + "'");
+
+        return new TranspileResult(error, depth, rightResult.nextAvailableDepthCode + 1);
     }
 
     @Override

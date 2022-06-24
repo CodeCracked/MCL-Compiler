@@ -4,3 +4,6 @@ function		: data/namespace/<func_identifier>
 init_callstack	: data modify storage mcl:variables CallStack set value [{}]
 push_callstack	: data modify storage mcl:variables CallStack prepend from storage mcl:variables CallStack[0]
 pop_callstack	: execute if data storage mcl:variables CallStack[1] run data remove storage mcl:variables CallStack[0]
+
+Constants:
+-1

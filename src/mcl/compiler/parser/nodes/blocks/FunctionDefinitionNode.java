@@ -8,29 +8,26 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 import mcl.compiler.source.MCLSourceCollection;
+import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 
-public class FunctionDefinitionNode extends AbstractNode
+public class FunctionDefinitionNode extends BlockDefinitionNode
 {
-    public final UUID symbolTableID;
     public final Token identifier;
     public final List<VariableSignatureNode> parameters;
     public final RuntimeType returnType;
-    public final AbstractNode body;
 
     public FunctionDefinitionNode(Token keyword, Token identifier, List<VariableSignatureNode> parameters, Token returnType, AbstractNode body)
     {
-        super(keyword.startPosition(), body.endPosition());
+        super(keyword.startPosition(), body.endPosition(), body);
 
-        this.symbolTableID = UUID.randomUUID();
         this.identifier = identifier;
         this.parameters = Collections.unmodifiableList(parameters);
         this.returnType = returnType != null ? RuntimeType.parse((String)returnType.value()) : RuntimeType.VOID;
-        this.body = body;
     }
 
     @Override
@@ -47,31 +44,31 @@ public class FunctionDefinitionNode extends AbstractNode
     }
 
     @Override
-    public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
+    protected MCLError createDefinitionSymbol(MCLCompiler compiler, MCLSourceCollection source)
     {
-        MCLError error = compiler.getSymbolTable().addSymbol(new FunctionSymbol(identifier, returnType));
-        if (error != null) return error;
-
-        compiler.pushSymbolTable(symbolTableID);
+        return compiler.getSymbolTable().addSymbol(new FunctionSymbol(identifier, returnType));
+    }
+    @Override
+    protected MCLError createContextSymbols(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        for (VariableSignatureNode parameter : parameters)
         {
-            for (VariableSignatureNode parameter : parameters)
-            {
-                error = parameter.createSymbols(compiler, source);
-                if (error != null) return error;
-            }
-
-            error = body.createSymbols(compiler, source);
+            MCLError error = parameter.createSymbols(compiler, source);
             if (error != null) return error;
         }
-        compiler.popSymbolTable();
-
         return null;
     }
 
     @Override
-    public RuntimeType getRuntimeType(MCLCompiler compiler)
+    public MCLError transpile(MCLTranspiler transpiler, Path target)
     {
-        return RuntimeType.UNDEFINED;
+        Path definitionFolder = target.resolve((String)identifier.value());
+
+        transpiler.getCompiler().pushSymbolTable(symbolTableID);
+        MCLError error = body.transpile(transpiler, definitionFolder);
+        transpiler.getCompiler().popSymbolTable();
+
+        return error;
     }
 
     @Override

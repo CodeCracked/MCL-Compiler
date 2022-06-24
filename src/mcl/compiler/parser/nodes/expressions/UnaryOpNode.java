@@ -3,11 +3,14 @@ package mcl.compiler.parser.nodes.expressions;
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.exceptions.MCLTranspileError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
+import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
 public class UnaryOpNode extends ExpressionNode
@@ -58,6 +61,29 @@ public class UnaryOpNode extends ExpressionNode
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
         return node.createSymbols(compiler, source);
+    }
+
+    @Override
+    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, int depth)
+    {
+        TranspileResult nodeResult = ((ExpressionNode)node).transpileExpression(transpiler, target, depth + 1);
+        if (nodeResult.error != null) return nodeResult;
+
+        MCLError error;
+
+        if (operation.type() == TokenType.MINUS) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, nodeResult.returnCode);
+            file.printf("scoreboard players operation r%s mcl.expressions *= -1 mcl.constants\n", depth);
+        });
+        else if (operation.type() == TokenType.PLUS) error = transpiler.appendToFile(target, file ->
+        {
+            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, nodeResult.returnCode);
+            file.printf("execute if score r%s matches ..0 run scoreboard players operation r%s mcl.expressions *= -1 mcl.constants\n", depth, depth);
+        });
+        else error = new MCLTranspileError(transpiler.getSource(), operation, "Invalid unary operation '" + operation.type() + "'");
+
+        return new TranspileResult(error, depth, nodeResult.nextAvailableDepthCode);
     }
 
     @Override

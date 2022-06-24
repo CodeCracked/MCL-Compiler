@@ -57,6 +57,7 @@ public class MCLTranspiler
     }
 
     public MCLCompiler getCompiler() { return compiler; }
+    public MCLSourceCollection getSource() { return source; }
     public Path getRootFolder() { return rootFolder; }
     public Path getDataFolder() { return dataFolder; }
 
