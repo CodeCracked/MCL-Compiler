@@ -1,14 +1,11 @@
 package mcl.compiler.transpiler;
 
 import mcl.compiler.MCLCompiler;
-import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLFileAppendError;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.nodes.blocks.NamespaceDefinitionNode;
 import mcl.compiler.parser.nodes.blocks.ProgramRootNode;
-import mcl.compiler.parser.nodes.variables.VariableDefinitionNode;
-import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.io.*;

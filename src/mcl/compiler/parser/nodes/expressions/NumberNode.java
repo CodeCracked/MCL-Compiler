@@ -1,4 +1,4 @@
-package mcl.compiler.parser.nodes;
+package mcl.compiler.parser.nodes.expressions;
 
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;
@@ -9,7 +9,7 @@ import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.function.BiConsumer;
 
-public class NumberNode extends AbstractNode
+public class NumberNode extends ExpressionNode
 {
     public final Token token;
 
@@ -17,6 +17,12 @@ public class NumberNode extends AbstractNode
     {
         super(token.startPosition(), token.endPosition());
         this.token = token;
+    }
+
+    @Override
+    public ExpressionNode simplify()
+    {
+        return this;
     }
 
     @Override

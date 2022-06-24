@@ -1,5 +1,6 @@
 package mcl.compiler.parser;
 
+import mcl.compiler.MCLCompiler;
 import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
@@ -9,13 +10,15 @@ import java.util.List;
 
 public class MCLParser
 {
+    private final MCLCompiler compiler;
     private final MCLSourceCollection source;
     private final List<Token> tokens;
     private int tokenIndex;
     private Token currentToken;
 
-    public MCLParser(MCLSourceCollection source, List<Token> tokens)
+    public MCLParser(MCLCompiler compiler, MCLSourceCollection source, List<Token> tokens)
     {
+        this.compiler = compiler;
         this.source = source;
         this.tokens = tokens;
         this.tokenIndex = -1;
@@ -35,6 +38,7 @@ public class MCLParser
         return result;
     }
 
+    public MCLCompiler getCompiler() { return compiler; }
     public MCLSourceCollection getSource() { return source; }
     public Token getCurrentToken() { return currentToken; }
 }

@@ -57,7 +57,7 @@ public class MCLCompiler
         System.out.println();
 
         // Generate Abstract Syntax Tree
-        MCLParser parser = new MCLParser(sourceCollection, tokens);
+        MCLParser parser = new MCLParser(this, sourceCollection, tokens);
         ParseResult parseResult = parser.parse();
         if (parseResult.error() != null) throw parseResult.error();
         AbstractNode syntaxTree = parseResult.node();

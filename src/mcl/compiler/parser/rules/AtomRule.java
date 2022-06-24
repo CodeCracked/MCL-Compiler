@@ -4,8 +4,8 @@ import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
-import mcl.compiler.parser.nodes.NumberNode;
-import mcl.compiler.parser.nodes.UnaryOpNode;
+import mcl.compiler.parser.nodes.expressions.NumberNode;
+import mcl.compiler.parser.nodes.expressions.UnaryOpNode;
 import mcl.compiler.parser.nodes.variables.VariableAccessNode;
 
 public class AtomRule implements GrammarRule

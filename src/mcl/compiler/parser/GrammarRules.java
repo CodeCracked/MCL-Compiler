@@ -1,7 +1,8 @@
 package mcl.compiler.parser;
 
 import mcl.compiler.lexer.Token;
-import mcl.compiler.parser.nodes.BinaryOpNode;
+import mcl.compiler.parser.nodes.expressions.BinaryOpNode;
+import mcl.compiler.parser.nodes.expressions.ExpressionNode;
 import mcl.compiler.parser.rules.*;
 import mcl.compiler.parser.rules.blocks.*;
 import mcl.compiler.parser.rules.variables.VariableDefinitionRule;
@@ -56,6 +57,7 @@ public class GrammarRules
             if (!foundOperation) break;
         }
 
+        if (parser.getCompiler().config.simplifyExpressions && left instanceof ExpressionNode expressionNode) left = expressionNode.simplify();
         return result.success(left);
     }
 }

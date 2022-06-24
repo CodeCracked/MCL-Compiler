@@ -1,0 +1,83 @@
+package mcl.compiler.parser.nodes.expressions;
+
+import mcl.compiler.MCLCompiler;
+import mcl.compiler.analyzer.RuntimeType;
+import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.lexer.Token;
+import mcl.compiler.lexer.TokenType;
+import mcl.compiler.parser.AbstractNode;
+import mcl.compiler.source.MCLSourceCollection;
+
+import java.util.function.BiConsumer;
+
+public class UnaryOpNode extends ExpressionNode
+{
+    public final Token operation;
+    public AbstractNode node;
+
+    public UnaryOpNode(Token operation, AbstractNode node)
+    {
+        super(operation.startPosition(), node.endPosition());
+
+        this.operation = operation;
+        this.node = node;
+    }
+
+    @Override
+    public ExpressionNode simplify()
+    {
+        if (node instanceof ExpressionNode expressionNode) node = expressionNode.simplify();
+
+        if (node instanceof NumberNode numberNode)
+        {
+            if (numberNode.token.value() instanceof Integer number)
+            {
+                if (operation.type() == TokenType.PLUS) return new NumberNode(new Token(TokenType.INT, Math.abs(number), startPosition(), endPosition()));
+                else if (operation.type() == TokenType.MINUS) return new NumberNode(new Token(TokenType.INT, -number, startPosition(), endPosition()));
+                else return this;
+            }
+            else if (numberNode.token.value() instanceof Float number)
+            {
+                if (operation.type() == TokenType.PLUS) return new NumberNode(new Token(TokenType.FLOAT, Math.abs(number), startPosition(), endPosition()));
+                else if (operation.type() == TokenType.MINUS) return new NumberNode(new Token(TokenType.FLOAT, -number, startPosition(), endPosition()));
+                else return this;
+            }
+            else return this;
+        }
+        else return this;
+    }
+
+    @Override
+    public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
+    {
+        parentChildConsumer.accept(this, node);
+        node.walk(parentChildConsumer);
+    }
+
+    @Override
+    public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        return node.createSymbols(compiler, source);
+    }
+
+    @Override
+    public RuntimeType getRuntimeType(MCLCompiler compiler)
+    {
+        return node.getRuntimeType(compiler);
+    }
+
+    @Override
+    public void debugPrint(int depth)
+    {
+        System.out.print("  ".repeat(depth));
+        System.out.println(operation);
+
+        node.debugPrint(depth + 1);
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("(%s, %s)", operation, node);
+    }
+}

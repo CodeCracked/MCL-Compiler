@@ -4,7 +4,6 @@ import mcl.compiler.MCLKeywords;
 import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
-import mcl.compiler.parser.nodes.blocks.BlockStatementNode;
 import mcl.compiler.parser.nodes.blocks.NamespaceBodyNode;
 
 import java.util.ArrayList;

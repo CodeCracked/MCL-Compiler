@@ -5,7 +5,7 @@ import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
-import mcl.compiler.parser.nodes.UnaryOpNode;
+import mcl.compiler.parser.nodes.expressions.UnaryOpNode;
 
 import java.util.Set;
 

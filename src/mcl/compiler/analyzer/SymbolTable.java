@@ -1,7 +1,6 @@
 package mcl.compiler.analyzer;
 
 import mcl.compiler.analyzer.symbols.EventSymbol;
-import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLDuplicateSymbolError;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLUndefinedSymbolError;
