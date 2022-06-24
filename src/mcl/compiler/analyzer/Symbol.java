@@ -8,6 +8,8 @@ public class Symbol
     public final String name;
     public final SymbolType symbolType;
 
+    public String tableLocation;
+
     public Symbol(Token identifier, SymbolType symbolType)
     {
         this.identifier = identifier;

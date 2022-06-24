@@ -5,4 +5,6 @@ public enum SymbolType
     NAMESPACE,
     FUNCTION,
     VARIABLE,
+
+    EVENT,
 }

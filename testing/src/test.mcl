@@ -1,3 +1,0 @@
-namespace mcl
-	func test()
-		int var = 6

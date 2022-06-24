@@ -46,7 +46,7 @@ public enum TokenType
     ;
 
     //region Static
-    private static final String DIGITS = "012345789";
+    private static final String DIGITS = "0123456789";
     private static final String LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String IDENTIFIER_CHARACTERS = LETTERS + DIGITS + "_";
 

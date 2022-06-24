@@ -14,6 +14,7 @@ public class VariableSignatureNode extends AbstractNode
 {
     public final RuntimeType type;
     public final Token identifier;
+    public VariableSymbol symbol;
 
     public VariableSignatureNode(Token type, Token identifier)
     {
@@ -29,7 +30,8 @@ public class VariableSignatureNode extends AbstractNode
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
-        return compiler.getSymbolTable().addSymbol(new VariableSymbol(identifier, type));
+        symbol = new VariableSymbol(identifier, type);
+        return compiler.getSymbolTable().addSymbol(symbol);
     }
 
     @Override
@@ -42,6 +44,12 @@ public class VariableSignatureNode extends AbstractNode
     public void debugPrint(int depth)
     {
         System.out.print("  ".repeat(depth));
-        System.out.println("VAR_SIGNATURE" + ":" + identifier.value() + "(" + type.toString() + ")");
+        System.out.println("VAR_SIGNATURE" + ":" + toString());
+    }
+
+    @Override
+    public String toString()
+    {
+        return identifier.value() + "(" + type.toString() + ")";
     }
 }

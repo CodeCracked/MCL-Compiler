@@ -21,20 +21,22 @@ import java.util.UUID;
 
 public class MCLCompiler
 {
-    private MCLSourceCollection sourceCollection;
+    public final CompilerConfig config;
+
     private SymbolTable rootSymbolTable;
     private SymbolTable currentSymbolTable;
 
-    public MCLCompiler()
+    public MCLCompiler(CompilerConfig config)
     {
         MCLLexer.init();
+        this.config = config;
     }
 
     public void compile(File source, File target) throws IOException, MCLError
     {
         // Setup
-        sourceCollection = new MCLSourceCollection(source);
-        rootSymbolTable = new SymbolTable(sourceCollection, null);
+        MCLSourceCollection sourceCollection = new MCLSourceCollection(source);
+        rootSymbolTable = new SymbolTable(sourceCollection, null, UUID.randomUUID()).addRootSymbols();
         currentSymbolTable = rootSymbolTable;
 
         // Generate Tokens
@@ -70,7 +72,7 @@ public class MCLCompiler
         if (symbolsError != null) throw symbolsError;
 
         // Transpile AST into Minecraft Function Files
-        MCLTranspiler transpiler = new MCLTranspiler(sourceCollection, syntaxTree, target);
+        MCLTranspiler transpiler = new MCLTranspiler(sourceCollection, this, syntaxTree, target);
         MCLError transpileError = transpiler.transpile();
         if (transpileError != null)
         {

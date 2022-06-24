@@ -1,10 +1,14 @@
 package mcl.compiler.transpiler;
 
+import mcl.compiler.MCLCompiler;
+import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLFileAppendError;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.nodes.blocks.NamespaceDefinitionNode;
 import mcl.compiler.parser.nodes.blocks.ProgramRootNode;
+import mcl.compiler.parser.nodes.variables.VariableDefinitionNode;
+import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.io.*;
@@ -14,14 +18,16 @@ import java.util.function.Consumer;
 public class MCLTranspiler
 {
     private final MCLSourceCollection source;
+    private final MCLCompiler compiler;
     private final ProgramRootNode syntaxTree;
 
     private final Path rootFolder;
     private final Path dataFolder;
 
-    public MCLTranspiler(MCLSourceCollection source, AbstractNode syntaxTree, File target)
+    public MCLTranspiler(MCLSourceCollection source, MCLCompiler compiler, AbstractNode syntaxTree, File target)
     {
         this.source = source;
+        this.compiler = compiler;
         this.syntaxTree = (ProgramRootNode) syntaxTree;
 
         this.rootFolder = target.toPath();
@@ -37,6 +43,8 @@ public class MCLTranspiler
 
     public MCLError appendToFile(Path target, Consumer<PrintWriter> consumer)
     {
+        target.getParent().toFile().mkdirs();
+
         try(FileWriter fileWriter = new FileWriter(target.toFile(), true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             PrintWriter out = new PrintWriter(bufferedWriter))
@@ -51,8 +59,10 @@ public class MCLTranspiler
         }
     }
 
+    public MCLCompiler getCompiler() { return compiler; }
     public Path getRootFolder() { return rootFolder; }
     public Path getDataFolder() { return dataFolder; }
+
     public Path getNamespaceFolder(AbstractNode node)
     {
         AbstractNode current = node;
@@ -60,5 +70,9 @@ public class MCLTranspiler
 
         if (current != null) return dataFolder.resolve((String)((NamespaceDefinitionNode)current).identifier.value());
         else return null;
+    }
+    public Path getFunctionsFolder(AbstractNode node)
+    {
+        return getNamespaceFolder(node).resolve("functions");
     }
 }

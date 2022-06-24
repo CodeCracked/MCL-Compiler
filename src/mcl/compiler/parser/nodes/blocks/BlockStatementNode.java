@@ -5,7 +5,9 @@ import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
+import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -28,6 +30,17 @@ public class BlockStatementNode extends AbstractNode
             parentChildConsumer.accept(this, statement);
             statement.walk(parentChildConsumer);
         }
+    }
+
+    @Override
+    public MCLError transpile(MCLTranspiler transpiler, Path target)
+    {
+        for (AbstractNode statement : statements)
+        {
+            MCLError error = statement.transpile(transpiler, target);
+            if (error != null) return error;
+        }
+        return null;
     }
 
     @Override

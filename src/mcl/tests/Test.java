@@ -1,5 +1,6 @@
 package mcl.tests;
 
+import mcl.compiler.CompilerConfig;
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.exceptions.MCLError;
 
@@ -14,7 +15,7 @@ public class Test
 
         try
         {
-            MCLCompiler compiler = new MCLCompiler();
+            MCLCompiler compiler = new MCLCompiler(new CompilerConfig());
             compiler.compile(source, dest);
         }
         catch (MCLError e)
