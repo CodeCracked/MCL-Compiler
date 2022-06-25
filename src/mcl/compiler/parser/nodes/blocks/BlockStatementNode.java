@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 public class BlockStatementNode extends AbstractNode
 {
     public final List<AbstractNode> statements;
-    protected Path mainFunction;
+    public Path mainFunction;
 
     public BlockStatementNode(List<AbstractNode> statements, int start)
     {
@@ -58,7 +58,7 @@ public class BlockStatementNode extends AbstractNode
     }
 
     @Override
-    public void setTranspileTarget(Path target) throws IOException
+    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
     {
         this.transpileTarget = target;
         this.mainFunction = target.resolve("main.mcfunction");
@@ -69,15 +69,15 @@ public class BlockStatementNode extends AbstractNode
         {
             Path statementTarget = mainFunction;
 
-            if (statement instanceof NamedBlockDefinitionNode block) statementTarget = transpileTarget.resolve(block.blockType);
+            if (statement instanceof NamedBlockDefinitionNode block) statementTarget = transpileTarget.resolve(block.blockName);
             else if (statement instanceof BlockDefinitionNode block)
             {
-                if (!blockTypeCounts.containsKey(block.blockType)) blockTypeCounts.put(block.blockType, 1);
-                statementTarget = target.resolve(block.blockType + "_" + blockTypeCounts.get(block.blockType));
-                blockTypeCounts.put(block.blockType, blockTypeCounts.get(block.blockType) + 1);
+                if (!blockTypeCounts.containsKey(block.blockName)) blockTypeCounts.put(block.blockName, 1);
+                statementTarget = target.resolve(block.blockName + "_" + blockTypeCounts.get(block.blockName));
+                blockTypeCounts.put(block.blockName, blockTypeCounts.get(block.blockName) + 1);
             }
 
-            statement.setTranspileTarget(statementTarget);
+            statement.setTranspileTarget(compiler, statementTarget);
         }
     }
     @Override

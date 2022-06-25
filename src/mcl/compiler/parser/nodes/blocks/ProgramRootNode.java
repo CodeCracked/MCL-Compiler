@@ -10,18 +10,36 @@ import mcl.compiler.transpiler.MCLTranspiler;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class ProgramRootNode extends AbstractNode
 {
     public final List<AbstractNode> namespaces;
+    private final Map<String, NamespaceDefinitionNode> namespaceMap;
 
     public ProgramRootNode(List<AbstractNode> namespaces)
     {
         super(0, namespaces.size() > 0 ? namespaces.get(namespaces.size() - 1).endPosition() : 1);
 
         this.namespaces = Collections.unmodifiableList(namespaces);
+
+        Map<String, NamespaceDefinitionNode> map = new HashMap<>();
+        for (AbstractNode namespace : namespaces)
+        {
+            if (namespace instanceof NamespaceDefinitionNode namespaceNode)
+            {
+                map.put((String)namespaceNode.identifier.value(), namespaceNode);
+            }
+        }
+        this.namespaceMap = Collections.unmodifiableMap(map);
+    }
+
+    public NamespaceDefinitionNode getNamespaceNode(String name)
+    {
+        return namespaceMap.get(name);
     }
 
     @Override
@@ -56,14 +74,14 @@ public class ProgramRootNode extends AbstractNode
     }
 
     @Override
-    public void setTranspileTarget(Path target) throws IOException
+    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
     {
         this.transpileTarget = target;
         Path dataFolder = target.resolve("data");
         dataFolder.toFile().mkdirs();
 
         // Transpile namespaces
-        for (AbstractNode namespace : namespaces) namespace.setTranspileTarget(dataFolder);
+        for (AbstractNode namespace : namespaces) namespace.setTranspileTarget(compiler, dataFolder);
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException

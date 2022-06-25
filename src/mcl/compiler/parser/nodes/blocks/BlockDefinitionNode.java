@@ -16,7 +16,7 @@ public abstract class BlockDefinitionNode extends AbstractNode
 {
     public final UUID symbolTableID;
     public final AbstractNode body;
-    public final String blockType;
+    public final String blockName;
 
     public BlockDefinitionNode(int startPosition, int endPosition, AbstractNode body, String blockName)
     {
@@ -24,7 +24,7 @@ public abstract class BlockDefinitionNode extends AbstractNode
 
         this.symbolTableID = UUID.randomUUID();
         this.body = body;
-        this.blockType = blockName;
+        this.blockName = blockName;
     }
 
     protected Path getDefinitionFolder(Path target) { return target; }
@@ -69,11 +69,11 @@ public abstract class BlockDefinitionNode extends AbstractNode
     }
 
     @Override
-    public void setTranspileTarget(Path target) throws IOException
+    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
     {
         this.transpileTarget = getDefinitionFolder(target);
         transpileTarget.toFile().mkdirs();
-        body.setTranspileTarget(transpileTarget);
+        body.setTranspileTarget(compiler, transpileTarget);
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException

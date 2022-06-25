@@ -39,6 +39,7 @@ public enum TokenType
     LPAREN(2, '('),
     RPAREN(2, ')'),
     COMMA(2, ','),
+    COLON(2, ':'),
 
     INDENT(0, TokenType::indentBuilder),
     NEWLINE(0, MCLSourceCollection.LINE_SEPARATOR),

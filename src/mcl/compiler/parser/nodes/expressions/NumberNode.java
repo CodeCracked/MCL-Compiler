@@ -51,7 +51,7 @@ public class NumberNode extends ExpressionNode
     }
 
     @Override
-    public void setTranspileTarget(Path target)
+    public void setTranspileTarget(MCLCompiler compiler, Path target)
     {
         this.transpileTarget = target;
     }

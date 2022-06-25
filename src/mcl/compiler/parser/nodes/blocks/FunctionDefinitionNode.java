@@ -54,10 +54,10 @@ public class FunctionDefinitionNode extends NamedBlockDefinitionNode
     }
 
     @Override
-    public void setTranspileTarget(Path target) throws IOException
+    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
     {
-        super.setTranspileTarget(target);
-        parameterList.setTranspileTarget(target);
+        super.setTranspileTarget(compiler, target);
+        parameterList.setTranspileTarget(compiler, target);
         symbol.mainFunctionFile = ((BlockStatementNode)body).mainFunction;
     }
 

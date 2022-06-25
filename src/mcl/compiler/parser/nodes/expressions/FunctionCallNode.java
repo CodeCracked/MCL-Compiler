@@ -9,6 +9,7 @@ import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLFunctionCallError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
+import mcl.compiler.parser.nodes.LocationNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
@@ -20,16 +21,16 @@ import java.util.function.BiConsumer;
 
 public class FunctionCallNode extends ExpressionNode
 {
-    public final Token identifier;
+    public final LocationNode location;
     public final List<AbstractNode> arguments;
 
     private FunctionSymbol function;
 
-    public FunctionCallNode(Token identifier, List<AbstractNode> arguments, Token closingToken)
+    public FunctionCallNode(LocationNode location, List<AbstractNode> arguments, Token closingToken)
     {
-        super(identifier.startPosition(), closingToken.endPosition());
+        super(location.startPosition(), closingToken.endPosition());
 
-        this.identifier = identifier;
+        this.location = location;
         this.arguments = Collections.unmodifiableList(arguments);
     }
 
@@ -68,11 +69,11 @@ public class FunctionCallNode extends ExpressionNode
         }
 
         // Check if function is defined
-        error = compiler.getSymbolTable().checkSymbolDefinition(identifier, SymbolType.FUNCTION);
+        error = location.symbolAnalysis(compiler, source, SymbolType.FUNCTION);
         if (error != null) return error;
 
         // Check function parameters
-        function = (FunctionSymbol)compiler.getSymbolTable().getSymbol((String)identifier.value(), SymbolType.FUNCTION);
+        function = (FunctionSymbol)location.getSymbol(compiler, SymbolType.FUNCTION);
         if (function.parameters.size() != arguments.size()) return new MCLFunctionCallError(compiler, this, function);
         for (int i = 0; i < function.parameters.size(); i++) if (!function.parameters.get(i).type.equals(arguments.get(i).getRuntimeType(compiler))) return new MCLFunctionCallError(compiler, this, function);
 
@@ -80,10 +81,10 @@ public class FunctionCallNode extends ExpressionNode
     }
 
     @Override
-    public void setTranspileTarget(Path target) throws IOException
+    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
     {
         this.transpileTarget = target;
-        for (AbstractNode argument : arguments) argument.setTranspileTarget(target);
+        for (AbstractNode argument : arguments) argument.setTranspileTarget(compiler, target);
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException
@@ -97,7 +98,7 @@ public class FunctionCallNode extends ExpressionNode
         ExpressionTranspileResult result = new ExpressionTranspileResult(null, depth, depth);
 
         // Print Header Comment
-        result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# FUNC_CALL " + identifier.value()));
+        result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# FUNC_CALL " + location.toString()));
         if (result.error != null) return result;
 
         // Push Call Stack
@@ -176,14 +177,14 @@ public class FunctionCallNode extends ExpressionNode
         if (result.error != null) return result;
 
         // Print Footer Comment
-        result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# END FUNC_CALL " + identifier.value()));
+        result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# END FUNC_CALL " + location.toString()));
         return result;
     }
 
     @Override
     public RuntimeType getRuntimeType(MCLCompiler compiler)
     {
-        function = (FunctionSymbol)compiler.getSymbolTable().getSymbol((String)identifier.value(), SymbolType.FUNCTION);
+        function = (FunctionSymbol)location.getSymbol(compiler, SymbolType.FUNCTION);
         return function.returnType;
     }
 
@@ -194,7 +195,7 @@ public class FunctionCallNode extends ExpressionNode
         System.out.println("FUNC_CALL");
 
         System.out.print("  ".repeat(depth + 1));
-        System.out.println(identifier);
+        System.out.println(location);
 
         for (AbstractNode argument : arguments) argument.debugPrint(depth + 1);
     }

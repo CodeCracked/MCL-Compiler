@@ -42,7 +42,7 @@ public class MCLTranspiler
 
         try
         {
-            syntaxTree.setTranspileTarget(rootFolder);
+            syntaxTree.setTranspileTarget(compiler, rootFolder);
             return syntaxTree.transpile(this);
         }
         catch (IOException e)

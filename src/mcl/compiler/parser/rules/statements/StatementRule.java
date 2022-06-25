@@ -20,6 +20,14 @@ public class StatementRule implements GrammarRule
             return result.success(definition);
         }
 
+        // Listener Definition
+        else if (parser.getCurrentToken().isKeyword(MCLKeywords.LISTENER))
+        {
+            AbstractNode definition = result.register(GrammarRules.LISTENER_DEFINITION.build(parser));
+            if (result.error() != null) return result;
+            return result.success(definition);
+        }
+
         // Variable Definition
         else if (parser.getCurrentToken().isKeyword(MCLKeywords.VARIABLE_TYPES))
         {
@@ -32,7 +40,7 @@ public class StatementRule implements GrammarRule
         else if (parser.getCurrentToken().type() == TokenType.IDENTIFIER)
         {
             // Function Calls
-            if (parser.peekNextToken().type() == TokenType.LPAREN)
+            if (parser.peekNextToken().type() == TokenType.LPAREN || parser.peekNextToken().type() == TokenType.COLON)
             {
                 AbstractNode functionCall = result.register(GrammarRules.FUNCTION_CALL.build(parser));
                 if (result.error() != null) return result;

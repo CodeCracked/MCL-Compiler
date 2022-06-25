@@ -73,10 +73,10 @@ public class UnaryOpNode extends ExpressionNode
     }
 
     @Override
-    public void setTranspileTarget(Path target) throws IOException
+    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
     {
         this.transpileTarget = target;
-        node.setTranspileTarget(target);
+        node.setTranspileTarget(compiler, target);
     }
     @Override
     protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, RuntimeType targetType, int depth) throws IOException

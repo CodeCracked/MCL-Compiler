@@ -58,7 +58,7 @@ public class EventDefinitionNode extends AbstractNode
     }
 
     @Override
-    public void setTranspileTarget(Path target) throws IOException
+    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
     {
         transpileTarget = new File(target.getParent().toString().replace("functions", "tags" + File.separator + "functions")).toPath().resolve(identifier.value() + ".json");
         transpileTarget.getParent().toFile().mkdirs();

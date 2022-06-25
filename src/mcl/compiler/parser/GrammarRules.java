@@ -3,12 +3,10 @@ package mcl.compiler.parser;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.nodes.expressions.BinaryOpNode;
 import mcl.compiler.parser.nodes.expressions.ExpressionNode;
-import mcl.compiler.parser.rules.blocks.BlockStatementRule;
-import mcl.compiler.parser.rules.blocks.FunctionDefinitionRule;
-import mcl.compiler.parser.rules.blocks.NamespaceDefinitionRule;
-import mcl.compiler.parser.rules.blocks.ProgramRootRule;
-import mcl.compiler.parser.rules.events.EventDefinitionRule;
+import mcl.compiler.parser.rules.LocationRule;
+import mcl.compiler.parser.rules.blocks.*;
 import mcl.compiler.parser.rules.expressions.*;
+import mcl.compiler.parser.rules.statements.EventDefinitionRule;
 import mcl.compiler.parser.rules.statements.StatementRule;
 import mcl.compiler.parser.rules.variables.ParameterListRule;
 import mcl.compiler.parser.rules.variables.VariableAssignmentRule;
@@ -23,6 +21,7 @@ public class GrammarRules
     public static final GrammarRule NAMESPACE = new NamespaceDefinitionRule();
     public static final GrammarRule STATEMENT = new StatementRule();
 
+    public static final GrammarRule LOCATION = new LocationRule();
     public static final GrammarRule VARIABLE_SIGNATURE = new VariableSignatureRule();
     public static final GrammarRule VARIABLE_DEFINITION = new VariableDefinitionRule();
     public static final GrammarRule VARIABLE_ASSIGNMENT = new VariableAssignmentRule();
@@ -31,6 +30,7 @@ public class GrammarRules
     public static final GrammarRule EVENT_DEFINITION = new EventDefinitionRule();
     public static final GrammarRule FUNCTION_DEFINITION = new FunctionDefinitionRule();
     public static final GrammarRule FUNCTION_CALL = new FunctionCallRule();
+    public static final GrammarRule LISTENER_DEFINITION = new ListenerDefinitionRule();
 
     public static final GrammarRule EXPRESSION = new ExpressionRule();
     public static final GrammarRule COMPARISON_EXPRESSION = new ComparisonExpressionRule();

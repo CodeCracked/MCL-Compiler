@@ -4,6 +4,7 @@ import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
+import mcl.compiler.parser.nodes.LocationNode;
 import mcl.compiler.parser.nodes.expressions.FunctionCallNode;
 
 import java.util.ArrayList;
@@ -16,11 +17,9 @@ public class FunctionCallRule implements GrammarRule
     {
         ParseResult result = new ParseResult();
 
-        // Function Identifier
-        Token identifier = parser.getCurrentToken();
-        if (identifier.type() != TokenType.IDENTIFIER) return result.failure(new MCLSyntaxError(parser, "Expected identifier"));
-        result.registerAdvancement();
-        parser.advance();
+        // Function Location
+        LocationNode location = (LocationNode)result.register(GrammarRules.LOCATION.build(parser));
+        if (result.error() != null) return result;
 
         // Check Argument List Start
         if (parser.getCurrentToken().type() != TokenType.LPAREN) return result.failure(new MCLSyntaxError(parser, "Expected '('"));
@@ -52,6 +51,6 @@ public class FunctionCallRule implements GrammarRule
         result.registerAdvancement();
         parser.advance();
 
-        return result.success(new FunctionCallNode(identifier, arguments, closingToken));
+        return result.success(new FunctionCallNode(location, arguments, closingToken));
     }
 }

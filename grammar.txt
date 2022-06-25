@@ -9,8 +9,11 @@ statement	: event_def
 			: var_assign
 			: func_call
 			: func_def
+			: listener
 
 
+
+location	: IDENTIFIER (COLON IDENTIFIER)?
 
 var_sig		: KEYWORD:(int|float) IDENTIFIER
 
@@ -26,7 +29,9 @@ event_def	: KEYWORD:event IDENTIFIER par_list
 
 func_def	: KEYWORD:func IDENTIFIER par_list (KEYWORD:return KEYWORD:(int|float))? block
 
-func_call	: IDENTIFIER LPAREN (expr (COMMA expr)*)? RPAREN
+func_call	: location LPAREN (expr (COMMA expr)*)? RPAREN
+
+listener	: KEYWORD:listener location par_list block
 
 
 

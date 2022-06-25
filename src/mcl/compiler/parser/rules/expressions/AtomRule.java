@@ -30,7 +30,7 @@ public class AtomRule implements GrammarRule
         else if (token.type() == TokenType.IDENTIFIER)
         {
             // Function Call
-            if (parser.peekNextToken().type() == TokenType.LPAREN)
+            if (parser.peekNextToken().type() == TokenType.LPAREN || parser.peekNextToken().type() == TokenType.COLON)
             {
                 AbstractNode functionCall = result.register(GrammarRules.FUNCTION_CALL.build(parser));
                 if (result.error() != null) return result;

@@ -1,10 +1,13 @@
-package mcl.compiler.parser.rules.events;
+package mcl.compiler.parser.rules.statements;
 
 import mcl.compiler.MCLKeywords;
 import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
-import mcl.compiler.parser.*;
+import mcl.compiler.parser.GrammarRule;
+import mcl.compiler.parser.GrammarRules;
+import mcl.compiler.parser.MCLParser;
+import mcl.compiler.parser.ParseResult;
 import mcl.compiler.parser.nodes.ParameterListNode;
 import mcl.compiler.parser.nodes.events.EventDefinitionNode;
 

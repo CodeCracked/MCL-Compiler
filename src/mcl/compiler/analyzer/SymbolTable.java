@@ -1,11 +1,9 @@
 package mcl.compiler.analyzer;
 
-import mcl.compiler.analyzer.symbols.EventSymbol;
 import mcl.compiler.exceptions.MCLDuplicateSymbolError;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLUndefinedSymbolError;
 import mcl.compiler.lexer.Token;
-import mcl.compiler.lexer.TokenType;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.HashMap;

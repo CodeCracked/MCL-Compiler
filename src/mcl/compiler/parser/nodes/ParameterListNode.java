@@ -57,10 +57,10 @@ public class ParameterListNode extends AbstractNode
     }
 
     @Override
-    public void setTranspileTarget(Path target) throws IOException
+    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
     {
         this.transpileTarget = target;
-        for (VariableSignatureNode parameter : parameters) parameter.setTranspileTarget(target);
+        for (VariableSignatureNode parameter : parameters) parameter.setTranspileTarget(compiler, target);
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException

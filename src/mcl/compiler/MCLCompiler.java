@@ -7,9 +7,9 @@ import mcl.compiler.lexer.LexerResult;
 import mcl.compiler.lexer.MCLLexer;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
-import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.MCLParser;
 import mcl.compiler.parser.ParseResult;
+import mcl.compiler.parser.nodes.blocks.ProgramRootNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.FileUtils;
 import mcl.compiler.transpiler.MCLTranspiler;
@@ -24,6 +24,7 @@ public class MCLCompiler
     public final CompilerConfig config;
 
     private MCLSourceCollection sourceCollection;
+    private ProgramRootNode syntaxTree;
     private SymbolTable rootSymbolTable;
     private SymbolTable currentSymbolTable;
 
@@ -61,7 +62,7 @@ public class MCLCompiler
         MCLParser parser = new MCLParser(this, sourceCollection, tokens);
         ParseResult parseResult = parser.parse();
         if (parseResult.error() != null) throw parseResult.error();
-        AbstractNode syntaxTree = parseResult.node();
+        syntaxTree = (ProgramRootNode)parseResult.node();
 
         // Debug Print AST
         syntaxTree.debugPrint(0);
@@ -83,6 +84,7 @@ public class MCLCompiler
     }
 
     public MCLSourceCollection getSource() { return sourceCollection; }
+    public ProgramRootNode getSyntaxTree() { return syntaxTree; }
     public void pushSymbolTable(UUID id)
     {
         currentSymbolTable = currentSymbolTable.getOrCreateChildTable(id);

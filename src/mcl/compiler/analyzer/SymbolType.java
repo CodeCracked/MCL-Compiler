@@ -6,5 +6,5 @@ public enum SymbolType
     FUNCTION,
     VARIABLE,
 
-    EVENT,
+    EVENT
 }
