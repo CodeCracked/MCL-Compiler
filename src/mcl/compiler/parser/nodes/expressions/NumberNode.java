@@ -51,7 +51,7 @@ public class NumberNode extends ExpressionNode
         MCLError error;
 
         Integer scoreboardValue = getScoreboardValue(transpiler);
-        if (scoreboardValue != null) error = transpiler.appendToFile(target, file -> file.printf("scoreboard players set r%1$s mcl.expressions %2$s\n", depth, scoreboardValue));
+        if (scoreboardValue != null) error = transpiler.appendToFile(target, file -> file.println(transpiler.applyConfig("scoreboard players set r%1$s {config.expressions} %2$s", depth, scoreboardValue)));
         else error = new MCLTranspileError(transpiler.getSource(), token, "Invalid number type '" + token.value().getClass().getSimpleName() + "'");
 
         return new TranspileResult(error, depth, depth + 1);

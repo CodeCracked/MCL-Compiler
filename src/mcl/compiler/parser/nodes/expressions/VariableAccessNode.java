@@ -47,8 +47,8 @@ public class VariableAccessNode extends ExpressionNode
         VariableSymbol symbol = (VariableSymbol)transpiler.getCompiler().getSymbolTable().getSymbol((String)identifier.value(), SymbolType.VARIABLE);
         MCLError error;
 
-        error = transpiler.appendToFile(target, file -> file.printf("execute store result score r%1$s %2$s run data get storage %3$s CallStack[0].%4$s %5$s\n",
-                depth, transpiler.getConfig().expressionsObjective(), transpiler.getConfig().variablesStorage(), symbol.tableLocation, symbol.type.scaleUp(transpiler.getCompiler().config)));
+        error = transpiler.appendToFile(target, file -> file.println(transpiler.applyConfig("execute store result score r%s {config.expressions} run data get storage {config.variables} CallStack[0].%s %s",
+                depth, symbol.tableLocation, symbol.type.scaleUp(transpiler.getCompiler().config))));
 
         return new TranspileResult(error, depth, depth + 1);
     }

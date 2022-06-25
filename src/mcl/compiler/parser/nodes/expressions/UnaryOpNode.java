@@ -76,18 +76,18 @@ public class UnaryOpNode extends ExpressionNode
 
         if (operation.type() == TokenType.MINUS) error = transpiler.appendToFile(target, file ->
         {
-            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, nodeResult.returnCode);
-            file.printf("scoreboard players operation r%s mcl.expressions *= -1 mcl.constants\n", depth);
+            file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", depth, nodeResult.returnCode));
+            file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} *= -1 {config.constants}", depth));
         });
         else if (operation.type() == TokenType.PLUS) error = transpiler.appendToFile(target, file ->
         {
-            file.printf("scoreboard players operation r%s mcl.expressions = r%s mcl.expressions\n", depth, nodeResult.returnCode);
-            file.printf("execute if score r%s matches ..0 run scoreboard players operation r%s mcl.expressions *= -1 mcl.constants\n", depth, depth);
+            file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", depth, nodeResult.returnCode));
+            file.println(transpiler.applyConfig("execute if score r%1$s matches ..0 run scoreboard players operation r%1$s {config.expressions} *= -1 {config.constants}", depth));
         });
         else if (operation.isKeyword(MCLKeywords.NOT)) error = transpiler.appendToFile(target, file ->
         {
-            file.printf("scoreboard players set r%s mcl.expressions 0\n", depth);
-            file.printf("execute if score r%s matches ..0 run scoreboard players set r%s mcl.expressions 1\n", nodeResult.returnCode, depth);
+            file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));
+            file.println(transpiler.applyConfig("execute if score r%s matches ..0 run scoreboard players set r%s {config.expressions} 1", nodeResult.returnCode, depth));
         });
         else error = new MCLTranspileError(transpiler.getSource(), operation, "Invalid unary operation '" + operation.type() + "'");
 

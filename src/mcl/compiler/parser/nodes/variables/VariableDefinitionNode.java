@@ -58,8 +58,8 @@ public class VariableDefinitionNode extends AbstractNode
         // Transpile Variable Assignment
         error = transpiler.appendToFile(target, file ->
         {
-            if (signature.type == RuntimeType.INTEGER) file.printf("execute store result storage mcl:variables CallStack[0].%s int 1 run scoreboard players get r0 mcl.expressions\n", signature.symbol.tableLocation);
-            else if (signature.type == RuntimeType.FLOAT) file.printf("execute store result storage mcl:variables CallStack[0].%s float 0.%s1 run scoreboard players get r0 mcl.expressions\n", signature.symbol.tableLocation, "0".repeat(transpiler.getCompiler().config.floatDecimalPlaces - 1));
+            if (signature.type == RuntimeType.INTEGER) file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s int 1 run scoreboard players get r0 {config.expressions}", signature.symbol.tableLocation));
+            else if (signature.type == RuntimeType.FLOAT) file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s float 0.%s1 run scoreboard players get r0 {config.expressions}", signature.symbol.tableLocation, "0".repeat(transpiler.getCompiler().config.floatDecimalPlaces - 1)));
             file.println("# END VAR_DEFINITION " + signature);
             file.println();
         });

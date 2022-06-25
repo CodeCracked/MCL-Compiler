@@ -59,9 +59,11 @@ public class MCLTranspiler
     public String applyConfig(String format, Object... params)
     {
         return String.format(format, params)
-                .replace("mcl.expressions", compiler.config.expressionsObjective())
-                .replace("mcl.constants", compiler.config.constantsObjective())
-                .replace("mcl:variables", compiler.config.variablesStorage());
+                .replace("{config.floatScaleDown}", compiler.config.floatScaleDown())
+                .replace("{config.floatScaleUp}", compiler.config.floatScaleUp())
+                .replace("{config.expressions}", compiler.config.expressionsObjective())
+                .replace("{config.constants}", compiler.config.constantsObjective())
+                .replace("{config.variables}", compiler.config.variablesStorage());
     }
 
     public MCLCompiler getCompiler() { return compiler; }

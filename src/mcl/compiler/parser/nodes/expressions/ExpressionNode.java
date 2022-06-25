@@ -45,8 +45,8 @@ public abstract class ExpressionNode extends AbstractNode
         MCLError error = null;
         if (targetType.equals(RuntimeType.FLOAT) && simplified.getRuntimeType(transpiler.getCompiler()).equals(RuntimeType.INTEGER)) error = transpiler.appendToFile(target, file ->
         {
-            file.printf("execute store result storage mcl:variables scaling float %s run scoreboard players get r%s mcl.expressions\n", targetType.scaleUp(transpiler.getCompiler().config), depth);
-            file.printf("execute store result score r%s mcl.expressions run data get storage mcl:variables scaling 1\n", depth);
+            file.println(transpiler.applyConfig("execute store result storage {config.variables} scaling float %s run scoreboard players get r%s {config.expressions}", targetType.scaleUp(transpiler.getCompiler().config), depth));
+            file.println(transpiler.applyConfig("execute store result score r%s {config.expressions} run data get storage {config.variables} scaling 1", depth));
         });
 
         return new TranspileResult(error, result.returnCode, result.nextAvailableDepthCode);
