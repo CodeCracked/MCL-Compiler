@@ -2,7 +2,6 @@ package mcl.compiler.exceptions;
 
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
-import mcl.compiler.parser.MCLParser;
 import mcl.compiler.source.CodeLocation;
 import mcl.compiler.source.MCLSourceCollection;
 

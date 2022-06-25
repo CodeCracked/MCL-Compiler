@@ -4,7 +4,10 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.nodes.expressions.BinaryOpNode;
 import mcl.compiler.parser.nodes.expressions.ExpressionNode;
 import mcl.compiler.parser.rules.*;
-import mcl.compiler.parser.rules.blocks.*;
+import mcl.compiler.parser.rules.blocks.BlockStatementRule;
+import mcl.compiler.parser.rules.blocks.FunctionDefinitionRule;
+import mcl.compiler.parser.rules.blocks.NamespaceDefinitionRule;
+import mcl.compiler.parser.rules.blocks.ProgramRootRule;
 import mcl.compiler.parser.rules.variables.VariableDefinitionRule;
 import mcl.compiler.parser.rules.variables.VariableSignatureRule;
 

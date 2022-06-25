@@ -9,7 +9,6 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 import mcl.compiler.source.MCLSourceCollection;
 
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;

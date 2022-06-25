@@ -72,7 +72,7 @@ public class FunctionDefinitionRule implements GrammarRule
         }
 
         // Body
-        AbstractNode body = result.register(GrammarRules.blockStatement(2).build(parser));
+        AbstractNode body = result.register(GrammarRules.blockStatement(parser.getCurrentIndent() + 1).build(parser));
         if (result.error() != null) return result;
 
         return result.success(new FunctionDefinitionNode(keyword, identifier, parameters, returnType, body));

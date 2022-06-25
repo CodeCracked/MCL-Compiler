@@ -25,17 +25,16 @@ public class BlockStatementRule implements GrammarRule
         List<AbstractNode> statements = new ArrayList<>();
         int start = parser.getCurrentToken().startPosition();
 
-        while (parser.getCurrentToken().type() == TokenType.NEWLINE)
+        while (parser.getCurrentToken().type() == TokenType.NEWLINE && parser.peekNextToken().type() == TokenType.INDENT)
         {
-            // Clear Newline
+            // Check Indent
+            int indent = (int)parser.peekNextToken().value();
+            if (indent < requiredIndent) break;
+            else if (indent > requiredIndent) return result.failure(new MCLSyntaxError(parser.getSource(), parser.peekNextToken(), "Expected indent of size " + requiredIndent));
+
+            // Clear Newline and Indent
             result.registerAdvancement();
             parser.advance();
-            if (parser.getCurrentToken().type() != TokenType.INDENT) break;
-
-            // Check Indent
-            int indent = (int)parser.getCurrentToken().value();
-            if (indent < requiredIndent) break;
-            else if (indent > requiredIndent) return result.failure(new MCLSyntaxError(parser, "Expected indent of size " + requiredIndent));
             result.registerAdvancement();
             parser.advance();
 

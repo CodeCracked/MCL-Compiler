@@ -2,7 +2,6 @@ package mcl.compiler.parser.nodes.variables;
 
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;
-import mcl.compiler.analyzer.Symbol;
 import mcl.compiler.analyzer.SymbolType;
 import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;

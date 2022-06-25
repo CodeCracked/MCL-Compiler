@@ -15,6 +15,8 @@ public class MCLParser
     private final List<Token> tokens;
     private int tokenIndex;
     private Token currentToken;
+    private Token nextToken;
+    private int currentIndent;
 
     public MCLParser(MCLCompiler compiler, MCLSourceCollection source, List<Token> tokens)
     {
@@ -22,6 +24,7 @@ public class MCLParser
         this.source = source;
         this.tokens = tokens;
         this.tokenIndex = -1;
+        this.currentIndent = 0;
         advance();
     }
 
@@ -29,6 +32,9 @@ public class MCLParser
     {
         this.tokenIndex++;
         this.currentToken = tokenIndex < tokens.size() ? tokens.get(tokenIndex) : null;
+        this.nextToken = (tokenIndex + 1) < tokens.size() ? tokens.get(tokenIndex + 1) : null;
+
+        if (currentToken != null && currentToken.type() == TokenType.INDENT) this.currentIndent = (int)currentToken.value();
     }
     public ParseResult parse()
     {
@@ -41,4 +47,6 @@ public class MCLParser
     public MCLCompiler getCompiler() { return compiler; }
     public MCLSourceCollection getSource() { return source; }
     public Token getCurrentToken() { return currentToken; }
+    public Token peekNextToken() { return nextToken; }
+    public int getCurrentIndent() { return currentIndent; }
 }

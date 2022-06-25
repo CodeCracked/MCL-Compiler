@@ -6,7 +6,6 @@ import mcl.compiler.analyzer.Symbol;
 import mcl.compiler.analyzer.SymbolType;
 import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
-import mcl.compiler.exceptions.MCLTranspileError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
