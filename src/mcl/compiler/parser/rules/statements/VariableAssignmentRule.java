@@ -1,6 +1,5 @@
-package mcl.compiler.parser.rules;
+package mcl.compiler.parser.rules.statements;
 
-import mcl.compiler.MCLKeywords;
 import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
@@ -9,7 +8,7 @@ import mcl.compiler.parser.nodes.variables.VariableAssignNode;
 
 import java.util.Set;
 
-public class StatementRule implements GrammarRule
+public class VariableAssignmentRule implements GrammarRule
 {
     private final Set<Token> assignOperations = Token.descriptions(TokenType.ASSIGN, TokenType.ASSIGN_PLUS, TokenType.ASSIGN_MINUS, TokenType.ASSIGN_MUL, TokenType.ASSIGN_DIV, TokenType.ASSIGN_MOD);
 
@@ -18,25 +17,6 @@ public class StatementRule implements GrammarRule
     {
         ParseResult result = new ParseResult();
 
-        if (parser.getCurrentToken().isKeyword(MCLKeywords.VARIABLE_TYPES))
-        {
-            AbstractNode definition = result.register(GrammarRules.VARIABLE_DEFINITION.build(parser));
-            if (result.error() != null) return result;
-            return result.success(definition);
-        }
-        else if (parser.getCurrentToken().type() == TokenType.IDENTIFIER) return variableAssignDeclaration(parser, result);
-        else if (parser.getCurrentToken().isKeyword(MCLKeywords.FUNC))
-        {
-            AbstractNode function = result.register(GrammarRules.FUNCTION.build(parser));
-            if (result.error() != null) return result;
-            return result.success(function);
-        }
-
-        return result.failure(new MCLSyntaxError(parser, "Not a statement"));
-    }
-
-    private ParseResult variableAssignDeclaration(MCLParser parser, ParseResult result)
-    {
         Token identifier = parser.getCurrentToken();
         result.registerAdvancement();
         parser.advance();

@@ -5,12 +5,17 @@ namespace	: KEYWORD:namespace IDENTIFIER block
 block		: (NEWLINE INDENT:2 statement)*
 
 statement	: var_sig ASSIGN expr
-			: var_def
-			: KEYWORD:func IDENTIFIER LPAREN (var_sig (COMMA var_sig)*)? RPAREN (KEYWORD:return KEYWORD:(int|float))? block
+			: var_assign
+			: func_call
+			: func_def
 
 var_sig		: KEYWORD:(int|float) IDENTIFIER
 
-var_def		: IDENTIFIER (ASSIGN|ASSIGN_PLUS|ASSIGN_MINUS|ASSIGN_MUL|ASSIGN_DIV|ASSIGN_MOD) expr
+var_assign	: IDENTIFIER (ASSIGN|ASSIGN_PLUS|ASSIGN_MINUS|ASSIGN_MUL|ASSIGN_DIV|ASSIGN_MOD) expr
+
+func_def	: KEYWORD:func IDENTIFIER LPAREN (var_sig (COMMA var_sig)*)? RPAREN (KEYWORD:return KEYWORD:(int|float))? block
+
+func_call	: IDENTIFIER LPAREN (expr (COMMA expr)*)? RPAREN
 
 expr		: comp-expr ((KEYWORD:AND|OR) comp-expr)*
 
@@ -25,3 +30,4 @@ factor		: atom ((MUL|DIV|MOD) atom)*
 atom		: INT|FLOAT|IDENTIFIER
 			: (PLUS|MINUS) factor
 			: LPAREN expr RPAREN
+			: func_call

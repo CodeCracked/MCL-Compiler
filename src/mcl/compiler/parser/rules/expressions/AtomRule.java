@@ -1,4 +1,4 @@
-package mcl.compiler.parser.rules;
+package mcl.compiler.parser.rules.expressions;
 
 import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
@@ -16,6 +16,7 @@ public class AtomRule implements GrammarRule
         ParseResult result = new ParseResult();
         Token token = parser.getCurrentToken();
 
+        // Unary Operations
         if (token.type() == TokenType.PLUS || token.type() == TokenType.MINUS)
         {
             result.registerAdvancement();
@@ -25,13 +26,27 @@ public class AtomRule implements GrammarRule
             else return result.success(new UnaryOpNode(token, factor));
         }
 
+        // Function Call or Variable Access
         else if (token.type() == TokenType.IDENTIFIER)
         {
-            result.registerAdvancement();
-            parser.advance();
-            return result.success(new VariableAccessNode(token));
+            // Function Call
+            if (parser.peekNextToken().type() == TokenType.LPAREN)
+            {
+                AbstractNode functionCall = result.register(GrammarRules.FUNCTION_CALL.build(parser));
+                if (result.error() != null) return result;
+                return result.success(functionCall);
+            }
+
+            // Variable Access
+            else
+            {
+                result.registerAdvancement();
+                parser.advance();
+                return result.success(new VariableAccessNode(token));
+            }
         }
 
+        // Number Literals
         else if (token.type() == TokenType.INT || token.type() == TokenType.FLOAT)
         {
             result.registerAdvancement();
@@ -39,6 +54,7 @@ public class AtomRule implements GrammarRule
             return result.success(new NumberNode(token));
         }
 
+        // Parenthesis Expressions
         else if (token.type() == TokenType.LPAREN)
         {
             result.registerAdvancement();

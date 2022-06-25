@@ -41,7 +41,7 @@ public class VariableAccessNode extends ExpressionNode
     }
 
     @Override
-    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
+    protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
     {
         VariableSymbol symbol = (VariableSymbol)transpiler.getCompiler().getSymbolTable().getSymbol((String)identifier.value(), SymbolType.VARIABLE);
         MCLError error;
@@ -49,7 +49,7 @@ public class VariableAccessNode extends ExpressionNode
         error = transpiler.appendToFile(target, file -> file.println(transpiler.applyConfig("execute store result score r%s {config.expressions} run data get storage {config.variables} CallStack[0].%s %s",
                 depth, symbol.tableLocation, symbol.type.scaleUp(transpiler.getCompiler().config))));
 
-        return new TranspileResult(error, depth, depth + 1);
+        return new ExpressionTranspileResult(error, depth, depth + 1);
     }
 
     @Override

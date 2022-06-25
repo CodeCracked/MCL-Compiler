@@ -109,12 +109,12 @@ public class BinaryOpNode extends ExpressionNode
     }
 
     @Override
-    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
+    protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
     {
-        TranspileResult leftResult = ((ExpressionNode)leftNode).castAndTranspile(transpiler, target, targetType, depth + 1);
+        ExpressionTranspileResult leftResult = ((ExpressionNode)leftNode).castAndTranspile(transpiler, target, targetType, depth + 1);
         if (leftResult.error != null) return leftResult;
 
-        TranspileResult rightResult = ((ExpressionNode)rightNode).castAndTranspile(transpiler, target, targetType, leftResult.nextAvailableDepthCode);
+        ExpressionTranspileResult rightResult = ((ExpressionNode)rightNode).castAndTranspile(transpiler, target, targetType, leftResult.nextAvailableDepthCode);
         if (rightResult.error != null) return rightResult;
 
         MCLError error;
@@ -197,7 +197,7 @@ public class BinaryOpNode extends ExpressionNode
 
         else error = new MCLTranspileError(transpiler.getSource(), operation, "Invalid binary operation '" + operation.type() + "'");
 
-        return new TranspileResult(error, depth, rightResult.nextAvailableDepthCode + (operation.matches(complexOperators) ? 1 : 0));
+        return new ExpressionTranspileResult(error, depth, rightResult.nextAvailableDepthCode + (operation.matches(complexOperators) ? 1 : 0));
     }
 
     @Override

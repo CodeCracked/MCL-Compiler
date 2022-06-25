@@ -1,4 +1,4 @@
-package mcl.compiler.parser.rules;
+package mcl.compiler.parser.rules.expressions;
 
 import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;

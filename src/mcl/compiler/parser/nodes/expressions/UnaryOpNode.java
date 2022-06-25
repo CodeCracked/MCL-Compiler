@@ -67,9 +67,9 @@ public class UnaryOpNode extends ExpressionNode
     }
 
     @Override
-    protected TranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
+    protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
     {
-        TranspileResult nodeResult = ((ExpressionNode)node).castAndTranspile(transpiler, target, targetType, depth + 1);
+        ExpressionTranspileResult nodeResult = ((ExpressionNode)node).castAndTranspile(transpiler, target, targetType, depth + 1);
         if (nodeResult.error != null) return nodeResult;
 
         MCLError error;
@@ -91,7 +91,7 @@ public class UnaryOpNode extends ExpressionNode
         });
         else error = new MCLTranspileError(transpiler.getSource(), operation, "Invalid unary operation '" + operation.type() + "'");
 
-        return new TranspileResult(error, depth, nodeResult.nextAvailableDepthCode);
+        return new ExpressionTranspileResult(error, depth, nodeResult.nextAvailableDepthCode);
     }
 
     @Override
