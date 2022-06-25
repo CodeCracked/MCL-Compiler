@@ -7,6 +7,7 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -41,13 +42,12 @@ public abstract class BlockDefinitionNode extends AbstractNode
     @Override
     public final MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
-        MCLError error = createDefinitionSymbol(compiler, source);
+        compiler.pushSymbolTable(symbolTableID);
+        MCLError error = createContextSymbols(compiler, source);
+        compiler.popSymbolTable();
         if (error != null) return error;
 
-        compiler.pushSymbolTable(symbolTableID);
         error = createDefinitionSymbol(compiler, source);
-        compiler.popSymbolTable();
-
         if (error != null) return error;
 
         compiler.pushSymbolTable(symbolTableID);
@@ -69,12 +69,17 @@ public abstract class BlockDefinitionNode extends AbstractNode
     }
 
     @Override
-    public MCLError transpile(MCLTranspiler transpiler, Path target)
+    public void setTranspileTarget(Path target) throws IOException
     {
-        Path definitionFolder = getDefinitionFolder(target);
-
+        this.transpileTarget = getDefinitionFolder(target);
+        transpileTarget.toFile().mkdirs();
+        body.setTranspileTarget(transpileTarget);
+    }
+    @Override
+    public MCLError transpile(MCLTranspiler transpiler) throws IOException
+    {
         transpiler.getCompiler().pushSymbolTable(symbolTableID);
-        MCLError error = body.transpile(transpiler, definitionFolder);
+        MCLError error = body.transpile(transpiler);
         transpiler.getCompiler().popSymbolTable();
 
         return error;

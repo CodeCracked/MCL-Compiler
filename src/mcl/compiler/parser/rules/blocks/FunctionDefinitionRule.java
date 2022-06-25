@@ -5,6 +5,7 @@ import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
+import mcl.compiler.parser.nodes.blocks.BlockStatementNode;
 import mcl.compiler.parser.nodes.blocks.FunctionDefinitionNode;
 import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 
@@ -72,7 +73,7 @@ public class FunctionDefinitionRule implements GrammarRule
         }
 
         // Body
-        AbstractNode body = result.register(GrammarRules.blockStatement(parser.getCurrentIndent() + 1).build(parser));
+        BlockStatementNode body = (BlockStatementNode)result.register(GrammarRules.blockStatement(parser.getCurrentIndent() + 1).build(parser));
         if (result.error() != null) return result;
 
         return result.success(new FunctionDefinitionNode(keyword, identifier, parameters, returnType, body));

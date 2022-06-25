@@ -8,6 +8,6 @@ public class MCLWrongTypeError extends MCLError
 {
     public MCLWrongTypeError(MCLCompiler compiler, AbstractNode node, RuntimeType expected, RuntimeType found)
     {
-        super(compiler.getSource().getCodeLocation(node.startPosition()), compiler.getSource().getCodeLocation(node.endPosition()), "Wrong Type", "Expected " + expected.getMinecraftName() + ", found " + found.getMinecraftName());
+        super(compiler.getSource().getCodeLocation(node.startPosition()), compiler.getSource().getCodeLocation(node.endPosition()), "Wrong Type", "Expected " + expected.toString() + ", found " + found.toString());
     }
 }

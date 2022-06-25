@@ -7,6 +7,7 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.function.BiConsumer;
 public class BlockStatementNode extends AbstractNode
 {
     public final List<AbstractNode> statements;
+    protected Path mainFunction;
 
     public BlockStatementNode(List<AbstractNode> statements, int start)
     {
@@ -56,27 +58,34 @@ public class BlockStatementNode extends AbstractNode
     }
 
     @Override
-    public MCLError transpile(MCLTranspiler transpiler, Path target)
+    public void setTranspileTarget(Path target) throws IOException
     {
-        Map<String, Integer> blockTypeCounts = new HashMap<>();
-        Path mainFunction = target.resolve("main.mcfunction");
+        this.transpileTarget = target;
+        this.mainFunction = target.resolve("main.mcfunction");
+        mainFunction.toFile().createNewFile();
 
+        Map<String, Integer> blockTypeCounts = new HashMap<>();
         for (AbstractNode statement : statements)
         {
-            Path childTarget = mainFunction;
+            Path statementTarget = mainFunction;
 
-            if (statement instanceof NamedBlockDefinitionNode block)
-            {
-                childTarget = target.resolve(block.blockType);
-            }
+            if (statement instanceof NamedBlockDefinitionNode block) statementTarget = transpileTarget.resolve(block.blockType);
             else if (statement instanceof BlockDefinitionNode block)
             {
                 if (!blockTypeCounts.containsKey(block.blockType)) blockTypeCounts.put(block.blockType, 1);
-                childTarget = target.resolve(block.blockType + "_" + blockTypeCounts.get(block.blockType));
+                statementTarget = target.resolve(block.blockType + "_" + blockTypeCounts.get(block.blockType));
                 blockTypeCounts.put(block.blockType, blockTypeCounts.get(block.blockType) + 1);
             }
 
-            MCLError error = statement.transpile(transpiler, childTarget);
+            statement.setTranspileTarget(statementTarget);
+        }
+    }
+    @Override
+    public MCLError transpile(MCLTranspiler transpiler) throws IOException
+    {
+        for (AbstractNode statement : statements)
+        {
+            MCLError error = statement.transpile(transpiler);
             if (error != null) return error;
         }
         return null;

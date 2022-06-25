@@ -12,6 +12,7 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -126,86 +127,93 @@ public class BinaryOpNode extends ExpressionNode
     }
 
     @Override
-    protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
+    public void setTranspileTarget(Path target) throws IOException
     {
-        ExpressionTranspileResult leftResult = ((ExpressionNode)leftNode).castAndTranspile(transpiler, target, targetType, depth + 1);
+        this.transpileTarget = target;
+        this.leftNode.setTranspileTarget(target);
+        this.rightNode.setTranspileTarget(target);
+    }
+    @Override
+    protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, RuntimeType targetType, int depth) throws IOException
+    {
+        ExpressionTranspileResult leftResult = ((ExpressionNode)leftNode).castAndTranspile(transpiler, targetType, depth + 1);
         if (leftResult.error != null) return leftResult;
 
-        ExpressionTranspileResult rightResult = ((ExpressionNode)rightNode).castAndTranspile(transpiler, target, targetType, leftResult.nextAvailableDepthCode);
+        ExpressionTranspileResult rightResult = ((ExpressionNode)rightNode).castAndTranspile(transpiler, targetType, leftResult.nextAvailableDepthCode);
         if (rightResult.error != null) return rightResult;
 
         MCLError error;
 
-        if (operation.type() == TokenType.PLUS) error = transpiler.appendToFile(target, file ->
+        if (operation.type() == TokenType.PLUS) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", depth, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} += r%s {config.expressions}", depth, rightResult.returnCode));
         });
-        else if (operation.type() == TokenType.MINUS) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.MINUS) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", depth, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} -= r%s {config.expressions}", depth, rightResult.returnCode));
         });
-        else if (operation.type() == TokenType.MUL) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.MUL) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", depth, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} *= r%s {config.expressions}", depth, rightResult.returnCode));
             // Divide By 1000
         });
-        else if (operation.type() == TokenType.DIV) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.DIV) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", depth, leftResult.returnCode));
             // Multiply by 1000
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} /= r%s {config.expressions}", depth, rightResult.returnCode));
         });
-        else if (operation.type() == TokenType.MOD) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.MOD) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", depth, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} %%= r%s {config.expressions}", depth, rightResult.returnCode));
         });
-        else if (operation.isKeyword(MCLKeywords.AND)) error = transpiler.appendToFile(target, file ->
+        else if (operation.isKeyword(MCLKeywords.AND)) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));
             file.println(transpiler.applyConfig("execute if score r%s {config.expressions} matches 1.. if score r%s {config.expressions} matches 1.. run scoreboard players set r%s {config.expressions} 1", leftResult.returnCode, rightResult.returnCode, depth));
         });
-        else if (operation.isKeyword(MCLKeywords.OR)) error = transpiler.appendToFile(target, file ->
+        else if (operation.isKeyword(MCLKeywords.OR)) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));
             file.println(transpiler.applyConfig("execute if score r%s {config.expressions} matches 1.. run scoreboard players set r%s {config.expressions} 1", leftResult.returnCode, depth));
             file.println(transpiler.applyConfig("execute if score r%s {config.expressions} matches 1.. run scoreboard players set r%s {config.expressions} 1", rightResult.returnCode, depth));
         });
 
-        else if (operation.type() == TokenType.EQUALS) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.EQUALS) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", rightResult.nextAvailableDepthCode, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));
             file.println(transpiler.applyConfig("execute if score r%s {config.expressions} = r%s {config.expressions} run scoreboard players set r%s {config.expressions} 1", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth));
         });
-        else if (operation.type() == TokenType.NOT_EQUALS) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.NOT_EQUALS) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", rightResult.nextAvailableDepthCode, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));
             file.println(transpiler.applyConfig("execute unless score r%s {config.expressions} = r%s {config.expressions} run scoreboard players set r%s {config.expressions} 1", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth));
         });
-        else if (operation.type() == TokenType.LESS) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.LESS) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", rightResult.nextAvailableDepthCode, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));
             file.println(transpiler.applyConfig("execute if score r%s {config.expressions} < r%s {config.expressions} run scoreboard players set r%s {config.expressions} 1", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth));
         });
-        else if (operation.type() == TokenType.LESS_OR_EQUAL) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.LESS_OR_EQUAL) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", rightResult.nextAvailableDepthCode, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));
             file.println(transpiler.applyConfig("execute if score r%s {config.expressions} <= r%s {config.expressions} run scoreboard players set r%s {config.expressions} 1", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth));
         });
-        else if (operation.type() == TokenType.GREATER) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.GREATER) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", rightResult.nextAvailableDepthCode, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));
             file.println(transpiler.applyConfig("execute if score r%s {config.expressions} > r%s {config.expressions} run scoreboard players set r%s {config.expressions} 1", rightResult.nextAvailableDepthCode, rightResult.returnCode, depth));
         });
-        else if (operation.type() == TokenType.GREATER_OR_EQUAL) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.GREATER_OR_EQUAL) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", rightResult.nextAvailableDepthCode, leftResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));

@@ -7,10 +7,10 @@ import java.util.*;
 
 public class RuntimeType
 {
-    public static final RuntimeType VOID = new RuntimeType("VOID", "!!!MCL_INTERNAL_ERROR!!!", 0);
-    public static final RuntimeType INTEGER = new RuntimeType("INTEGER", "int", 0);
-    public static final RuntimeType FLOAT = new RuntimeType("FLOAT", "float", 1);
-    public static final RuntimeType UNDEFINED = new RuntimeType("UNDEFINED", "!!!MCL_INTERNAL_ERROR!!!", Integer.MAX_VALUE);
+    public static final RuntimeType VOID = new RuntimeType("void", "!!!MCL_INTERNAL_ERROR!!!", 0);
+    public static final RuntimeType INTEGER = new RuntimeType("int", "int", 0);
+    public static final RuntimeType FLOAT = new RuntimeType("float", "float", 1);
+    public static final RuntimeType UNDEFINED = new RuntimeType("undefined", "!!!MCL_INTERNAL_ERROR!!!", Integer.MAX_VALUE);
 
     // region Configuration
     private static final Map<RuntimeType, Set<RuntimeType>> combinableTypes = new HashMap<>();

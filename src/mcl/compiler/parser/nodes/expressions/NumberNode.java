@@ -51,12 +51,17 @@ public class NumberNode extends ExpressionNode
     }
 
     @Override
-    protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
+    public void setTranspileTarget(Path target)
+    {
+        this.transpileTarget = target;
+    }
+    @Override
+    protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, RuntimeType targetType, int depth)
     {
         MCLError error;
 
         Integer scoreboardValue = getScoreboardValue(transpiler);
-        if (scoreboardValue != null) error = transpiler.appendToFile(target, file -> file.println(transpiler.applyConfig("scoreboard players set r%1$s {config.expressions} %2$s", depth, scoreboardValue)));
+        if (scoreboardValue != null) error = transpiler.appendToFile(transpileTarget, file -> file.println(transpiler.applyConfig("scoreboard players set r%1$s {config.expressions} %2$s", depth, scoreboardValue)));
         else error = new MCLTranspileError(transpiler.getSource(), token, "Invalid number type '" + token.value().getClass().getSimpleName() + "'");
 
         return new ExpressionTranspileResult(error, depth, depth + 1);

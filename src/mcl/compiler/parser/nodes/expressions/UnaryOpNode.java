@@ -11,6 +11,7 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
@@ -72,24 +73,30 @@ public class UnaryOpNode extends ExpressionNode
     }
 
     @Override
-    protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
+    public void setTranspileTarget(Path target) throws IOException
     {
-        ExpressionTranspileResult nodeResult = ((ExpressionNode)node).castAndTranspile(transpiler, target, targetType, depth + 1);
+        this.transpileTarget = target;
+        node.setTranspileTarget(target);
+    }
+    @Override
+    protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, RuntimeType targetType, int depth) throws IOException
+    {
+        ExpressionTranspileResult nodeResult = ((ExpressionNode)node).castAndTranspile(transpiler, targetType, depth + 1);
         if (nodeResult.error != null) return nodeResult;
 
         MCLError error;
 
-        if (operation.type() == TokenType.MINUS) error = transpiler.appendToFile(target, file ->
+        if (operation.type() == TokenType.MINUS) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", depth, nodeResult.returnCode));
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} *= -1 {config.constants}", depth));
         });
-        else if (operation.type() == TokenType.PLUS) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.PLUS) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players operation r%s {config.expressions} = r%s {config.expressions}", depth, nodeResult.returnCode));
             file.println(transpiler.applyConfig("execute if score r%1$s matches ..0 run scoreboard players operation r%1$s {config.expressions} *= -1 {config.constants}", depth));
         });
-        else if (operation.isKeyword(MCLKeywords.NOT)) error = transpiler.appendToFile(target, file ->
+        else if (operation.isKeyword(MCLKeywords.NOT)) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("scoreboard players set r%s {config.expressions} 0", depth));
             file.println(transpiler.applyConfig("execute if score r%s matches ..0 run scoreboard players set r%s {config.expressions} 1", nodeResult.returnCode, depth));

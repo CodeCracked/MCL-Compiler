@@ -9,6 +9,7 @@ import mcl.compiler.parser.nodes.expressions.ExpressionNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
@@ -58,19 +59,25 @@ public class VariableDefinitionNode extends AbstractNode
     }
 
     @Override
-    public MCLError transpile(MCLTranspiler transpiler, Path target)
+    public void setTranspileTarget(Path target) throws IOException
+    {
+        this.transpileTarget = target;
+        this.value.setTranspileTarget(target);
+    }
+    @Override
+    public MCLError transpile(MCLTranspiler transpiler) throws IOException
     {
         // Print Header Comment
-        MCLError error = transpiler.appendToFile(target, file -> file.println("# VAR_DEFINITION " + signature));
+        MCLError error = transpiler.appendToFile(transpileTarget, file -> file.println("# VAR_DEFINITION " + signature));
         if (error != null) return error;
 
         // Transpile Value Node
-        if (value instanceof ExpressionNode expression) error = expression.transpile(transpiler, target, signature.type);
-        else error = value.transpile(transpiler, target);
+        if (value instanceof ExpressionNode expression) error = expression.transpile(transpiler, signature.type);
+        else error = value.transpile(transpiler);
         if (error != null) return error;
 
         // Transpile Variable Assignment
-        error = transpiler.appendToFile(target, file ->
+        error = transpiler.appendToFile(transpileTarget, file ->
         {
             if (signature.type == RuntimeType.INTEGER) file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s int 1 run scoreboard players get r0 {config.expressions}", signature.symbol.tableLocation));
             else if (signature.type == RuntimeType.FLOAT) file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s float 0.%s1 run scoreboard players get r0 {config.expressions}", signature.symbol.tableLocation, "0".repeat(transpiler.getCompiler().config.floatDecimalPlaces - 1)));

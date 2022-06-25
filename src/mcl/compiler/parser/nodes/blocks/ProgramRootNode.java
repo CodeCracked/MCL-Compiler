@@ -7,6 +7,7 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -55,12 +56,22 @@ public class ProgramRootNode extends AbstractNode
     }
 
     @Override
-    public MCLError transpile(MCLTranspiler transpiler, Path target)
+    public void setTranspileTarget(Path target) throws IOException
+    {
+        this.transpileTarget = target;
+        Path dataFolder = target.resolve("data");
+        dataFolder.toFile().mkdirs();
+
+        // Transpile namespaces
+        for (AbstractNode namespace : namespaces) namespace.setTranspileTarget(dataFolder);
+    }
+    @Override
+    public MCLError transpile(MCLTranspiler transpiler) throws IOException
     {
         MCLError error;
 
         // Write pack.mcmeta
-        Path packMeta = target.resolve("pack.mcmeta");
+        Path packMeta = transpileTarget.resolve("pack.mcmeta");
         error = transpiler.appendToFile(packMeta, file ->
         {
             file.println('{');
@@ -72,14 +83,10 @@ public class ProgramRootNode extends AbstractNode
         });
         if (error != null) return error;
 
-        // Data folder
-        Path dataFolder = target.resolve("data");
-        dataFolder.toFile().mkdirs();
-
         // Transpile namespaces
         for (AbstractNode namespace : namespaces)
         {
-            error = namespace.transpile(transpiler, dataFolder);
+            error = namespace.transpile(transpiler);
             if (error != null) return error;
         }
 

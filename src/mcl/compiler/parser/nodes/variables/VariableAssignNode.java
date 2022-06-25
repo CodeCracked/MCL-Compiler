@@ -14,6 +14,7 @@ import mcl.compiler.parser.nodes.expressions.ExpressionNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
@@ -68,17 +69,23 @@ public class VariableAssignNode extends AbstractNode
     }
 
     @Override
-    public MCLError transpile(MCLTranspiler transpiler, Path target)
+    public void setTranspileTarget(Path target) throws IOException
+    {
+        this.transpileTarget = target;
+        this.value.setTranspileTarget(target);
+    }
+    @Override
+    public MCLError transpile(MCLTranspiler transpiler) throws IOException
     {
         VariableSymbol symbol = (VariableSymbol) transpiler.getCompiler().getSymbolTable().getSymbol((String)identifier.value(), SymbolType.VARIABLE);
 
         // Print Header Comment
-        MCLError error = transpiler.appendToFile(target, file -> file.println("# VAR_ASSIGN " + identifier.value()));
+        MCLError error = transpiler.appendToFile(transpileTarget, file -> file.println("# VAR_ASSIGN " + identifier.value()));
         if (error != null) return error;
 
         // Transpile Value Node
-        if (value instanceof ExpressionNode expression) error = expression.transpile(transpiler, target, symbol.type);
-        else error = value.transpile(transpiler, target);
+        if (value instanceof ExpressionNode expression) error = expression.transpile(transpiler, symbol.type);
+        else error = value.transpile(transpiler);
         if (error != null) return error;
 
         // Calculate Scaling Strings
@@ -86,35 +93,35 @@ public class VariableAssignNode extends AbstractNode
         String scaleUp = symbol.type.scaleUp(transpiler.getCompiler().config);
 
         // Transpile Variable Assignment
-        if (operation.type() == TokenType.ASSIGN) error = transpiler.appendToFile(target, file ->
+        if (operation.type() == TokenType.ASSIGN) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r0 {config.expressions}", symbol.tableLocation, symbol.type.getMinecraftName(), scaleDown));
         });
-        else if (operation.type() == TokenType.ASSIGN_PLUS) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.ASSIGN_PLUS) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.tableLocation, scaleUp));
             file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} += r0 {config.expressions}"));
             file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r1 {config.expressions}", symbol.tableLocation, symbol.type.getMinecraftName(), scaleDown));
         });
-        else if (operation.type() == TokenType.ASSIGN_MINUS) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.ASSIGN_MINUS) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.tableLocation, scaleUp));
             file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} -= r0 {config.expressions}"));
             file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r1 {config.expressions}", symbol.tableLocation, symbol.type.getMinecraftName(), scaleDown));
         });
-        else if (operation.type() == TokenType.ASSIGN_MUL) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.ASSIGN_MUL) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.tableLocation, scaleUp));
             file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} *= r0 {config.expressions}"));
             file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r1 {config.expressions}", symbol.tableLocation, symbol.type.getMinecraftName(), scaleDown));
         });
-        else if (operation.type() == TokenType.ASSIGN_DIV) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.ASSIGN_DIV) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.tableLocation, scaleUp));
             file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} /= r0 {config.expressions}"));
             file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r1 {config.expressions}", symbol.tableLocation, symbol.type.getMinecraftName(), scaleDown));
         });
-        else if (operation.type() == TokenType.ASSIGN_MOD) error = transpiler.appendToFile(target, file ->
+        else if (operation.type() == TokenType.ASSIGN_MOD) error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.tableLocation, scaleUp));
             file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} %= r0 {config.expressions}"));
@@ -123,7 +130,7 @@ public class VariableAssignNode extends AbstractNode
         if (error != null) return error;
 
         // Print Footer Comment
-        error = transpiler.appendToFile(target, file ->
+        error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println("# END VAR_ASSIGN " + identifier.value());
             file.println();

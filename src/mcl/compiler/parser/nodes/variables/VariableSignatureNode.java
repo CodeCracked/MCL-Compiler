@@ -7,14 +7,16 @@ import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
+import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
 public class VariableSignatureNode extends AbstractNode
 {
     public final RuntimeType type;
     public final Token identifier;
-    public VariableSymbol symbol;
+    public final VariableSymbol symbol;
 
     public VariableSignatureNode(Token type, Token identifier)
     {
@@ -22,6 +24,7 @@ public class VariableSignatureNode extends AbstractNode
 
         this.type = RuntimeType.parse((String)type.value());
         this.identifier = identifier;
+        this.symbol = new VariableSymbol(identifier, this.type);
     }
 
     @Override
@@ -30,11 +33,21 @@ public class VariableSignatureNode extends AbstractNode
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
-        symbol = new VariableSymbol(identifier, type);
         return compiler.getSymbolTable().addSymbol(symbol);
     }
     @Override
     public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        return null;
+    }
+
+    @Override
+    public void setTranspileTarget(Path target)
+    {
+        this.transpileTarget = target;
+    }
+    @Override
+    public MCLError transpile(MCLTranspiler transpiler)
     {
         return null;
     }
