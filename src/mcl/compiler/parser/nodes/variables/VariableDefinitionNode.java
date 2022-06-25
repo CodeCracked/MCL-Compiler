@@ -3,6 +3,7 @@ package mcl.compiler.parser.nodes.variables;
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.exceptions.MCLWrongTypeError;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.nodes.expressions.ExpressionNode;
 import mcl.compiler.source.MCLSourceCollection;
@@ -41,6 +42,19 @@ public class VariableDefinitionNode extends AbstractNode
         if (error != null) return error;
 
         return value.createSymbols(compiler, source);
+    }
+
+    @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        MCLError error = value.symbolAnalysis(compiler, source);
+        if (error != null) return error;
+
+        // Ensure type matching
+        RuntimeType valueType = value.getRuntimeType(compiler);
+        if (!signature.type.isAssignableFrom(valueType)) return new MCLWrongTypeError(compiler, value, signature.type, valueType);
+
+        return null;
     }
 
     @Override

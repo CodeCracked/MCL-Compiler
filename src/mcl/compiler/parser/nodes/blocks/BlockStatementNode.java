@@ -35,6 +35,27 @@ public class BlockStatementNode extends AbstractNode
     }
 
     @Override
+    public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        for (AbstractNode statement : statements)
+        {
+            MCLError error = statement.createSymbols(compiler, source);
+            if (error != null) return error;
+        }
+        return null;
+    }
+    @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        for (AbstractNode statement : statements)
+        {
+            MCLError error = statement.symbolAnalysis(compiler, source);
+            if (error != null) return error;
+        }
+        return null;
+    }
+
+    @Override
     public MCLError transpile(MCLTranspiler transpiler, Path target)
     {
         Map<String, Integer> blockTypeCounts = new HashMap<>();
@@ -56,17 +77,6 @@ public class BlockStatementNode extends AbstractNode
             }
 
             MCLError error = statement.transpile(transpiler, childTarget);
-            if (error != null) return error;
-        }
-        return null;
-    }
-
-    @Override
-    public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
-    {
-        for (AbstractNode statement : statements)
-        {
-            MCLError error = statement.createSymbols(compiler, source);
             if (error != null) return error;
         }
         return null;

@@ -65,6 +65,11 @@ public class UnaryOpNode extends ExpressionNode
     {
         return node.createSymbols(compiler, source);
     }
+    @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        return node.symbolAnalysis(compiler, source);
+    }
 
     @Override
     protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)

@@ -44,6 +44,11 @@ public class NumberNode extends ExpressionNode
     {
         return null;
     }
+    @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        return null;
+    }
 
     @Override
     protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)

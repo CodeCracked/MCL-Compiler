@@ -9,6 +9,7 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 import mcl.compiler.source.MCLSourceCollection;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -39,7 +40,9 @@ public class FunctionDefinitionNode extends NamedBlockDefinitionNode
     @Override
     protected MCLError createDefinitionSymbol(MCLCompiler compiler, MCLSourceCollection source)
     {
-        return compiler.getSymbolTable().addSymbol(new FunctionSymbol(identifier, returnType));
+        List<RuntimeType> parameterTypes = new ArrayList<>();
+        for (VariableSignatureNode parameter : parameters) parameterTypes.add(parameter.type);
+        return compiler.getSymbolTable().addSymbol(new FunctionSymbol(identifier, parameterTypes, returnType));
     }
     @Override
     protected MCLError createContextSymbols(MCLCompiler compiler, MCLSourceCollection source)

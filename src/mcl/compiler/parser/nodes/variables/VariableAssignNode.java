@@ -5,6 +5,8 @@ import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.analyzer.SymbolType;
 import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.exceptions.MCLIllegalOperationError;
+import mcl.compiler.exceptions.MCLWrongTypeError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.AbstractNode;
@@ -43,6 +45,26 @@ public class VariableAssignNode extends AbstractNode
         MCLError error = compiler.getSymbolTable().checkSymbolDefinition(identifier, SymbolType.VARIABLE);
         if (error != null) return error;
         return value.createSymbols(compiler, source);
+    }
+    @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        MCLError error = value.symbolAnalysis(compiler, source);
+        if (error != null) return error;
+
+        VariableSymbol symbol = (VariableSymbol)compiler.getSymbolTable().getSymbol((String)identifier.value(), SymbolType.VARIABLE);
+
+        // Ensure type matching
+        RuntimeType valueType = value.getRuntimeType(compiler);
+        if (!symbol.type.isAssignableFrom(valueType)) return new MCLWrongTypeError(compiler, value, symbol.type, valueType);
+
+        // No float modulus
+        if (operation.type() == TokenType.ASSIGN_MOD && (symbol.type.equals(RuntimeType.FLOAT) || value.getRuntimeType(compiler).equals(RuntimeType.FLOAT)))
+        {
+            return new MCLIllegalOperationError(compiler, this, "Cannot perform modulo of float numbers");
+        }
+
+        return null;
     }
 
     @Override

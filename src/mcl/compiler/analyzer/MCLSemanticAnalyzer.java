@@ -18,8 +18,10 @@ public class MCLSemanticAnalyzer
         this.rootNode = rootNode;
     }
 
-    public MCLError loadSymbolTables()
+    public MCLError analyze()
     {
-        return rootNode.createSymbols(compiler, source);
+        MCLError error = rootNode.createSymbols(compiler, source);
+        if (error != null) return error;
+        return rootNode.symbolAnalysis(compiler, source);
     }
 }

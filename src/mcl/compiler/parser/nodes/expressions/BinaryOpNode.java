@@ -4,6 +4,7 @@ import mcl.compiler.MCLCompiler;
 import mcl.compiler.MCLKeywords;
 import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.exceptions.MCLIllegalOperationError;
 import mcl.compiler.exceptions.MCLTranspileError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
@@ -105,6 +106,22 @@ public class BinaryOpNode extends ExpressionNode
         if (error != null) return error;
 
         error = rightNode.createSymbols(compiler, source);
+        return error;
+    }
+    @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        MCLError error = leftNode.symbolAnalysis(compiler, source);
+        if (error != null) return error;
+
+        error = rightNode.symbolAnalysis(compiler, source);
+        if (error != null) return error;
+
+        // No float modulus
+        if (operation.type() == TokenType.MOD && (leftNode.getRuntimeType(compiler).equals(RuntimeType.FLOAT) || rightNode.getRuntimeType(compiler).equals(RuntimeType.FLOAT)))
+        {
+            error = new MCLIllegalOperationError(compiler, this, "Cannot perform modulo of float types");
+        }
         return error;
     }
 

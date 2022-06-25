@@ -23,6 +23,7 @@ public class MCLCompiler
 {
     public final CompilerConfig config;
 
+    private MCLSourceCollection sourceCollection;
     private SymbolTable rootSymbolTable;
     private SymbolTable currentSymbolTable;
 
@@ -35,7 +36,7 @@ public class MCLCompiler
     public void compile(File source, File target) throws IOException, MCLError
     {
         // Setup
-        MCLSourceCollection sourceCollection = new MCLSourceCollection(source);
+        sourceCollection = new MCLSourceCollection(source);
         rootSymbolTable = new SymbolTable(sourceCollection, null, UUID.randomUUID()).addRootSymbols();
         currentSymbolTable = rootSymbolTable;
 
@@ -68,7 +69,7 @@ public class MCLCompiler
 
         // Perform Symbol Analysis
         MCLSemanticAnalyzer semanticAnalyzer = new MCLSemanticAnalyzer(this, sourceCollection, syntaxTree);
-        MCLError symbolsError = semanticAnalyzer.loadSymbolTables();
+        MCLError symbolsError = semanticAnalyzer.analyze();
         if (symbolsError != null) throw symbolsError;
 
         // Transpile AST into Minecraft Function Files
@@ -81,6 +82,7 @@ public class MCLCompiler
         }
     }
 
+    public MCLSourceCollection getSource() { return sourceCollection; }
     public void pushSymbolTable(UUID id)
     {
         currentSymbolTable = currentSymbolTable.getOrCreateChildTable(id);

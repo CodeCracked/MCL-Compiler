@@ -45,16 +45,27 @@ public abstract class BlockDefinitionNode extends AbstractNode
         if (error != null) return error;
 
         compiler.pushSymbolTable(symbolTableID);
-        {
-            error = createContextSymbols(compiler, source);
-            if (error != null) return error;
-
-            error = body.createSymbols(compiler, source);
-            if (error != null) return error;
-        }
+        error = createDefinitionSymbol(compiler, source);
         compiler.popSymbolTable();
 
-        return null;
+        if (error != null) return error;
+
+        compiler.pushSymbolTable(symbolTableID);
+        error = body.createSymbols(compiler, source);
+        compiler.popSymbolTable();
+
+        return error;
+    }
+    @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        MCLError error;
+
+        compiler.pushSymbolTable(symbolTableID);
+        error = body.symbolAnalysis(compiler, source);
+        compiler.popSymbolTable();
+
+        return error;
     }
 
     @Override

@@ -24,6 +24,7 @@ public abstract class AbstractNode
 
     public abstract void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer);
     public abstract MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source);
+    public abstract MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source);
     public MCLError transpile(MCLTranspiler transpiler, Path target) { return null; }
 
     public abstract RuntimeType getRuntimeType(MCLCompiler compiler);

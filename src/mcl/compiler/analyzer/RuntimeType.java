@@ -13,15 +13,29 @@ public class RuntimeType
     public static final RuntimeType UNDEFINED = new RuntimeType("UNDEFINED", "!!!MCL_INTERNAL_ERROR!!!", Integer.MAX_VALUE);
 
     // region Configuration
+    private static final Map<RuntimeType, Set<RuntimeType>> combinableTypes = new HashMap<>();
     private static final Map<RuntimeType, Set<RuntimeType>> implicitCasts = new HashMap<>();
+
     static
     {
+        VOID.setCombinableTypes();
+        INTEGER.setCombinableTypes(FLOAT);
+        FLOAT.setCombinableTypes(INTEGER);
+        UNDEFINED.setCombinableTypes();
+
         VOID.setImplicitCasts();
         INTEGER.setImplicitCasts(FLOAT);
-        FLOAT.setImplicitCasts(INTEGER);
-        UNDEFINED.setImplicitCasts(UNDEFINED);
+        FLOAT.setImplicitCasts();
+        UNDEFINED.setImplicitCasts();
     }
 
+    private void setCombinableTypes(RuntimeType... types)
+    {
+        Set<RuntimeType> set = new HashSet<>();
+        Collections.addAll(set, types);
+        set.add(this);
+        combinableTypes.put(this, Collections.unmodifiableSet(set));
+    }
     private void setImplicitCasts(RuntimeType... casts)
     {
         Set<RuntimeType> set = new HashSet<>();
@@ -50,9 +64,15 @@ public class RuntimeType
 
     public RuntimeType getCombinedType(RuntimeType other)
     {
-        if (this == other) return this;
-        else if (implicitCasts.get(this).contains(other)) return this.priority > other.priority ? this : other;
+        if (this.equals(other)) return this;
+        else if (combinableTypes.get(this).contains(other)) return this.priority > other.priority ? this : other;
         else return UNDEFINED;
+    }
+
+    public boolean isAssignableFrom(RuntimeType other)
+    {
+        if (this.equals(other)) return true;
+        else return implicitCasts.get(other).contains(this);
     }
 
     public String scaleUp(CompilerConfig config)

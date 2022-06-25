@@ -44,6 +44,17 @@ public class ProgramRootNode extends AbstractNode
         return null;
     }
     @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        for (AbstractNode namespace : namespaces)
+        {
+            MCLError error = namespace.symbolAnalysis(compiler, source);
+            if (error != null) return error;
+        }
+        return null;
+    }
+
+    @Override
     public MCLError transpile(MCLTranspiler transpiler, Path target)
     {
         MCLError error;

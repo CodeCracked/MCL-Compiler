@@ -5,6 +5,7 @@ import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.analyzer.SymbolType;
 import mcl.compiler.analyzer.symbols.FunctionSymbol;
 import mcl.compiler.exceptions.MCLError;
+import mcl.compiler.exceptions.MCLFunctionCallError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
@@ -53,6 +54,30 @@ public class FunctionCallNode extends ExpressionNode
     }
 
     @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        MCLError error;
+
+        // Analyze children
+        for (AbstractNode argument : arguments)
+        {
+            error = argument.symbolAnalysis(compiler, source);
+            if (error != null) return error;
+        }
+
+        // Check if function is defined
+        error = compiler.getSymbolTable().checkSymbolDefinition(identifier, SymbolType.FUNCTION);
+        if (error != null) return error;
+
+        // Check function parameters
+        function = (FunctionSymbol)compiler.getSymbolTable().getSymbol((String)identifier.value(), SymbolType.FUNCTION);
+        if (function.parameters.size() != arguments.size()) return new MCLFunctionCallError(compiler, this, function);
+        for (int i = 0; i < function.parameters.size(); i++) if (!function.parameters.get(i).equals(arguments.get(i).getRuntimeType(compiler))) return new MCLFunctionCallError(compiler, this, function);
+
+        return null;
+    }
+
+    @Override
     public MCLError transpile(MCLTranspiler transpiler, Path target)
     {
         ExpressionTranspileResult result = transpileExpression(transpiler, target, RuntimeType.VOID, 0);
@@ -71,7 +96,7 @@ public class FunctionCallNode extends ExpressionNode
         // Print Footer Comment
         mclError = transpiler.appendToFile(target, file -> file.println("# END FUNC_CALL " + identifier.value()));
         if (mclError != null) return result;
-        
+
         return result;
     }
 

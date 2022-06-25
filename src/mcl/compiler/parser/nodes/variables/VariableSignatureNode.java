@@ -33,6 +33,11 @@ public class VariableSignatureNode extends AbstractNode
         symbol = new VariableSymbol(identifier, type);
         return compiler.getSymbolTable().addSymbol(symbol);
     }
+    @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        return null;
+    }
 
     @Override
     public RuntimeType getRuntimeType(MCLCompiler compiler)

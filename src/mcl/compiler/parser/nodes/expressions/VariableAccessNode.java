@@ -41,6 +41,12 @@ public class VariableAccessNode extends ExpressionNode
     }
 
     @Override
+    public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
+    {
+        return null;
+    }
+
+    @Override
     protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, Path target, RuntimeType targetType, int depth)
     {
         VariableSymbol symbol = (VariableSymbol)transpiler.getCompiler().getSymbolTable().getSymbol((String)identifier.value(), SymbolType.VARIABLE);
