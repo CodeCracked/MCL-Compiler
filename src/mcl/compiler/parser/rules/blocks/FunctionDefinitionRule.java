@@ -5,12 +5,9 @@ import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
+import mcl.compiler.parser.nodes.ParameterListNode;
 import mcl.compiler.parser.nodes.blocks.BlockStatementNode;
 import mcl.compiler.parser.nodes.blocks.FunctionDefinitionNode;
-import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FunctionDefinitionRule implements GrammarRule
 {
@@ -30,34 +27,9 @@ public class FunctionDefinitionRule implements GrammarRule
         result.registerAdvancement();
         parser.advance();
 
-        // Check for Parameter List Start
-        if (parser.getCurrentToken().type() != TokenType.LPAREN) return result.failure(new MCLSyntaxError(parser, "Expected '('"));
-        result.registerAdvancement();
-        parser.advance();
-
         // Parameter List
-        List<VariableSignatureNode> parameters = new ArrayList<>();
-        if (parser.getCurrentToken().isKeyword(MCLKeywords.VARIABLE_TYPES))
-        {
-            do
-            {
-                if (parser.getCurrentToken().type() == TokenType.COMMA)
-                {
-                    result.registerAdvancement();
-                    parser.advance();
-                }
-
-                AbstractNode parameter = result.register(GrammarRules.VARIABLE_SIGNATURE.build(parser));
-                if (result.error() != null) return result;
-                parameters.add((VariableSignatureNode) parameter);
-            }
-            while (parser.getCurrentToken().type() == TokenType.COMMA);
-        }
-
-        // Check for Parameter List Start
-        if (parser.getCurrentToken().type() != TokenType.RPAREN) return result.failure(new MCLSyntaxError(parser, "Expected ')'"));
-        result.registerAdvancement();
-        parser.advance();
+        ParameterListNode parameters = (ParameterListNode)result.register(GrammarRules.PARAMETER_LIST.build(parser));
+        if (result.error() != null) return result;
 
         // Return Type
         Token returnType = null;

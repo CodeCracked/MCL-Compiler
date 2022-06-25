@@ -68,7 +68,7 @@ public class MCLTranspiler
         });
     }
 
-    public MCLError runFunctionFile(Path target, Path functionFile)
+    public String getFunctionName(Path functionFile)
     {
         String fromNamespace = functionFile.toString().replace(dataFolder.toString(), "").trim().substring(1);
         String[] tokens = fromNamespace.split(Pattern.quote(File.separator));
@@ -78,7 +78,11 @@ public class MCLTranspiler
         for (int i = 2; i < tokens.length - 1; i++) functionName.append(tokens[i] + "/");
         functionName.append(tokens[tokens.length - 1].replace(".mcfunction", ""));
 
-        return appendToFile(target, file -> file.println("function " + functionName));
+        return functionName.toString();
+    }
+    public MCLError runFunctionFile(Path target, Path functionFile)
+    {
+        return appendToFile(target, file -> file.println("function " + getFunctionName(functionFile)));
     }
 
     public MCLError assignVariable(Path target, VariableSymbol variable, int register)

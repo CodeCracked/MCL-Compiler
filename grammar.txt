@@ -1,24 +1,36 @@
-program		: (namespace)*
+program		: (namespace (NELWINE namespace)*)?
 
 namespace	: KEYWORD:namespace IDENTIFIER block
 
 block		: (NEWLINE INDENT:2 statement)*
 
-statement	: var_sig ASSIGN expr
+statement	: event_def
+			: var_def
 			: var_assign
 			: func_call
 			: func_def
 
+
+
 var_sig		: KEYWORD:(int|float) IDENTIFIER
+
+var_def		: var_sig ASSIGN expr
 
 var_assign	: IDENTIFIER (ASSIGN|ASSIGN_PLUS|ASSIGN_MINUS|ASSIGN_MUL|ASSIGN_DIV|ASSIGN_MOD) expr
 
-func_def	: KEYWORD:func IDENTIFIER LPAREN (var_sig (COMMA var_sig)*)? RPAREN (KEYWORD:return KEYWORD:(int|float))? block
+par_list	: LPAREN (var_sig (COMMA var_sig)*)? RPAREN
+
+
+
+event_def	: KEYWORD:event IDENTIFIER par_list
+
+func_def	: KEYWORD:func IDENTIFIER par_list (KEYWORD:return KEYWORD:(int|float))? block
 
 func_call	: IDENTIFIER LPAREN (expr (COMMA expr)*)? RPAREN
 
-expr		: comp-expr ((KEYWORD:AND|OR) comp-expr)*
 
+
+expr		: comp-expr ((KEYWORD:AND|OR) comp-expr)*
 
 comp-expr	: KEYWORD:not comp-expr
 			: arith-expr ((ASSIGN|NOT_ASSIGN|LESS|GREATER|LESS_OR_EQUAL|GREATER_OR_EQUAL) arith-expr)*

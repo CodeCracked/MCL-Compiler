@@ -34,11 +34,12 @@ public class MCLError extends Exception
             else builder.append(' ');
         }
 
-        for (int i = start; i < end; i++)
+        for (int i = start; i < Math.min(end, lineChars.length); i++)
         {
             if (lineChars[i] == '\t') builder.append("^^^^");
             else builder.append('^');
         }
+        builder.append("^".repeat(Math.max(0, end - Math.min(end, lineChars.length))));
 
         return builder.toString();
     }

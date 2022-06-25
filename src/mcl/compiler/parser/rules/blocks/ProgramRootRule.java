@@ -15,11 +15,21 @@ public class ProgramRootRule implements GrammarRule
         ParseResult result = new ParseResult();
         List<AbstractNode> namespaces = new ArrayList<>();
 
-        while (parser.getCurrentToken().matches(TokenType.KEYWORD, "namespace"))
+        if (parser.getCurrentToken().matches(TokenType.KEYWORD, "namespace"))
         {
-            AbstractNode namespace = result.register(GrammarRules.NAMESPACE.build(parser));
-            if (result.error() != null) return result;
-            namespaces.add(namespace);
+            do
+            {
+                if (parser.getCurrentToken().type() == TokenType.NEWLINE)
+                {
+                    result.registerAdvancement();
+                    parser.advance();
+                }
+
+                AbstractNode namespace = result.register(GrammarRules.NAMESPACE.build(parser));
+                if (result.error() != null) return result;
+                namespaces.add(namespace);
+            }
+            while (parser.getCurrentToken().type() == TokenType.NEWLINE);
         }
 
         return result.success(new ProgramRootNode(namespaces));

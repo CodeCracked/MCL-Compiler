@@ -7,9 +7,11 @@ import mcl.compiler.parser.rules.blocks.BlockStatementRule;
 import mcl.compiler.parser.rules.blocks.FunctionDefinitionRule;
 import mcl.compiler.parser.rules.blocks.NamespaceDefinitionRule;
 import mcl.compiler.parser.rules.blocks.ProgramRootRule;
+import mcl.compiler.parser.rules.events.EventDefinitionRule;
 import mcl.compiler.parser.rules.expressions.*;
 import mcl.compiler.parser.rules.statements.StatementRule;
-import mcl.compiler.parser.rules.statements.VariableAssignmentRule;
+import mcl.compiler.parser.rules.variables.ParameterListRule;
+import mcl.compiler.parser.rules.variables.VariableAssignmentRule;
 import mcl.compiler.parser.rules.variables.VariableDefinitionRule;
 import mcl.compiler.parser.rules.variables.VariableSignatureRule;
 
@@ -19,11 +21,15 @@ public class GrammarRules
 {
     public static final GrammarRule PROGRAM_ROOT = new ProgramRootRule();
     public static final GrammarRule NAMESPACE = new NamespaceDefinitionRule();
-    public static final GrammarRule FUNCTION = new FunctionDefinitionRule();
-    public static final GrammarRule VARIABLE_SIGNATURE = new VariableSignatureRule();
-    public static final GrammarRule VARIABLE_ASSIGNMENT = new VariableAssignmentRule();
     public static final GrammarRule STATEMENT = new StatementRule();
+
+    public static final GrammarRule VARIABLE_SIGNATURE = new VariableSignatureRule();
     public static final GrammarRule VARIABLE_DEFINITION = new VariableDefinitionRule();
+    public static final GrammarRule VARIABLE_ASSIGNMENT = new VariableAssignmentRule();
+    public static final GrammarRule PARAMETER_LIST = new ParameterListRule();
+
+    public static final GrammarRule EVENT_DEFINITION = new EventDefinitionRule();
+    public static final GrammarRule FUNCTION_DEFINITION = new FunctionDefinitionRule();
     public static final GrammarRule FUNCTION_CALL = new FunctionCallRule();
 
     public static final GrammarRule EXPRESSION = new ExpressionRule();

@@ -34,8 +34,8 @@ public class SymbolTable
     }
     public SymbolTable addRootSymbols()
     {
-        addSymbol(new EventSymbol(Token.description(TokenType.IDENTIFIER, "minecraft:load")));
-        addSymbol(new EventSymbol(Token.description(TokenType.IDENTIFIER, "minecraft:tick")));
+        //addSymbol(new EventSymbol(Token.description(TokenType.IDENTIFIER, "minecraft:load")));
+        //addSymbol(new EventSymbol(Token.description(TokenType.IDENTIFIER, "minecraft:tick")));
         return this;
     }
 

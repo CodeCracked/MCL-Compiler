@@ -7,42 +7,39 @@ import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
+import mcl.compiler.parser.nodes.ParameterListNode;
 import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class FunctionDefinitionNode extends NamedBlockDefinitionNode
 {
-    public final List<VariableSignatureNode> parameters;
+    public final ParameterListNode parameterList;
     public final RuntimeType returnType;
     public final FunctionSymbol symbol;
 
-    public FunctionDefinitionNode(Token keyword, Token identifier, List<VariableSignatureNode> parameters, Token returnType, BlockStatementNode body)
+    public FunctionDefinitionNode(Token keyword, Token identifier, ParameterListNode parameterList, Token returnType, BlockStatementNode body)
     {
         super(keyword.startPosition(), body.endPosition(), identifier, body);
 
-        this.parameters = Collections.unmodifiableList(parameters);
+        this.parameterList = parameterList;
         this.returnType = returnType != null ? RuntimeType.parse((String)returnType.value()) : RuntimeType.VOID;
 
         List<VariableSymbol> parameterSymbols = new ArrayList<>();
-        for (VariableSignatureNode parameter : this.parameters) parameterSymbols.add(parameter.symbol);
+        for (VariableSignatureNode parameter : this.parameterList.parameters) parameterSymbols.add(parameter.symbol);
         this.symbol = new FunctionSymbol(identifier, parameterSymbols, this.returnType);
     }
 
     @Override
     public void walkChildren(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
     {
-        for (VariableSignatureNode parameter : parameters)
-        {
-            parentChildConsumer.accept(this, parameter);
-            parameter.walk(parentChildConsumer);
-        }
+        parentChildConsumer.accept(this, parameterList);
+        parameterList.walk(parentChildConsumer);
     }
 
     @Override
@@ -53,18 +50,14 @@ public class FunctionDefinitionNode extends NamedBlockDefinitionNode
     @Override
     protected MCLError createContextSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
-        for (VariableSignatureNode parameter : parameters)
-        {
-            MCLError error = parameter.createSymbols(compiler, source);
-            if (error != null) return error;
-        }
-        return null;
+        return parameterList.createSymbols(compiler, source);
     }
 
     @Override
     public void setTranspileTarget(Path target) throws IOException
     {
         super.setTranspileTarget(target);
+        parameterList.setTranspileTarget(target);
         symbol.mainFunctionFile = ((BlockStatementNode)body).mainFunction;
     }
 
@@ -77,10 +70,11 @@ public class FunctionDefinitionNode extends NamedBlockDefinitionNode
         System.out.print("  ".repeat(depth + 1));
         System.out.println(identifier);
 
+        parameterList.debugPrint(depth + 1);
+
         System.out.print("  ".repeat(depth + 1));
         System.out.println("RETURN:" + returnType.toString());
 
-        for (VariableSignatureNode parameter : parameters) parameter.debugPrint(depth + 1);
         body.debugPrint(depth + 1);
     }
 }

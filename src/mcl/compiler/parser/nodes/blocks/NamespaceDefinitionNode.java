@@ -7,7 +7,11 @@ import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
+import mcl.compiler.transpiler.FileUtils;
+import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class NamespaceDefinitionNode extends NamedBlockDefinitionNode
@@ -27,6 +31,19 @@ public class NamespaceDefinitionNode extends NamedBlockDefinitionNode
     protected Path getDefinitionFolder(Path target)
     {
         return target.resolve((String)identifier.value()).resolve("functions");
+    }
+    @Override
+    public MCLError transpile(MCLTranspiler transpiler) throws IOException
+    {
+        MCLError error = super.transpile(transpiler);
+        if (error != null) return error;
+
+        if (body instanceof BlockStatementNode block)
+        {
+            if (Files.readString(block.mainFunction).trim().length() == 0) block.mainFunction.toFile().delete();
+            if (block.mainFunction.getParent().toFile().listFiles().length == 0) FileUtils.delete(block.mainFunction.getParent().toFile(), true);
+        }
+        return null;
     }
 
     @Override

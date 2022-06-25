@@ -6,6 +6,7 @@ public final class MCLKeywords
 {
     public static final String NAMESPACE = "namespace";
     public static final String FUNC = "func";
+    public static final String EVENT = "event";
     public static final String RETURN = "return";
 
     public static final String INT = "int";
@@ -23,6 +24,7 @@ public final class MCLKeywords
     public static Set<String> KEYWORDS = Set.of(
             NAMESPACE,
             FUNC,
+            EVENT,
             RETURN,
 
             INT,

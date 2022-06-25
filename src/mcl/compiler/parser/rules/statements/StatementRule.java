@@ -12,8 +12,16 @@ public class StatementRule implements GrammarRule
     {
         ParseResult result = new ParseResult();
 
+        // Event Definition
+        if (parser.getCurrentToken().isKeyword(MCLKeywords.EVENT))
+        {
+            AbstractNode definition = result.register(GrammarRules.EVENT_DEFINITION.build(parser));
+            if (result.error() != null) return result;
+            return result.success(definition);
+        }
+
         // Variable Definition
-        if (parser.getCurrentToken().isKeyword(MCLKeywords.VARIABLE_TYPES))
+        else if (parser.getCurrentToken().isKeyword(MCLKeywords.VARIABLE_TYPES))
         {
             AbstractNode definition = result.register(GrammarRules.VARIABLE_DEFINITION.build(parser));
             if (result.error() != null) return result;
@@ -43,7 +51,7 @@ public class StatementRule implements GrammarRule
         // Function Definitions
         else if (parser.getCurrentToken().isKeyword(MCLKeywords.FUNC))
         {
-            AbstractNode function = result.register(GrammarRules.FUNCTION.build(parser));
+            AbstractNode function = result.register(GrammarRules.FUNCTION_DEFINITION.build(parser));
             if (result.error() != null) return result;
             return result.success(function);
         }
