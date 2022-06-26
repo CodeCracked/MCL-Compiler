@@ -85,7 +85,7 @@ public class MCLCompiler
 
     public MCLSourceCollection getSource() { return sourceCollection; }
     public ProgramRootNode getSyntaxTree() { return syntaxTree; }
-    public void pushSymbolTable(UUID id)
+    public void pushSymbolTable(Object id)
     {
         currentSymbolTable = currentSymbolTable.getOrCreateChildTable(id);
     }

@@ -5,6 +5,7 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 public abstract class Symbol
 {
@@ -22,4 +23,19 @@ public abstract class Symbol
     }
 
     public abstract MCLError transpileHeader(MCLTranspiler transpiler, Path target);
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Symbol symbol = (Symbol) o;
+        return Objects.equals(name, symbol.name) && symbolType == symbol.symbolType;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(name, symbolType);
+    }
 }

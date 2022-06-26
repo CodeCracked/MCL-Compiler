@@ -190,6 +190,24 @@ public class MCLTranspiler
     }
     //endregion
     //region Helpers
+    public MCLError writeFile(Path target, Consumer<PrintWriter> consumer)
+    {
+        if (!canWrite()) return null;
+        target.getParent().toFile().mkdirs();
+
+        try(FileWriter fileWriter = new FileWriter(target.toFile(), false);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            PrintWriter out = new PrintWriter(bufferedWriter))
+        {
+            consumer.accept(out);
+            return null;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return new MCLFileWriteError(e);
+        }
+    }
     public MCLError appendToFile(Path target, Consumer<PrintWriter> consumer)
     {
         if (!canWrite()) return null;

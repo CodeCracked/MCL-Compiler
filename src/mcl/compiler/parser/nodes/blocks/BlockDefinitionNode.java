@@ -14,15 +14,19 @@ import java.util.function.BiConsumer;
 
 public abstract class BlockDefinitionNode extends AbstractNode
 {
-    public final UUID symbolTableID;
+    public final Object symbolTableID;
     public final AbstractNode body;
     public final String blockName;
 
     public BlockDefinitionNode(int startPosition, int endPosition, AbstractNode body, String blockName)
     {
+        this(startPosition, endPosition, body, blockName, UUID.randomUUID());
+    }
+    public BlockDefinitionNode(int startPosition, int endPosition, AbstractNode body, String blockName, Object symbolTableID)
+    {
         super(startPosition, endPosition);
 
-        this.symbolTableID = UUID.randomUUID();
+        this.symbolTableID = symbolTableID;
         this.body = body;
         this.blockName = blockName;
     }

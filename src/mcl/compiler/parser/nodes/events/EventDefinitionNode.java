@@ -2,6 +2,7 @@ package mcl.compiler.parser.nodes.events;
 
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;
+import mcl.compiler.analyzer.SymbolType;
 import mcl.compiler.analyzer.symbols.EventSymbol;
 import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
@@ -23,7 +24,7 @@ public class EventDefinitionNode extends AbstractNode
 {
     public final Token identifier;
     public final ParameterListNode parameterList;
-    public final EventSymbol symbol;
+    public EventSymbol symbol;
 
     public EventDefinitionNode(Token keyword, Token identifier, ParameterListNode parameterList)
     {
@@ -47,7 +48,13 @@ public class EventDefinitionNode extends AbstractNode
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
-        return compiler.getSymbolTable().addSymbol(symbol);
+        MCLError error = compiler.getSymbolTable().addSymbol(symbol);
+        if (error != null) return error;
+
+        // Update symbol reference in case it was merged with an existing header event
+        symbol = (EventSymbol) compiler.getSymbolTable().getSymbol((String)identifier.value(), SymbolType.EVENT);
+        return null;
+
         // Don't create parameterList symbols because they are only used on a per-listener basis.
         // The parameterList node only defines the types required for listener symbol analysis
     }
@@ -69,7 +76,7 @@ public class EventDefinitionNode extends AbstractNode
     public MCLError transpile(MCLTranspiler transpiler) throws IOException
     {
         transpiler.bypassDisable = true;
-        MCLError error = transpiler.appendToFile(transpileTarget, file ->
+        MCLError error = transpiler.writeFile(transpileTarget, file ->
         {
             file.println("{");
             file.println("    \"values\": [");

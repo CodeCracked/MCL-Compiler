@@ -14,7 +14,6 @@ import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 
 public class LocationNode extends AbstractNode
@@ -43,7 +42,7 @@ public class LocationNode extends AbstractNode
         if (namespace == null) return compiler.getSymbolTable().getSymbol((String)identifier.value(), symbolType);
         else
         {
-            UUID namespaceTableID = compiler.getSyntaxTree().getNamespaceNode((String)namespace.value()).symbolTableID;
+            Object namespaceTableID = compiler.getSyntaxTree().getNamespaceNode((String)namespace.value()).symbolTableID;
             return compiler.getRootSymbolTable().getOrCreateChildTable(namespaceTableID).getSymbol((String)identifier.value(), symbolType);
         }
     }

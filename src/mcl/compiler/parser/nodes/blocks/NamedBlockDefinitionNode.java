@@ -9,7 +9,7 @@ public abstract class NamedBlockDefinitionNode extends BlockDefinitionNode
 
     public NamedBlockDefinitionNode(int startPosition, int endPosition, Token identifier, AbstractNode body)
     {
-        super(startPosition, endPosition, body, (String)identifier.value());
+        super(startPosition, endPosition, body, (String)identifier.value(), identifier.value());
         this.identifier = identifier;
     }
 }

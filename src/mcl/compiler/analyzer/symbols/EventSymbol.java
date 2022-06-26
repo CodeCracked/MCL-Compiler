@@ -7,9 +7,7 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class EventSymbol extends Symbol
 {
@@ -28,7 +26,7 @@ public class EventSymbol extends Symbol
         return transpiler.appendToFile(target, file ->
         {
             file.print("\tevent ");
-            file.print(identifier.value());
+            file.print(name);
             file.print('(');
             for (int i = 0; i < parameters.size(); i++)
             {
@@ -37,5 +35,30 @@ public class EventSymbol extends Symbol
             }
             file.println(')');
         });
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EventSymbol that = (EventSymbol) o;
+        if (!Objects.equals(name, that.name)) return false;
+        else if (parameters.size() != that.parameters.size()) return false;
+        else
+        {
+            for (int i = 0; i < parameters.size(); i++) if (!Objects.equals(parameters.get(i).type, that.parameters.get(i).type)) return false;
+            return true;
+        }
+    }
+
+    @Override
+    public int hashCode()
+    {
+        Object[] objs = new Object[parameters.size() + 1];
+        objs[0] = name;
+        for (int i = 1; i < objs.length; i++) objs[i] = parameters.get(i - 1).type;
+        return Arrays.hashCode(objs);
     }
 }
