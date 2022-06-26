@@ -1,6 +1,5 @@
 package mcl.compiler.analyzer.symbols;
 
-import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.analyzer.Symbol;
 import mcl.compiler.analyzer.SymbolType;
 import mcl.compiler.exceptions.MCLError;
@@ -9,19 +8,16 @@ import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.nio.file.Path;
 
-public class VariableSymbol extends Symbol
+public class NamespaceSymbol extends Symbol
 {
-    public final RuntimeType type;
-
-    public VariableSymbol(Token identifier, RuntimeType type)
+    public NamespaceSymbol(Token identifier)
     {
-        super(identifier, SymbolType.VARIABLE);
-        this.type = type;
+        super(identifier, SymbolType.NAMESPACE);
     }
 
     @Override
     public MCLError transpileHeader(MCLTranspiler transpiler, Path target)
     {
-        return null;
+        return transpiler.appendToFile(target, file -> file.println("namespace " + identifier.value()));
     }
 }

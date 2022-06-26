@@ -67,7 +67,7 @@ public class LocationNode extends AbstractNode
         else
         {
             NamespaceDefinitionNode namespaceNode = compiler.getSyntaxTree().getNamespaceNode((String)namespace.value());
-            if (namespaceNode == null) return new MCLUndefinedNamespaceError(source, identifier);
+            if (namespaceNode == null) return new MCLUndefinedNamespaceError(source, namespace);
 
             MCLError error = compiler.getRootSymbolTable().checkSymbolDefinition(namespace, SymbolType.NAMESPACE);
             if (error != null) return error;

@@ -1,8 +1,7 @@
 package mcl.compiler.parser.nodes.blocks;
 
 import mcl.compiler.MCLCompiler;
-import mcl.compiler.analyzer.Symbol;
-import mcl.compiler.analyzer.SymbolType;
+import mcl.compiler.analyzer.symbols.NamespaceSymbol;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
@@ -24,7 +23,7 @@ public class NamespaceDefinitionNode extends NamedBlockDefinitionNode
     @Override
     protected MCLError createDefinitionSymbol(MCLCompiler compiler, MCLSourceCollection source)
     {
-        return compiler.getSymbolTable().addSymbol(new Symbol(identifier, SymbolType.NAMESPACE));
+        return compiler.getSymbolTable().addSymbol(new NamespaceSymbol(identifier));
     }
 
     @Override

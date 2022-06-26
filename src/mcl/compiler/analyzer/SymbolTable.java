@@ -9,6 +9,7 @@ import mcl.compiler.source.MCLSourceCollection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class SymbolTable
 {
@@ -17,7 +18,7 @@ public class SymbolTable
 
     private final UUID id;
     private final MCLSourceCollection source;
-    private final Map<String, Map<SymbolType, Symbol>> symbolMap;
+    private final Map<SymbolType, Map<String, Symbol>> symbolMap;
     private final Map<UUID, SymbolTable> childTables;
 
     public SymbolTable(MCLSourceCollection source, SymbolTable parent, UUID id)
@@ -39,7 +40,7 @@ public class SymbolTable
 
     public Symbol getSymbol(String identifier, SymbolType symbolType)
     {
-        if (symbolMap.containsKey(identifier) && symbolMap.get(identifier).containsKey(symbolType)) return symbolMap.get(identifier).get(symbolType);
+        if (symbolMap.containsKey(symbolType) && symbolMap.get(symbolType).containsKey(identifier)) return symbolMap.get(symbolType).get(identifier);
         else if (parent != null) return parent.getSymbol(identifier, symbolType);
         else return null;
     }
@@ -51,7 +52,7 @@ public class SymbolTable
     public MCLError addSymbol(Symbol symbol)
     {
         String name = (String)symbol.identifier.value();
-        if (symbolMap.containsKey(name) && symbolMap.get(name).containsKey(symbol.symbolType)) return new MCLDuplicateSymbolError(source, symbol.identifier, symbol.symbolType);
+        if (symbolMap.containsKey(symbol.symbolType) && symbolMap.get(symbol.symbolType).containsKey(name)) return new MCLDuplicateSymbolError(source, symbol.identifier, symbol.symbolType);
         else
         {
             String location = (String)symbol.identifier.value();
@@ -63,10 +64,19 @@ public class SymbolTable
             }
             symbol.tableLocation = location;
 
-            if (!symbolMap.containsKey(name)) symbolMap.put(name, new HashMap<>());
-            symbolMap.get(name).put(symbol.symbolType, symbol);
+            if (!symbolMap.containsKey(symbol.symbolType)) symbolMap.put(symbol.symbolType, new HashMap<>());
+            symbolMap.get(symbol.symbolType).put(name, symbol);
             return null;
         }
+    }
+
+    public void forEach(SymbolType symbolType, Consumer<Symbol> consumer)
+    {
+        if (symbolMap.containsKey(symbolType)) symbolMap.get(symbolType).values().forEach(consumer);
+    }
+    public void forEach(Consumer<Symbol> consumer)
+    {
+        symbolMap.values().forEach(map -> map.values().forEach(consumer));
     }
 
     public SymbolTable getOrCreateChildTable(UUID id)

@@ -3,6 +3,10 @@ package mcl.compiler.transpiler;
 import mcl.compiler.CompilerConfig;
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;
+import mcl.compiler.analyzer.Symbol;
+import mcl.compiler.analyzer.SymbolTable;
+import mcl.compiler.analyzer.SymbolType;
+import mcl.compiler.analyzer.symbols.NamespaceSymbol;
 import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLFileWriteError;
@@ -13,6 +17,7 @@ import mcl.compiler.source.MCLSourceCollection;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -43,14 +48,68 @@ public class MCLTranspiler
         try
         {
             syntaxTree.setTranspileTarget(compiler, rootFolder);
-            return syntaxTree.transpile(this);
+
+            MCLError error = syntaxTree.transpile(this);
+            if (error != null) return error;
+
+            error = transpileHeader();
+            return error;
         }
         catch (IOException e)
         {
             return new MCLFileWriteError(e);
         }
     }
+    private MCLError transpileHeader()
+    {
+        Path header = rootFolder.resolve(compiler.config.projectName + ".mclh");
+        header.getParent().toFile().mkdirs();
 
+        Map<String, Symbol> namespaceSymbols = new HashMap<>();
+        compiler.getRootSymbolTable().forEach(SymbolType.NAMESPACE, symbol -> namespaceSymbols.put(symbol.name, symbol));
+
+        // For Each Namespace
+        MCLError error;
+        for (Map.Entry<String, Symbol> entry : namespaceSymbols.entrySet())
+        {
+            // Transpile Namespace
+            error = entry.getValue().transpileHeader(this, header);
+            if (error != null) return error;
+
+            SymbolTable table = compiler.getRootSymbolTable().getOrCreateChildTable(syntaxTree.getNamespaceNode(entry.getKey()).symbolTableID);
+            List<Symbol> symbols = new ArrayList<>();
+
+            // Transpile Events
+            table.forEach(SymbolType.EVENT, symbols::add);
+            for (Symbol symbol : symbols)
+            {
+                error = symbol.transpileHeader(this, header);
+                if (error != null) return error;
+            }
+            symbols.clear();
+
+            // Transpile Functions
+            table.forEach(SymbolType.FUNCTION, symbols::add);
+            for (Symbol symbol : symbols)
+            {
+                error = symbol.transpileHeader(this, header);
+                if (error != null) return error;
+            }
+            symbols.clear();
+
+            // Transpile Variables
+            table.forEach(SymbolType.VARIABLE, symbols::add);
+            for (Symbol symbol : symbols)
+            {
+                error = symbol.transpileHeader(this, header);
+                if (error != null) return error;
+            }
+        }
+
+        return null;
+    }
+
+    //region Transpile Atoms
     public MCLError pushStacks(Path target)
     {
         return appendToFile(target, file ->
@@ -107,7 +166,8 @@ public class MCLTranspiler
     {
         return appendToFile(target, file -> file.println(applyConfig("execute store result storage {config.variables} CallStack[0].return %s %s run scoreboard players get r0 {config.expressions}", type.getMinecraftName(), type.scaleDown(compiler.config))));
     }
-
+    //endregion
+    //region Helpers
     public MCLError appendToFile(Path target, Consumer<PrintWriter> consumer)
     {
         target.getParent().toFile().mkdirs();
@@ -135,12 +195,6 @@ public class MCLTranspiler
                 .replace("{config.variables}", compiler.config.variablesStorage());
     }
 
-    public MCLCompiler getCompiler() { return compiler; }
-    public CompilerConfig getConfig() { return compiler.config; }
-    public MCLSourceCollection getSource() { return source; }
-    public Path getRootFolder() { return rootFolder; }
-    public Path getDataFolder() { return dataFolder; }
-
     public Path getNamespaceFolder(AbstractNode node)
     {
         AbstractNode current = node;
@@ -153,4 +207,11 @@ public class MCLTranspiler
     {
         return getNamespaceFolder(node).resolve("functions");
     }
+    //endregion
+
+    public MCLCompiler getCompiler() { return compiler; }
+    public CompilerConfig getConfig() { return compiler.config; }
+    public MCLSourceCollection getSource() { return source; }
+    public Path getRootFolder() { return rootFolder; }
+    public Path getDataFolder() { return dataFolder; }
 }

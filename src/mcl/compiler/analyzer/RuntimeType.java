@@ -8,8 +8,8 @@ import java.util.*;
 public class RuntimeType
 {
     public static final RuntimeType VOID = new RuntimeType("void", "!!!MCL_INTERNAL_ERROR!!!", 0);
-    public static final RuntimeType INTEGER = new RuntimeType("int", "int", 0);
-    public static final RuntimeType FLOAT = new RuntimeType("float", "float", 1);
+    public static final RuntimeType INTEGER = new RuntimeType(MCLKeywords.INT, "int", 0);
+    public static final RuntimeType FLOAT = new RuntimeType(MCLKeywords.FLOAT, "float", 1);
     public static final RuntimeType UNDEFINED = new RuntimeType("undefined", "!!!MCL_INTERNAL_ERROR!!!", Integer.MAX_VALUE);
 
     // region Configuration
@@ -45,13 +45,13 @@ public class RuntimeType
     }
     // endregion
 
-    private final String name;
+    private final String keyword;
     private final String minecraftName;
     private final int priority;
 
-    private RuntimeType(String name, String minecraftName, int priority)
+    private RuntimeType(String keyword, String minecraftName, int priority)
     {
-        this.name = name;
+        this.keyword = keyword;
         this.minecraftName = minecraftName;
         this.priority = priority;
     }
@@ -93,20 +93,20 @@ public class RuntimeType
     @Override
     public int hashCode()
     {
-        return name.hashCode();
+        return keyword.hashCode();
     }
 
     @Override
     public boolean equals(Object obj)
     {
-        if (obj instanceof RuntimeType type) return name.equals(type.name);
+        if (obj instanceof RuntimeType type) return keyword.equals(type.keyword);
         else return false;
     }
 
     @Override
     public String toString()
     {
-        return name;
+        return keyword;
     }
     // endregion
 }
