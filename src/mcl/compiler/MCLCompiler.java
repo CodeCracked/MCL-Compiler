@@ -37,7 +37,7 @@ public class MCLCompiler
     public void compile(File source, File target) throws IOException, MCLError
     {
         // Setup
-        sourceCollection = new MCLSourceCollection(source);
+        sourceCollection = new MCLSourceCollection(source, true);
         rootSymbolTable = new SymbolTable(sourceCollection, null, UUID.randomUUID()).addRootSymbols();
         currentSymbolTable = rootSymbolTable;
 
@@ -64,14 +64,14 @@ public class MCLCompiler
         if (parseResult.error() != null) throw parseResult.error();
         syntaxTree = (ProgramRootNode)parseResult.node();
 
-        // Debug Print AST
-        syntaxTree.debugPrint(0);
-        System.out.println();
-
         // Perform Symbol Analysis
         MCLSemanticAnalyzer semanticAnalyzer = new MCLSemanticAnalyzer(this, sourceCollection, syntaxTree);
         MCLError symbolsError = semanticAnalyzer.analyze();
         if (symbolsError != null) throw symbolsError;
+
+        // Debug Print AST
+        syntaxTree.debugPrint(0);
+        System.out.println();
 
         // Transpile AST into Minecraft Function Files
         MCLTranspiler transpiler = new MCLTranspiler(sourceCollection, this, syntaxTree, target);

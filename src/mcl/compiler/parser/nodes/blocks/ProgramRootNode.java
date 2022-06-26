@@ -19,12 +19,14 @@ public class ProgramRootNode extends AbstractNode
 {
     public final List<AbstractNode> namespaces;
     private final Map<String, NamespaceDefinitionNode> namespaceMap;
+    private final Map<Path, ProgramRootNode> headers;
 
     public ProgramRootNode(List<AbstractNode> namespaces)
     {
         super(0, namespaces.size() > 0 ? namespaces.get(namespaces.size() - 1).endPosition() : 1);
 
         this.namespaces = Collections.unmodifiableList(namespaces);
+        this.headers = new HashMap<>();
 
         Map<String, NamespaceDefinitionNode> map = new HashMap<>();
         for (AbstractNode namespace : namespaces)
@@ -37,9 +39,22 @@ public class ProgramRootNode extends AbstractNode
         this.namespaceMap = Collections.unmodifiableMap(map);
     }
 
+    public void addHeaderSyntaxTree(Path header, ProgramRootNode headerSyntaxTree)
+    {
+        headers.put(header, headerSyntaxTree);
+    }
     public NamespaceDefinitionNode getNamespaceNode(String name)
     {
-        return namespaceMap.get(name);
+        NamespaceDefinitionNode namespace = namespaceMap.get(name);
+        if (namespace == null)
+        {
+            for (ProgramRootNode header : headers.values())
+            {
+                namespace = header.namespaceMap.get(name);
+                if (namespace != null) return namespace;
+            }
+        }
+        return namespace;
     }
 
     @Override
@@ -50,6 +65,7 @@ public class ProgramRootNode extends AbstractNode
             parentChildConsumer.accept(this, namespace);
             namespace.walk(parentChildConsumer);
         }
+        for (ProgramRootNode header : headers.values()) header.walk(parentChildConsumer);
     }
 
     @Override
@@ -59,6 +75,13 @@ public class ProgramRootNode extends AbstractNode
         {
             MCLError error = namespace.createSymbols(compiler, source);
             if (error != null) return error;
+        }
+        for (Map.Entry<Path, ProgramRootNode> entry : headers.entrySet())
+        {
+            source.openHeader = entry.getKey();
+            MCLError error = entry.getValue().createSymbols(compiler, source);
+            if (error != null) return error;
+            source.openHeader = null;
         }
         return null;
     }
@@ -70,18 +93,35 @@ public class ProgramRootNode extends AbstractNode
             MCLError error = namespace.symbolAnalysis(compiler, source);
             if (error != null) return error;
         }
+        for (Map.Entry<Path, ProgramRootNode> entry : headers.entrySet())
+        {
+            source.openHeader = entry.getKey();
+            MCLError error = entry.getValue().symbolAnalysis(compiler, source);
+            if (error != null) return error;
+            source.openHeader = null;
+        }
         return null;
     }
 
     @Override
-    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
+    public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
         this.transpileTarget = target;
         Path dataFolder = target.resolve("data");
-        dataFolder.toFile().mkdirs();
+        transpiler.createDirectory(dataFolder);
 
-        // Transpile namespaces
-        for (AbstractNode namespace : namespaces) namespace.setTranspileTarget(compiler, dataFolder);
+        // Set Namespace Targets
+        for (AbstractNode namespace : namespaces) namespace.setTranspileTarget(transpiler, dataFolder);
+
+        // Set Header Targets
+        for (Map.Entry<Path, ProgramRootNode> entry : headers.entrySet())
+        {
+            transpiler.enabled = false;
+            transpiler.getSource().openHeader = entry.getKey();
+            entry.getValue().setTranspileTarget(transpiler, target);
+            transpiler.getSource().openHeader = null;
+            transpiler.enabled = true;
+        }
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException
@@ -108,6 +148,19 @@ public class ProgramRootNode extends AbstractNode
             if (error != null) return error;
         }
 
+        // Transpile headers
+        for (Map.Entry<Path, ProgramRootNode> entry : headers.entrySet())
+        {
+            transpiler.enabled = false;
+            transpiler.getSource().openHeader = entry.getKey();
+
+            error = entry.getValue().transpile(transpiler);
+            if (error != null) return error;
+
+            transpiler.getSource().openHeader = null;
+            transpiler.enabled = true;
+        }
+
         return null;
     }
 
@@ -123,5 +176,9 @@ public class ProgramRootNode extends AbstractNode
         System.out.print("  ".repeat(depth));
         System.out.println("PROGRAM");
         for (AbstractNode namespace : namespaces) namespace.debugPrint(depth + 1);
+
+        System.out.print("  ".repeat(depth));
+        System.out.println("HEADERS");
+        for (ProgramRootNode header : headers.values()) header.debugPrint(depth + 1);
     }
 }

@@ -6,7 +6,6 @@ import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.analyzer.Symbol;
 import mcl.compiler.analyzer.SymbolTable;
 import mcl.compiler.analyzer.SymbolType;
-import mcl.compiler.analyzer.symbols.NamespaceSymbol;
 import mcl.compiler.analyzer.symbols.VariableSymbol;
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.exceptions.MCLFileWriteError;
@@ -17,12 +16,18 @@ import mcl.compiler.source.MCLSourceCollection;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class MCLTranspiler
 {
+    public boolean enabled = true;
+    public boolean bypassDisable = false;
+
     private final MCLSourceCollection source;
     private final MCLCompiler compiler;
     private final ProgramRootNode syntaxTree;
@@ -42,12 +47,15 @@ public class MCLTranspiler
 
     public MCLError transpile()
     {
+        enabled = true;
+        bypassDisable = false;
+
         FileUtils.delete(rootFolder.toFile(), false);
         syntaxTree.walk((parent, child) -> child.parent = parent);
 
         try
         {
-            syntaxTree.setTranspileTarget(compiler, rootFolder);
+            syntaxTree.setTranspileTarget(this, rootFolder);
 
             MCLError error = syntaxTree.transpile(this);
             if (error != null) return error;
@@ -109,7 +117,21 @@ public class MCLTranspiler
         return null;
     }
 
+    public boolean canWrite() { return enabled || bypassDisable; }
+
     //region Transpile Atoms
+    public void createDirectory(Path target)
+    {
+        if (!canWrite()) return;
+        target.toFile().mkdirs();
+    }
+    public void createFile(Path target) throws IOException
+    {
+        if (!canWrite()) return;
+        createDirectory(target.getParent());
+        target.toFile().createNewFile();
+    }
+
     public MCLError pushStacks(Path target)
     {
         return appendToFile(target, file ->
@@ -170,6 +192,7 @@ public class MCLTranspiler
     //region Helpers
     public MCLError appendToFile(Path target, Consumer<PrintWriter> consumer)
     {
+        if (!canWrite()) return null;
         target.getParent().toFile().mkdirs();
 
         try(FileWriter fileWriter = new FileWriter(target.toFile(), true);

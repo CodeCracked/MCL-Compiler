@@ -10,6 +10,7 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.nodes.ParameterListNode;
 import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 import mcl.compiler.source.MCLSourceCollection;
+import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -54,10 +55,10 @@ public class FunctionDefinitionNode extends NamedBlockDefinitionNode
     }
 
     @Override
-    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
+    public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
-        super.setTranspileTarget(compiler, target);
-        parameterList.setTranspileTarget(compiler, target);
+        super.setTranspileTarget(transpiler, target);
+        parameterList.setTranspileTarget(transpiler, target);
         symbol.mainFunctionFile = ((BlockStatementNode)body).mainFunction;
     }
 

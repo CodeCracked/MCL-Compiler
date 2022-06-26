@@ -23,7 +23,7 @@ public class EventDefinitionNode extends AbstractNode
 {
     public final Token identifier;
     public final ParameterListNode parameterList;
-    public final EventSymbol event;
+    public final EventSymbol symbol;
 
     public EventDefinitionNode(Token keyword, Token identifier, ParameterListNode parameterList)
     {
@@ -34,7 +34,7 @@ public class EventDefinitionNode extends AbstractNode
 
         List<VariableSymbol> parameterSymbols = new ArrayList<>();
         for (VariableSignatureNode parameter : this.parameterList.parameters) parameterSymbols.add(parameter.symbol);
-        this.event = new EventSymbol(identifier, parameterSymbols);
+        this.symbol = new EventSymbol(identifier, parameterSymbols);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class EventDefinitionNode extends AbstractNode
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
-        return compiler.getSymbolTable().addSymbol(event);
+        return compiler.getSymbolTable().addSymbol(symbol);
         // Don't create parameterList symbols because they are only used on a per-listener basis.
         // The parameterList node only defines the types required for listener symbol analysis
     }
@@ -58,32 +58,36 @@ public class EventDefinitionNode extends AbstractNode
     }
 
     @Override
-    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
+    public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
+        transpiler.bypassDisable = true;
         transpileTarget = new File(target.getParent().toString().replace("functions", "tags" + File.separator + "functions")).toPath().resolve(identifier.value() + ".json");
-        transpileTarget.getParent().toFile().mkdirs();
-        transpileTarget.toFile().createNewFile();
+        transpiler.createFile(transpileTarget);
+        transpiler.bypassDisable = false;
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException
     {
-        return transpiler.appendToFile(transpileTarget, file ->
+        transpiler.bypassDisable = true;
+        MCLError error = transpiler.appendToFile(transpileTarget, file ->
         {
             file.println("{");
             file.println("    \"values\": [");
 
-            for (int i = 0; i < event.listenerFunctionFiles.size(); i++)
+            for (int i = 0; i < symbol.listenerFunctionFiles.size(); i++)
             {
                 file.print("        \"");
-                file.print(transpiler.getFunctionName(event.listenerFunctionFiles.get(i)));
+                file.print(transpiler.getFunctionName(symbol.listenerFunctionFiles.get(i)));
                 file.print("\"");
-                if (i < event.listenerFunctionFiles.size() - 1) file.println(",");
+                if (i < symbol.listenerFunctionFiles.size() - 1) file.println(",");
                 else file.println();
             }
 
             file.println("    ]");
             file.println("}");
         });
+        transpiler.bypassDisable = false;
+        return error;
     }
 
     @Override

@@ -69,11 +69,11 @@ public abstract class BlockDefinitionNode extends AbstractNode
     }
 
     @Override
-    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
+    public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
         this.transpileTarget = getDefinitionFolder(target);
-        transpileTarget.toFile().mkdirs();
-        body.setTranspileTarget(compiler, transpileTarget);
+        transpiler.createDirectory(transpileTarget);
+        body.setTranspileTarget(transpiler, transpileTarget);
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException

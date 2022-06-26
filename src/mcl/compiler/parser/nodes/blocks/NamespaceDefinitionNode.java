@@ -37,7 +37,7 @@ public class NamespaceDefinitionNode extends NamedBlockDefinitionNode
         MCLError error = super.transpile(transpiler);
         if (error != null) return error;
 
-        if (body instanceof BlockStatementNode block)
+        if (body instanceof BlockStatementNode block && block.mainFunction.toFile().exists())
         {
             if (Files.readString(block.mainFunction).trim().length() == 0) block.mainFunction.toFile().delete();
             if (block.mainFunction.getParent().toFile().listFiles().length == 0) FileUtils.delete(block.mainFunction.getParent().toFile(), true);

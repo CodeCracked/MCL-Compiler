@@ -59,10 +59,10 @@ public class VariableDefinitionNode extends AbstractNode
     }
 
     @Override
-    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
+    public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
         this.transpileTarget = target;
-        this.value.setTranspileTarget(compiler, target);
+        this.value.setTranspileTarget(transpiler, target);
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException

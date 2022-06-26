@@ -58,11 +58,11 @@ public class BlockStatementNode extends AbstractNode
     }
 
     @Override
-    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
+    public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
         this.transpileTarget = target;
         this.mainFunction = target.resolve("main.mcfunction");
-        mainFunction.toFile().createNewFile();
+        transpiler.createFile(mainFunction);
 
         Map<String, Integer> blockTypeCounts = new HashMap<>();
         for (AbstractNode statement : statements)
@@ -77,7 +77,7 @@ public class BlockStatementNode extends AbstractNode
                 blockTypeCounts.put(block.blockName, blockTypeCounts.get(block.blockName) + 1);
             }
 
-            statement.setTranspileTarget(compiler, statementTarget);
+            statement.setTranspileTarget(transpiler, statementTarget);
         }
     }
     @Override

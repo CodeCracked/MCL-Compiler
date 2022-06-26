@@ -1,4 +1,4 @@
-package mcl.compiler.parser.nodes.events;
+package mcl.compiler.parser.nodes.blocks;
 
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.SymbolType;
@@ -9,8 +9,6 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.parser.nodes.LocationNode;
 import mcl.compiler.parser.nodes.ParameterListNode;
-import mcl.compiler.parser.nodes.blocks.BlockDefinitionNode;
-import mcl.compiler.parser.nodes.blocks.BlockStatementNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
@@ -58,22 +56,24 @@ public class ListenerDefinitionNode extends BlockDefinitionNode
         if (event.parameters.size() != parameterList.parameters.size()) return new MCLListenerParametersError(compiler, this, event);
         for (int i = 0; i < event.parameters.size(); i++) if (!event.parameters.get(i).type.equals(parameterList.parameters.get(i).type)) return new MCLListenerParametersError(compiler, this, event);
 
-        return parameterList.symbolAnalysis(compiler, source);
+        error = parameterList.symbolAnalysis(compiler, source);
+        if (error != null) return error;
+
+        return body.symbolAnalysis(compiler, source);
     }
 
     @Override
-    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
+    public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
-        super.setTranspileTarget(compiler, target);
-        parameterList.setTranspileTarget(compiler, target);
+        super.setTranspileTarget(transpiler, target);
+        parameterList.setTranspileTarget(transpiler, target);
 
         // Create Call File
         callFunctionFile = transpileTarget.resolve("call.mcfunction");
-        callFunctionFile.getParent().toFile().mkdirs();
-        callFunctionFile.toFile().createNewFile();
+        transpiler.createFile(callFunctionFile);
 
         // Register to Event
-        EventSymbol event = (EventSymbol) location.getSymbol(compiler, SymbolType.EVENT);
+        EventSymbol event = (EventSymbol) location.getSymbol(transpiler.getCompiler(), SymbolType.EVENT);
         event.listenerFunctionFiles.add(callFunctionFile);
     }
     @Override

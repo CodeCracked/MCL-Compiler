@@ -11,6 +11,7 @@ import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.source.MCLSourceCollection;
 import mcl.compiler.transpiler.MCLTranspiler;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.BiConsumer;
 
@@ -47,7 +48,7 @@ public class VariableAccessNode extends ExpressionNode
     }
 
     @Override
-    public void setTranspileTarget(MCLCompiler compiler, Path target)
+    public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
         this.transpileTarget = target;
     }

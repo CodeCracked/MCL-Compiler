@@ -3,7 +3,7 @@ package mcl.compiler.exceptions;
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.symbols.EventSymbol;
 import mcl.compiler.analyzer.symbols.VariableSymbol;
-import mcl.compiler.parser.nodes.events.ListenerDefinitionNode;
+import mcl.compiler.parser.nodes.blocks.ListenerDefinitionNode;
 import mcl.compiler.parser.nodes.variables.VariableSignatureNode;
 
 import java.util.List;

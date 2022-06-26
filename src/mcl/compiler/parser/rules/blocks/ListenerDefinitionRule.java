@@ -6,7 +6,7 @@ import mcl.compiler.lexer.Token;
 import mcl.compiler.parser.*;
 import mcl.compiler.parser.nodes.LocationNode;
 import mcl.compiler.parser.nodes.ParameterListNode;
-import mcl.compiler.parser.nodes.events.ListenerDefinitionNode;
+import mcl.compiler.parser.nodes.blocks.ListenerDefinitionNode;
 
 public class ListenerDefinitionRule implements GrammarRule
 {

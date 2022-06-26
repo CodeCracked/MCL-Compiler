@@ -127,11 +127,11 @@ public class BinaryOpNode extends ExpressionNode
     }
 
     @Override
-    public void setTranspileTarget(MCLCompiler compiler, Path target) throws IOException
+    public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
         this.transpileTarget = target;
-        this.leftNode.setTranspileTarget(compiler, target);
-        this.rightNode.setTranspileTarget(compiler, target);
+        this.leftNode.setTranspileTarget(transpiler, target);
+        this.rightNode.setTranspileTarget(transpiler, target);
     }
     @Override
     protected ExpressionTranspileResult transpileExpression(MCLTranspiler transpiler, RuntimeType targetType, int depth) throws IOException
