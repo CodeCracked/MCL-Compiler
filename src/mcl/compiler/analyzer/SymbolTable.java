@@ -50,7 +50,7 @@ public class SymbolTable
     public int getDepth(Symbol symbol)
     {
         if (symbolMap.containsKey(symbol.symbolType) && symbolMap.get(symbol.symbolType).containsKey(symbol.name)) return 0;
-        else if (parent != null) return parent.getDepth(symbol);
+        else if (parent != null) return parent.getDepth(symbol) + 1;
         else return -1;
     }
     public MCLError checkSymbolDefinition(Token identifier, SymbolType symbolType)

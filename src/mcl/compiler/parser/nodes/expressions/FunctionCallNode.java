@@ -154,7 +154,7 @@ public class FunctionCallNode extends ExpressionNode
         // Copy Return to Register
         if (!function.returnType.equals(RuntimeType.VOID))
         {
-            result.error = transpiler.accessVariable(transpileTarget, "return", function.returnType, depth);
+            result.error = transpiler.accessVariable(transpileTarget, 0, "return", function.returnType, depth);
             if (result.error != null) return result;
         }
 

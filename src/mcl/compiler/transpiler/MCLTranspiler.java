@@ -177,11 +177,11 @@ public class MCLTranspiler
 
     public MCLError accessVariable(Path target, VariableSymbol variable, int register)
     {
-        return accessVariable(target, variable.name, variable.type, register);
+        return accessVariable(target, compiler.getSymbolTable().getDepth(variable), variable.name, variable.type, register);
     }
-    public MCLError accessVariable(Path target, String location, RuntimeType type, int register)
+    public MCLError accessVariable(Path target, int stackLevel, String location, RuntimeType type, int register)
     {
-        return appendToFile(target, file -> file.println(applyConfig("execute store result score r%s {config.expressions} run data get storage {config.variables} CallStack[0].%s %s %s", register, location, type.getMinecraftName(), type.scaleUp(compiler.config))));
+        return appendToFile(target, file -> file.println(applyConfig("execute store result score r%s {config.expressions} run data get storage {config.variables} CallStack[%s].%s %s", register, stackLevel, location, type.scaleUp(compiler.config))));
     }
 
     public MCLError assignReturn(Path target, RuntimeType type)

@@ -7,8 +7,6 @@ import mcl.compiler.lexer.TokenType;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class MCLParser
 {

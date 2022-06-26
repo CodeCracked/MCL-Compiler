@@ -88,45 +88,20 @@ public class VariableAssignNode extends AbstractNode
         else error = value.transpile(transpiler);
         if (error != null) return error;
 
-        // Calculate Scaling Strings
-        String scaleDown = symbol.type.scaleDown(transpiler.getCompiler().config);
-        String scaleUp = symbol.type.scaleUp(transpiler.getCompiler().config);
+        // Transpile Operations
+        if (operation.type() != TokenType.ASSIGN) error = transpiler.accessVariable(transpileTarget, symbol, 1);
+        if (error != null) return error;
 
-        // Transpile Variable Assignment
-        if (operation.type() == TokenType.ASSIGN) error = transpiler.appendToFile(transpileTarget, file ->
-        {
-            file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r0 {config.expressions}", symbol.name, symbol.type.getMinecraftName(), scaleDown));
-        });
-        else if (operation.type() == TokenType.ASSIGN_PLUS) error = transpiler.appendToFile(transpileTarget, file ->
-        {
-            file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.name, scaleUp));
-            file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} += r0 {config.expressions}"));
-            file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r1 {config.expressions}", symbol.name, symbol.type.getMinecraftName(), scaleDown));
-        });
-        else if (operation.type() == TokenType.ASSIGN_MINUS) error = transpiler.appendToFile(transpileTarget, file ->
-        {
-            file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.name, scaleUp));
-            file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} -= r0 {config.expressions}"));
-            file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r1 {config.expressions}", symbol.name, symbol.type.getMinecraftName(), scaleDown));
-        });
-        else if (operation.type() == TokenType.ASSIGN_MUL) error = transpiler.appendToFile(transpileTarget, file ->
-        {
-            file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.name, scaleUp));
-            file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} *= r0 {config.expressions}"));
-            file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r1 {config.expressions}", symbol.name, symbol.type.getMinecraftName(), scaleDown));
-        });
-        else if (operation.type() == TokenType.ASSIGN_DIV) error = transpiler.appendToFile(transpileTarget, file ->
-        {
-            file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.name, scaleUp));
-            file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} /= r0 {config.expressions}"));
-            file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r1 {config.expressions}", symbol.name, symbol.type.getMinecraftName(), scaleDown));
-        });
-        else if (operation.type() == TokenType.ASSIGN_MOD) error = transpiler.appendToFile(transpileTarget, file ->
-        {
-            file.println(transpiler.applyConfig("execute store result score r1 {config.expressions} run data get storage {config.variables} CallStack[0].%s %s", symbol.name, scaleUp));
-            file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} %= r0 {config.expressions}"));
-            file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s %s %s run scoreboard players get r1 {config.expressions}", symbol.name, symbol.type.getMinecraftName(), scaleDown));
-        });
+        if (operation.type() == TokenType.ASSIGN_PLUS) error = transpiler.appendToFile(transpileTarget, file -> file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} += r0 {config.expressions}")));
+        else if (operation.type() == TokenType.ASSIGN_MINUS) error = transpiler.appendToFile(transpileTarget, file -> file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} -= r0 {config.expressions}")));
+        else if (operation.type() == TokenType.ASSIGN_MUL) error = transpiler.appendToFile(transpileTarget, file -> file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} *= r0 {config.expressions}")));
+        else if (operation.type() == TokenType.ASSIGN_DIV) error = transpiler.appendToFile(transpileTarget, file -> file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} /= r0 {config.expressions}")));
+        else if (operation.type() == TokenType.ASSIGN_MOD) error = transpiler.appendToFile(transpileTarget, file -> file.println(transpiler.applyConfig("scoreboard players operation r1 {config.expressions} %= r0 {config.expressions}")));
+        if (error != null) return error;
+
+        // Transpile Assignment
+        int register = operation.type() == TokenType.ASSIGN ? 0 : 1;
+        error = transpiler.assignVariable(transpileTarget, symbol, register);
         if (error != null) return error;
 
         // Print Footer Comment
