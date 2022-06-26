@@ -13,6 +13,7 @@ public enum TokenType
 
     INT,
     FLOAT,
+    STRING(1, TokenType::stringTokenBuilder),
     IDENTIFIER,
     KEYWORD,
 
@@ -132,6 +133,38 @@ public enum TokenType
         String text = textBuilder.toString();
         if (MCLKeywords.KEYWORDS.contains(text)) return new Token(TokenType.KEYWORD, text, startPosition, lexer.getPosition());
         else return new Token(TokenType.IDENTIFIER, text, startPosition, lexer.getPosition());
+    }
+    private static Token stringTokenBuilder(MCLLexer lexer, int startPosition)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        char closingChar = lexer.getCurrentChar();
+
+        if (closingChar != '"' && closingChar != '|') return null;
+        else
+        {
+            lexer.advance();
+
+            // Build String Literal
+            boolean escapeNextChar = false;
+            while (lexer.getCurrentChar() != null)
+            {
+                if (escapeNextChar)
+                {
+                    stringBuilder.append(lexer.getCurrentChar());
+                    escapeNextChar = false;
+                }
+                else if (lexer.getCurrentChar() == '\\') escapeNextChar = true;
+                else if (lexer.getCurrentChar() == closingChar)
+                {
+                    lexer.advance();
+                    break;
+                }
+                else stringBuilder.append(lexer.getCurrentChar());
+
+                lexer.advance();
+            }
+            return new Token(TokenType.STRING, stringBuilder.toString(), startPosition, lexer.getPosition());
+        }
     }
     //endregion
 

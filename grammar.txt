@@ -44,7 +44,7 @@ arith-expr	: factor ((PLUS|MINUS) factor)*
 
 factor		: atom ((MUL|DIV|MOD) atom)*
 
-atom		: INT|FLOAT|IDENTIFIER
+atom		: INT|FLOAT|STRING|IDENTIFIER
 			: (PLUS|MINUS) factor
 			: LPAREN expr RPAREN
 			: func_call

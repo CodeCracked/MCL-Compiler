@@ -48,7 +48,7 @@ public record Token(TokenType type, Object value, int startPosition, int endPosi
     @Override
     public String toString()
     {
-        if (value != null) return type.name() + ":" + value;
+        if (value != null) return type.name() + "(" + value + ")";
         else return type.name();
     }
 }
