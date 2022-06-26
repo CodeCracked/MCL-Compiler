@@ -10,6 +10,7 @@ statement	: event_def
 			: func_call
 			: func_def
 			: listener
+			: run
 
 
 
@@ -32,6 +33,8 @@ func_def	: KEYWORD:func IDENTIFIER par_list (KEYWORD:return KEYWORD:(int|float))
 func_call	: location LPAREN (expr (COMMA expr)*)? RPAREN
 
 listener	: KEYWORD:listener location par_list block
+
+run			: KEYWORD:run NEWLINE? STRING (NEWLINE STRING)*
 
 
 

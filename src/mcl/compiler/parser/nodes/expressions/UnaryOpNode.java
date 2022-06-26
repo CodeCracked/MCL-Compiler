@@ -37,16 +37,16 @@ public class UnaryOpNode extends ExpressionNode
         {
             if (numberNode.token.value() instanceof Integer number)
             {
-                if (operation.type() == TokenType.PLUS) return new NumberNode(new Token(TokenType.INT, Math.abs(number), startPosition(), endPosition()));
-                else if (operation.type() == TokenType.MINUS) return new NumberNode(new Token(TokenType.INT, -number, startPosition(), endPosition()));
-                else if (operation.isKeyword(MCLKeywords.NOT)) return new NumberNode(new Token(TokenType.INT, number > 0 ? 0 : 1, startPosition(), endPosition()));
+                if (operation.type() == TokenType.PLUS) return NumberNode.simplified(this, Math.abs(number));
+                else if (operation.type() == TokenType.MINUS) return NumberNode.simplified(this, -number);
+                else if (operation.isKeyword(MCLKeywords.NOT)) return NumberNode.simplified(this, number > 0 ? 0 : 1);
                 else return this;
             }
             else if (numberNode.token.value() instanceof Float number)
             {
-                if (operation.type() == TokenType.PLUS) return new NumberNode(new Token(TokenType.FLOAT, Math.abs(number), startPosition(), endPosition()));
-                else if (operation.type() == TokenType.MINUS) return new NumberNode(new Token(TokenType.FLOAT, -number, startPosition(), endPosition()));
-                else if (operation.isKeyword(MCLKeywords.NOT)) return new NumberNode(new Token(TokenType.INT, number > 0 ? 0 : 1, startPosition(), endPosition()));
+                if (operation.type() == TokenType.PLUS) return NumberNode.simplified(this, Math.abs(number));
+                else if (operation.type() == TokenType.MINUS) return NumberNode.simplified(this, -number);
+                else if (operation.isKeyword(MCLKeywords.NOT)) return NumberNode.simplified(this, number > 0 ? 0 : 1);
                 else return this;
             }
             else return this;

@@ -23,6 +23,18 @@ public class NumberNode extends ExpressionNode
         super(token.startPosition(), token.endPosition());
         this.token = token;
     }
+    public static NumberNode simplified(AbstractNode before, int value)
+    {
+        NumberNode node = new NumberNode(new Token(TokenType.INT, value, before.startPosition(), before.endPosition()));
+        node.transpileTarget = before.transpileTarget();
+        return node;
+    }
+    public static NumberNode simplified(AbstractNode before, float value)
+    {
+        NumberNode node = new NumberNode(new Token(TokenType.FLOAT, value, before.startPosition(), before.endPosition()));
+        node.transpileTarget = before.transpileTarget();
+        return node;
+    }
 
     @Override
     public ExpressionNode simplify()
@@ -33,7 +45,12 @@ public class NumberNode extends ExpressionNode
     @Override
     public ExpressionNode implicitCast(RuntimeType targetType)
     {
-        if (targetType.equals(RuntimeType.FLOAT) && token.value() instanceof Integer number) return new NumberNode(new Token(TokenType.FLOAT, (float)number, token.startPosition(), token.endPosition()));
+        if (targetType.equals(RuntimeType.FLOAT) && token.value() instanceof Integer number)
+        {
+            NumberNode cast = new NumberNode(new Token(TokenType.FLOAT, (float)number, token.startPosition(), token.endPosition()));
+            cast.transpileTarget = transpileTarget;
+            return cast;
+        }
         else return this;
     }
 

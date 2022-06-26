@@ -64,6 +64,14 @@ public class StatementRule implements GrammarRule
             return result.success(function);
         }
 
+        // Run Commands
+        else if (parser.getCurrentToken().isKeyword(MCLKeywords.RUN))
+        {
+            AbstractNode run = result.register(GrammarRules.RUN_COMMANDS.build(parser));
+            if (result.error() != null) return result;
+            return result.success(run);
+        }
+
         return result.failure(new MCLSyntaxError(parser, "Not a statement"));
     }
 }

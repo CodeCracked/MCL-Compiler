@@ -47,6 +47,12 @@ public class SymbolTable
         else if (parent != null) return parent.getSymbol(identifier, symbolType);
         else return null;
     }
+    public int getDepth(Symbol symbol)
+    {
+        if (symbolMap.containsKey(symbol.symbolType) && symbolMap.get(symbol.symbolType).containsKey(symbol.name)) return 0;
+        else if (parent != null) return parent.getDepth(symbol);
+        else return -1;
+    }
     public MCLError checkSymbolDefinition(Token identifier, SymbolType symbolType)
     {
         if (getSymbol((String)identifier.value(), symbolType) != null) return null;
@@ -82,15 +88,6 @@ public class SymbolTable
         }
         else
         {
-            String location = (String)symbol.identifier.value();
-            SymbolTable current = this;
-            while (current != null)
-            {
-                location = current.id.toString() + "." + location;
-                current = current.parent;
-            }
-            symbol.tableLocation = location;
-
             if (!symbolMap.containsKey(symbol.symbolType)) symbolMap.put(symbol.symbolType, new HashMap<>());
             symbolMap.get(symbol.symbolType).put(name, symbol);
             if (forgiveDuplicate) forgivableDuplicatesSet.add(symbol);

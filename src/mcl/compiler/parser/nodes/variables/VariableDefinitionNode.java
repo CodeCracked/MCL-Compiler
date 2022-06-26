@@ -77,14 +77,15 @@ public class VariableDefinitionNode extends AbstractNode
         if (error != null) return error;
 
         // Transpile Variable Assignment
+        error = transpiler.assignVariable(transpileTarget, signature.symbol, 0);
+        if (error != null) return error;
+
+        // Print Footer Comment
         error = transpiler.appendToFile(transpileTarget, file ->
         {
-            if (signature.type == RuntimeType.INTEGER) file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s int 1 run scoreboard players get r0 {config.expressions}", signature.symbol.tableLocation));
-            else if (signature.type == RuntimeType.FLOAT) file.println(transpiler.applyConfig("execute store result storage {config.variables} CallStack[0].%s float 0.%s1 run scoreboard players get r0 {config.expressions}", signature.symbol.tableLocation, "0".repeat(transpiler.getCompiler().config.floatDecimalPlaces - 1)));
             file.println("# END VAR_DEFINITION " + signature);
             file.println();
         });
-
         return error;
     }
 

@@ -58,7 +58,7 @@ public class BinaryOpNode extends ExpressionNode
                     default: return this;
                 }
 
-                return new NumberNode(new Token(TokenType.FLOAT, result, startPosition(), endPosition()));
+                return NumberNode.simplified(this, result);
             }
             else
             {
@@ -84,7 +84,7 @@ public class BinaryOpNode extends ExpressionNode
                     default: return this;
                 }
 
-                return new NumberNode(new Token(TokenType.INT, result, startPosition(), endPosition()));
+                return NumberNode.simplified(this, result);
             }
         }
         else return this;

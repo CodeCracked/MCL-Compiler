@@ -7,6 +7,8 @@ import mcl.compiler.lexer.TokenType;
 import mcl.compiler.source.MCLSourceCollection;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class MCLParser
 {
@@ -36,6 +38,11 @@ public class MCLParser
 
         if (currentToken != null && currentToken.type() == TokenType.INDENT) this.currentIndent = (int)currentToken.value();
     }
+    public void setIndex(int index)
+    {
+        this.tokenIndex = index - 1;
+        advance();
+    }
     public ParseResult parse()
     {
         ParseResult result = GrammarRules.PROGRAM_ROOT.build(this);
@@ -48,5 +55,6 @@ public class MCLParser
     public MCLSourceCollection getSource() { return source; }
     public Token getCurrentToken() { return currentToken; }
     public Token peekNextToken() { return nextToken; }
+    public int getTokenIndex() { return tokenIndex; }
     public int getCurrentIndent() { return currentIndent; }
 }
