@@ -2,7 +2,6 @@ package mcl.compiler.parser.nodes.expressions;
 
 import mcl.compiler.analyzer.RuntimeType;
 import mcl.compiler.exceptions.MCLError;
-import mcl.compiler.exceptions.MCLTranspileError;
 import mcl.compiler.parser.AbstractNode;
 import mcl.compiler.transpiler.MCLTranspiler;
 

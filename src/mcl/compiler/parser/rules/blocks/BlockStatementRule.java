@@ -25,24 +25,33 @@ public class BlockStatementRule implements GrammarRule
         List<AbstractNode> statements = new ArrayList<>();
         int start = parser.getCurrentToken().startPosition();
 
-        while (parser.getCurrentToken().type() == TokenType.NEWLINE && parser.peekNextToken().type() == TokenType.INDENT)
+        if (parser.getCurrentToken().type() == TokenType.NEWLINE)
         {
-            // Check Indent
-            int indent = (int)parser.peekNextToken().value();
-            if (indent < requiredIndent) break;
-            else if (indent > requiredIndent) return result.failure(new MCLSyntaxError(parser.getSource(), parser.peekNextToken(), "Expected indent of size " + requiredIndent));
+            while (parser.getCurrentToken().type() == TokenType.NEWLINE && parser.peekNextToken().type() == TokenType.INDENT)
+            {
+                // Check Indent
+                int indent = (int)parser.peekNextToken().value();
+                if (indent < requiredIndent) break;
+                else if (indent > requiredIndent) return result.failure(new MCLSyntaxError(parser.getSource(), parser.peekNextToken(), "Expected indent of size " + requiredIndent));
 
-            // Clear Newline and Indent
-            result.registerAdvancement();
-            parser.advance();
-            result.registerAdvancement();
-            parser.advance();
+                // Clear Newline and Indent
+                result.registerAdvancement();
+                parser.advance();
+                result.registerAdvancement();
+                parser.advance();
 
-            // Build Statement
-            AbstractNode statement = result.register(GrammarRules.STATEMENT.build(parser));
+                // Build Statement
+                AbstractNode statement = result.register(GrammarRules.STATEMENT.build(parser));
+                if (result.error() != null) return result;
+
+                statements.add(statement);
+            }
+        }
+        else
+        {
+            AbstractNode inlineStatement = result.register(GrammarRules.STATEMENT.build(parser));
             if (result.error() != null) return result;
-
-            statements.add(statement);
+            statements.add(inlineStatement);
         }
 
         return result.success(new BlockStatementNode(statements, start));

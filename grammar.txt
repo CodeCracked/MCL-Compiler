@@ -2,7 +2,7 @@ program		: (namespace (NELWINE namespace)*)?
 
 namespace	: KEYWORD:namespace IDENTIFIER block
 
-block		: (NEWLINE INDENT:2 statement)*
+block		: ((NEWLINE INDENT:2 statement)*|statement)
 
 statement	: event_def
 			: var_def
