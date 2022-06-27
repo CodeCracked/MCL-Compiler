@@ -39,16 +39,33 @@ public class IfStatementRule implements GrammarRule
         // True Block
         AbstractNode trueBlock = result.register(blockRule.build(parser));
         if (result.error() != null) return result;
-        if (parser.getCurrentToken().type() != TokenType.NEWLINE) return result.failure(new MCLSyntaxError(parser, "Expected end of line"));
-        result.registerAdvancement();
-        parser.advance();
+        if (parser.getCurrentToken().type() != TokenType.NEWLINE && !parser.getCurrentToken().isKeyword(MCLKeywords.ELSE)) return result.failure(new MCLSyntaxError(parser, "Expected 'else' or end of line"));
 
-        // Optional False Block
+        if (parser.getCurrentToken().type() == TokenType.NEWLINE)
+        {
+            result.registerAdvancement();
+            parser.advance();
+        }
+
         AbstractNode falseBlock = null;
-        if (parser.getCurrentToken().type() == TokenType.INDENT && parser.peekNextToken().isKeyword(MCLKeywords.ELSE))
+        // Inline Else Block
+        if (parser.getCurrentToken().isKeyword(MCLKeywords.ELSE))
+        {
+            // Clear Else Keyword
+            result.registerAdvancement();
+            parser.advance();
+
+            // Build False Block
+            if (parser.getCurrentToken().isKeyword(MCLKeywords.IF)) falseBlock = result.register(GrammarRules.IF_STATEMENT.build(parser));
+            else falseBlock = result.register(blockRule.build(parser));
+            if (result.error() != null) return result;
+        }
+
+        // Newline Else Block
+        else if (parser.getCurrentToken().type() == TokenType.INDENT && parser.peekNextToken().isKeyword(MCLKeywords.ELSE))
         {
             // Check Indent Level
-            int currentIndent = (int)parser.getCurrentToken().value();
+            int currentIndent = parser.getCurrentToken().type() == TokenType.INDENT ? (int)parser.getCurrentToken().value() : indent;
             if (currentIndent == indent)
             {
                 // Clear Indent and Else Keyword
@@ -56,7 +73,6 @@ public class IfStatementRule implements GrammarRule
                 parser.advance();
                 result.registerAdvancement();
                 parser.advance();
-
                 // Build False Block
                 if (parser.getCurrentToken().isKeyword(MCLKeywords.IF)) falseBlock = result.register(GrammarRules.IF_STATEMENT.build(parser));
                 else falseBlock = result.register(blockRule.build(parser));

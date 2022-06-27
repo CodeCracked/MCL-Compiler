@@ -2,7 +2,7 @@ program		: (namespace (NELWINE namespace)*)?
 
 namespace	: KEYWORD:namespace IDENTIFIER block
 
-block		: ((NEWLINE INDENT:2 statement)*|statement)
+block		: ((NEWLINE INDENT statement)*|statement)
 
 statement	: event_def
 			: var_def
@@ -39,7 +39,7 @@ run			: KEYWORD:run NEWLINE? STRING (NEWLINE STRING)*
 
 
 
-if			: KEYWORD:if LPAREN expr RPAREN block (KEYWORD:else (block|if))?
+if			: KEYWORD:if LPAREN expr RPAREN block (NEWLINE INDENT)? (KEYWORD:else (block|if))?
 
 
 
