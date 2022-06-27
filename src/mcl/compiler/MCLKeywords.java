@@ -8,6 +8,9 @@ public final class MCLKeywords
     public static final String FUNC = "func";
     public static final String EVENT = "event";
     public static final String LISTENER = "listener";
+
+    public static final String IF = "if";
+    public static final String ELSE = "else";
     public static final String RUN = "run";
     public static final String RETURN = "return";
 
@@ -28,6 +31,9 @@ public final class MCLKeywords
             FUNC,
             EVENT,
             LISTENER,
+
+            IF,
+            ELSE,
             RUN,
             RETURN,
 

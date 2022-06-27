@@ -56,6 +56,6 @@ public abstract class ExpressionNode extends AbstractNode
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException
     {
-        return new MCLTranspileError(transpiler.getSource(), this, "Cannot transpile ExpressionNode with (MCLTranspiler, Path)! Use transpile(MCLTranspiler, Path, RuntimeType) instead");
+        return transpile(transpiler, getRuntimeType(transpiler.getCompiler()));
     }
 }

@@ -59,7 +59,7 @@ public class FunctionDefinitionNode extends NamedBlockDefinitionNode
     {
         super.setTranspileTarget(transpiler, target);
         parameterList.setTranspileTarget(transpiler, target);
-        symbol.mainFunctionFile = ((BlockStatementNode)body).mainFunction;
+        symbol.mainFunctionFile = ((BlockStatementNode) blocks[0]).mainFunctionPath;
     }
 
     @Override
@@ -76,6 +76,6 @@ public class FunctionDefinitionNode extends NamedBlockDefinitionNode
         System.out.print("  ".repeat(depth + 1));
         System.out.println("RETURN:" + returnType.toString());
 
-        body.debugPrint(depth + 1);
+        blocks[0].debugPrint(depth + 1);
     }
 }

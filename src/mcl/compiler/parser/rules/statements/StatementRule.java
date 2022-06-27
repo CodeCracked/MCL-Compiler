@@ -72,6 +72,14 @@ public class StatementRule implements GrammarRule
             return result.success(run);
         }
 
+        // If Statement
+        else if (parser.getCurrentToken().isKeyword(MCLKeywords.IF))
+        {
+            AbstractNode ifStatement = result.register(GrammarRules.IF_STATEMENT.build(parser));
+            if (result.error() != null) return result;
+            return result.success(ifStatement);
+        }
+
         return result.failure(new MCLSyntaxError(parser, "Not a statement"));
     }
 }

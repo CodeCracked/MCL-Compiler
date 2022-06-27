@@ -37,10 +37,10 @@ public class NamespaceDefinitionNode extends NamedBlockDefinitionNode
         MCLError error = super.transpile(transpiler);
         if (error != null) return error;
 
-        if (body instanceof BlockStatementNode block && block.mainFunction.toFile().exists())
+        if (blocks[0] instanceof BlockStatementNode block && block.mainFunctionPath.toFile().exists())
         {
-            if (Files.readString(block.mainFunction).trim().length() == 0) block.mainFunction.toFile().delete();
-            if (block.mainFunction.getParent().toFile().listFiles().length == 0) FileUtils.delete(block.mainFunction.getParent().toFile(), true);
+            if (Files.readString(block.mainFunctionPath).trim().length() == 0) block.mainFunctionPath.toFile().delete();
+            if (block.mainFunctionPath.getParent().toFile().listFiles().length == 0) FileUtils.delete(block.mainFunctionPath.getParent().toFile(), true);
         }
         return null;
     }
@@ -50,6 +50,6 @@ public class NamespaceDefinitionNode extends NamedBlockDefinitionNode
     {
         System.out.print("  ".repeat(depth));
         System.out.println("NAMESPACE:" + identifier.value());
-        body.debugPrint(depth + 1);
+        blocks[0].debugPrint(depth + 1);
     }
 }

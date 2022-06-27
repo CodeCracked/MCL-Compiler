@@ -59,7 +59,7 @@ public class ListenerDefinitionNode extends BlockDefinitionNode
         error = parameterList.symbolAnalysis(compiler, source);
         if (error != null) return error;
 
-        return body.symbolAnalysis(compiler, source);
+        return blocks[0].symbolAnalysis(compiler, source);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ListenerDefinitionNode extends BlockDefinitionNode
         MCLError error = transpiler.pushStacks(callFunctionFile);
         if (error != null) return error;
 
-        error = transpiler.runFunctionFile(callFunctionFile, ((BlockStatementNode)body).mainFunction);
+        error = transpiler.runFunctionFile(callFunctionFile, ((BlockStatementNode) blocks[0]).mainFunctionPath);
         if (error != null) return error;
 
         error = transpiler.popStacks(callFunctionFile);
@@ -99,6 +99,6 @@ public class ListenerDefinitionNode extends BlockDefinitionNode
 
         location.debugPrint(depth + 1);
         parameterList.debugPrint(depth + 1);
-        body.debugPrint(depth + 1);
+        blocks[0].debugPrint(depth + 1);
     }
 }

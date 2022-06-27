@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 public class BlockStatementNode extends AbstractNode
 {
     public final List<AbstractNode> statements;
-    public Path mainFunction;
+    public Path mainFunctionPath;
 
     public BlockStatementNode(List<AbstractNode> statements, int start)
     {
@@ -61,13 +61,13 @@ public class BlockStatementNode extends AbstractNode
     public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
         this.transpileTarget = target;
-        this.mainFunction = target.resolve("main.mcfunction");
-        transpiler.createFile(mainFunction);
+        this.mainFunctionPath = target.resolve("main.mcfunction");
+        transpiler.createFile(mainFunctionPath);
 
         Map<String, Integer> blockTypeCounts = new HashMap<>();
         for (AbstractNode statement : statements)
         {
-            Path statementTarget = mainFunction;
+            Path statementTarget = mainFunctionPath;
 
             if (statement instanceof NamedBlockDefinitionNode block) statementTarget = transpileTarget.resolve(block.blockName);
             else if (statement instanceof BlockDefinitionNode block)
@@ -87,6 +87,12 @@ public class BlockStatementNode extends AbstractNode
         {
             MCLError error = statement.transpile(transpiler);
             if (error != null) return error;
+
+            if (statement instanceof BlockDefinitionNode block)
+            {
+                error = block.transpileStatement(transpiler, mainFunctionPath);
+                if (error != null) return error;
+            }
         }
         return null;
     }

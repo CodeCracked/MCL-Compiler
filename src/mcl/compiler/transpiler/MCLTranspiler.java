@@ -132,6 +132,11 @@ public class MCLTranspiler
         target.toFile().createNewFile();
     }
 
+    public MCLError comment(Path target, String comment)
+    {
+        return appendToFile(target, file -> file.printf("# %s\n", comment));
+    }
+
     public MCLError pushStacks(Path target)
     {
         return appendToFile(target, file ->

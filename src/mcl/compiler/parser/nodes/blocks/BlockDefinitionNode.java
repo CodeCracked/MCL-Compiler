@@ -15,23 +15,34 @@ import java.util.function.BiConsumer;
 public abstract class BlockDefinitionNode extends AbstractNode
 {
     public final Object symbolTableID;
-    public final AbstractNode body;
+    public final AbstractNode[] blocks;
     public final String blockName;
 
     public BlockDefinitionNode(int startPosition, int endPosition, AbstractNode body, String blockName)
     {
-        this(startPosition, endPosition, body, blockName, UUID.randomUUID());
+        this(startPosition, endPosition, blockName, UUID.randomUUID(), body);
     }
     public BlockDefinitionNode(int startPosition, int endPosition, AbstractNode body, String blockName, Object symbolTableID)
+    {
+        this(startPosition, endPosition, blockName, symbolTableID, body);
+    }
+    public BlockDefinitionNode(int startPosition, int endPosition, String blockName, AbstractNode... blocks)
+    {
+        this(startPosition, endPosition, blockName, UUID.randomUUID(), blocks);
+    }
+    public BlockDefinitionNode(int startPosition, int endPosition, String blockName, Object symbolTableID, AbstractNode... blocks)
     {
         super(startPosition, endPosition);
 
         this.symbolTableID = symbolTableID;
-        this.body = body;
+        this.blocks = blocks;
         this.blockName = blockName;
     }
 
     protected Path getDefinitionFolder(Path target) { return target; }
+    protected Path getBlockDefinitionFolder(AbstractNode block, Path target) { return target; }
+    protected MCLError transpileStatement(MCLTranspiler transpiler, Path target) { return null; }
+
     protected void walkChildren(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer) {  }
     protected MCLError createDefinitionSymbol(MCLCompiler compiler, MCLSourceCollection source) { return null; }
     protected MCLError createContextSymbols(MCLCompiler compiler, MCLSourceCollection source) { return null; }
@@ -39,8 +50,11 @@ public abstract class BlockDefinitionNode extends AbstractNode
     @Override
     public final void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
     {
-        parentChildConsumer.accept(this, body);
-        body.walk(parentChildConsumer);
+        for (AbstractNode block : blocks)
+        {
+            parentChildConsumer.accept(this, block);
+            block.walk(parentChildConsumer);
+        }
     }
 
     @Override
@@ -55,21 +69,27 @@ public abstract class BlockDefinitionNode extends AbstractNode
         if (error != null) return error;
 
         compiler.pushSymbolTable(symbolTableID);
-        error = body.createSymbols(compiler, source);
+        for (AbstractNode block : blocks)
+        {
+            error = block.createSymbols(compiler, source);
+            if (error != null) return error;
+        }
         compiler.popSymbolTable();
 
-        return error;
+        return null;
     }
     @Override
     public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
     {
-        MCLError error;
-
         compiler.pushSymbolTable(symbolTableID);
-        error = body.symbolAnalysis(compiler, source);
+        for (AbstractNode block : blocks)
+        {
+            MCLError error = block.symbolAnalysis(compiler, source);
+            if (error != null) return error;
+        }
         compiler.popSymbolTable();
 
-        return error;
+        return null;
     }
 
     @Override
@@ -77,16 +97,20 @@ public abstract class BlockDefinitionNode extends AbstractNode
     {
         this.transpileTarget = getDefinitionFolder(target);
         transpiler.createDirectory(transpileTarget);
-        body.setTranspileTarget(transpiler, transpileTarget);
+        for (AbstractNode block : blocks) block.setTranspileTarget(transpiler, getBlockDefinitionFolder(block, transpileTarget));
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException
     {
         transpiler.getCompiler().pushSymbolTable(symbolTableID);
-        MCLError error = body.transpile(transpiler);
+        for (AbstractNode block : blocks)
+        {
+            MCLError error = block.transpile(transpiler);
+            if (error != null) return error;
+        }
         transpiler.getCompiler().popSymbolTable();
 
-        return error;
+        return null;
     }
 
     @Override
