@@ -1,0 +1,9 @@
+namespace minecraft
+	event load()
+	event tick()
+
+namespace mcl_bootstrap
+	listener minecraft:load() run
+    	"scoreboard objectives add mcl.expressions dummy"
+    	"execute unless data storage mcl:variables CallStack[0] run data modify storage mcl:variables CallStack set value [{}]"
+    	"execute unless data storage mcl:variables ExpressionStack[0] run data modify storage mcl:variables ExpressionStack set value [{}]"

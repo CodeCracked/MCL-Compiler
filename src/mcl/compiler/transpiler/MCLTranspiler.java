@@ -80,37 +80,25 @@ public class MCLTranspiler
         MCLError error;
         for (Map.Entry<String, Symbol> entry : namespaceSymbols.entrySet())
         {
-            // Transpile Namespace
-            error = entry.getValue().transpileHeader(this, header);
-            if (error != null) return error;
-
+            // Load Header Symbols
             SymbolTable table = compiler.getRootSymbolTable().getOrCreateChildTable(syntaxTree.getNamespaceNode(entry.getKey()).symbolTableID);
             List<Symbol> symbols = new ArrayList<>();
-
-            // Transpile Events
             table.forEach(SymbolType.EVENT, symbols::add);
-            for (Symbol symbol : symbols)
-            {
-                error = symbol.transpileHeader(this, header);
-                if (error != null) return error;
-            }
-            symbols.clear();
-
-            // Transpile Functions
             table.forEach(SymbolType.FUNCTION, symbols::add);
-            for (Symbol symbol : symbols)
-            {
-                error = symbol.transpileHeader(this, header);
-                if (error != null) return error;
-            }
-            symbols.clear();
-
-            // Transpile Variables
             table.forEach(SymbolType.VARIABLE, symbols::add);
-            for (Symbol symbol : symbols)
+
+            if (symbols.size() > 0)
             {
-                error = symbol.transpileHeader(this, header);
+                // Transpile Namespace
+                error = entry.getValue().transpileHeader(this, header);
                 if (error != null) return error;
+
+                // Transpile Symbols
+                for (Symbol symbol : symbols)
+                {
+                    error = symbol.transpileHeader(this, header);
+                    if (error != null) return error;
+                }
             }
         }
 
