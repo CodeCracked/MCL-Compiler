@@ -15,21 +15,31 @@ public class IfStatementNode extends BlockDefinitionNode
     public final AbstractNode condition;
     public final AbstractNode trueBlock;
     public final AbstractNode falseBlock;
+    public final AbstractNode finallyBlock;
 
     public Path callFunctionPath;
 
-    public IfStatementNode(Token ifKeyword, AbstractNode condition, AbstractNode trueBlock, AbstractNode falseBlock)
+    public IfStatementNode(Token ifKeyword, AbstractNode condition, AbstractNode trueBlock, AbstractNode falseBlock, AbstractNode finallyNode)
     {
-        super(ifKeyword.startPosition(), falseBlock != null ? falseBlock.endPosition() : trueBlock.endPosition(), "if", getBlocks(trueBlock, falseBlock));
+        super(ifKeyword.startPosition(), falseBlock != null ? falseBlock.endPosition() : trueBlock.endPosition(), "if", getBlocks(trueBlock, falseBlock, finallyNode));
 
         this.condition = condition;
         this.trueBlock = trueBlock;
         this.falseBlock = falseBlock;
+        this.finallyBlock = finallyNode;
     }
-    private static AbstractNode[] getBlocks(AbstractNode trueBlock, AbstractNode falseBlock)
+    private static AbstractNode[] getBlocks(AbstractNode trueBlock, AbstractNode falseBlock, AbstractNode finallyBlock)
     {
-        if (falseBlock != null) return new AbstractNode[] { trueBlock, falseBlock };
-        else return new AbstractNode[] { trueBlock };
+        if (finallyBlock != null)
+        {
+            if (falseBlock != null) return new AbstractNode[] { trueBlock, falseBlock, finallyBlock };
+            else return new AbstractNode[] { trueBlock, finallyBlock };
+        }
+        else
+        {
+            if (falseBlock != null) return new AbstractNode[] { trueBlock, falseBlock };
+            else return new AbstractNode[] { trueBlock };
+        }
     }
 
     @Override
@@ -37,6 +47,7 @@ public class IfStatementNode extends BlockDefinitionNode
     {
         if (block.equals(trueBlock)) return target.resolve("true");
         else if (block.equals(falseBlock)) return target.resolve("false");
+        else if (block.equals(finallyBlock)) return target.resolve("finally");
         else return target.resolve("other");
     }
 
@@ -83,7 +94,17 @@ public class IfStatementNode extends BlockDefinitionNode
             String falseBlockFunction;
             if (falseBlock instanceof IfStatementNode elseIf) falseBlockFunction = transpiler.getFunctionName(elseIf.callFunctionPath);
             else falseBlockFunction = transpiler.getFunctionName(((BlockStatementNode)falseBlock).mainFunctionPath);
-            return transpiler.appendToFile(callFunctionPath, file -> file.println(transpiler.applyConfig("execute if score r0 {config.expressions} matches ..0 run function %s", falseBlockFunction)));
+            error = transpiler.appendToFile(callFunctionPath, file -> file.println(transpiler.applyConfig("execute if score r0 {config.expressions} matches ..0 run function %s", falseBlockFunction)));
+            if (error != null) return error;
+        }
+
+        // Transpile Finally
+        if (finallyBlock != null)
+        {
+            Path finallyBlockFunction;
+            if (finallyBlock instanceof IfStatementNode finallyIf) finallyBlockFunction = finallyIf.callFunctionPath;
+            else finallyBlockFunction = ((BlockStatementNode)finallyBlock).mainFunctionPath;
+            return transpiler.runFunctionFile(callFunctionPath, finallyBlockFunction);
         }
 
         return null;
@@ -98,5 +119,6 @@ public class IfStatementNode extends BlockDefinitionNode
         condition.debugPrint(depth + 1);
         trueBlock.debugPrint(depth + 1);
         if (falseBlock != null) falseBlock.debugPrint(depth + 1);
+        if (finallyBlock != null) finallyBlock.debugPrint(depth + 1);
     }
 }

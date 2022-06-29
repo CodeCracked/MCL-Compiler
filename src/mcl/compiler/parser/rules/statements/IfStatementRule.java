@@ -14,7 +14,7 @@ public class IfStatementRule implements GrammarRule
     {
         ParseResult result = new ParseResult();
         int indent = parser.getCurrentIndent();
-        GrammarRule blockRule = GrammarRules.blockStatement(parser.getCurrentIndent() + 1);
+        GrammarRule blockRule = GrammarRules.blockStatement(indent + 1);
 
         // If Keyword
         Token ifKeyword = parser.getCurrentToken();
@@ -80,6 +80,10 @@ public class IfStatementRule implements GrammarRule
             }
         }
 
-        return result.success(new IfStatementNode(ifKeyword, condition, trueBlock, falseBlock));
+        // Finally Block
+        AbstractNode finallyBlock = result.register(GrammarRules.blockStatement(indent).build(parser));
+        if (result.error() != null) return result;
+
+        return result.success(new IfStatementNode(ifKeyword, condition, trueBlock, falseBlock, finallyBlock));
     }
 }

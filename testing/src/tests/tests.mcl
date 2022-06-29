@@ -1,3 +1,4 @@
 namespace transpiler_tests
 	func test_condition(int a, int b)
 		if (a > b) run "say True" else run "say False"
+		run "say Finally"
