@@ -5,7 +5,8 @@ import mcl.compiler.exceptions.MCLSyntaxError;
 import mcl.compiler.lexer.Token;
 import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.*;
-import mcl.compiler.parser.nodes.IfStatementNode;
+import mcl.compiler.parser.nodes.blocks.BlockStatementNode;
+import mcl.compiler.parser.nodes.statements.IfStatementNode;
 
 public class IfStatementRule implements GrammarRule
 {
@@ -81,8 +82,9 @@ public class IfStatementRule implements GrammarRule
         }
 
         // Finally Block
-        AbstractNode finallyBlock = result.register(GrammarRules.blockStatement(indent).build(parser));
+        BlockStatementNode finallyBlock = (BlockStatementNode) result.register(GrammarRules.blockStatement(indent).build(parser));
         if (result.error() != null) return result;
+        if (finallyBlock.statements.isEmpty()) finallyBlock = null;
 
         return result.success(new IfStatementNode(ifKeyword, condition, trueBlock, falseBlock, finallyBlock));
     }

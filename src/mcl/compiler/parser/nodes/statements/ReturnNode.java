@@ -1,4 +1,4 @@
-package mcl.compiler.parser.nodes;
+package mcl.compiler.parser.nodes.statements;
 
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;
@@ -10,69 +10,68 @@ import mcl.compiler.transpiler.MCLTranspiler;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.BiConsumer;
 
-public class RunCommandsNode extends AbstractNode
+public class ReturnNode extends AbstractNode
 {
-    public final List<Token> commands;
+    public final AbstractNode value;
 
-    public RunCommandsNode(Token keyword, List<Token> commands)
+    public ReturnNode(Token keyword, AbstractNode value)
     {
-        super(keyword.startPosition(), commands.get(commands.size() - 1).endPosition());
-        this.commands = Collections.unmodifiableList(commands);
+        super(keyword.startPosition(), value.endPosition());
+        this.value = value;
     }
 
     @Override
     public void walk(BiConsumer<AbstractNode, AbstractNode> parentChildConsumer)
     {
-
+        parentChildConsumer.accept(this, value);
+        value.walk(parentChildConsumer);
     }
 
     @Override
     public MCLError createSymbols(MCLCompiler compiler, MCLSourceCollection source)
     {
-        return null;
+        return value.createSymbols(compiler, source);
     }
-
     @Override
     public MCLError symbolAnalysis(MCLCompiler compiler, MCLSourceCollection source)
     {
-        return null;
+        return value.symbolAnalysis(compiler, source);
     }
 
     @Override
     public void setTranspileTarget(MCLTranspiler transpiler, Path target) throws IOException
     {
         this.transpileTarget = target;
+        value.setTranspileTarget(transpiler, target);
     }
     @Override
     public MCLError transpile(MCLTranspiler transpiler) throws IOException
     {
-        for (Token command : commands)
-        {
-            MCLError error = transpiler.appendToFile(transpileTarget, file -> file.println(command.value()));
-            if (error != null) return error;
-        }
-        return null;
+        MCLError error = transpiler.comment(transpileTarget, "RETURN_VALUE");
+        if (error != null) return error;
+
+        error = value.transpile(transpiler);
+        if (error != null) return error;
+
+        error = transpiler.assignReturn(transpileTarget, getRuntimeType(transpiler.getCompiler()), 0);
+        if (error != null) return error;
+
+        error = transpiler.comment(transpileTarget, "END RETURN_VALUE");
+        return error;
     }
 
     @Override
     public RuntimeType getRuntimeType(MCLCompiler compiler)
     {
-        return RuntimeType.UNDEFINED;
+        return value.getRuntimeType(compiler);
     }
     @Override
     public void debugPrint(int depth)
     {
         System.out.print("  ".repeat(depth));
-        System.out.println("RUN");
-
-        for (Token command : commands)
-        {
-            System.out.print("  ".repeat(depth + 1));
-            System.out.println(command);
-        }
+        System.out.println("RETURN");
+        value.debugPrint(depth + 1);
     }
 }

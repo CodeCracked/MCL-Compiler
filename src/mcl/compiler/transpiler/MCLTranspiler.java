@@ -141,6 +141,48 @@ public class MCLTranspiler
             file.println(applyConfig("execute if data storage {config.variables} ExpressionStack[1] run data remove storage {config.variables} ExpressionStack[0]"));
         });
     }
+    
+    public MCLError enterBlock(Path target, int returnCode)
+    {
+        // Push Call Stack
+        MCLError error = pushStacks(target);
+        if (error != null) return error;
+
+        // Backup Expressions Objective
+        if (returnCode > 0)
+        {
+            error = appendToFile(target, file -> file.println("# BACKUP_EXPRESSION_STACK"));
+            if (error != null) return error;
+            for (int i = 0; i < returnCode; i++)
+            {
+                int register = i;
+                error = appendToFile(target, file -> file.println(applyConfig("execute store result storage {config.variables} ExpressionStack[0].r%1$s int 1 run scoreboard players get r%1$s {config.expressions}", register)));
+                if (error != null) return error;
+            }
+            return appendToFile(target, file -> file.println("# END BACKUP_EXPRESSION_STACK"));
+        }
+        
+        return null;
+    }
+    public MCLError exitBlock(Path target, int returnCode)
+    {
+        // Restore Expressions Objective
+        if (returnCode > 0)
+        {
+            MCLError error = appendToFile(target, file -> file.println("# RESTORE_EXPRESSION_STACK"));
+            if (error != null) return error;
+            for (int i = 0; i < returnCode; i++)
+            {
+                int register = i;
+                error = appendToFile(target, file -> file.println(applyConfig("execute store result score r%1$s {config.expressions} run data get storage {config.variables} ExpressionStack[0].r%1$s 1", register)));
+                if (error != null) return error;
+            }
+            error = appendToFile(target, file -> file.println("# END RESTORE_EXPRESSION_STACK"));
+        }
+
+        // Pop Call Stack
+        return popStacks(target);
+    }
 
     public String getFunctionName(Path functionFile)
     {
@@ -177,9 +219,13 @@ public class MCLTranspiler
         return appendToFile(target, file -> file.println(applyConfig("execute store result score r%s {config.expressions} run data get storage {config.variables} CallStack[%s].%s %s", register, stackLevel, location, type.scaleUp(compiler.config))));
     }
 
-    public MCLError assignReturn(Path target, RuntimeType type)
+    public MCLError assignReturn(Path target, RuntimeType type, int register)
     {
-        return appendToFile(target, file -> file.println(applyConfig("execute store result storage {config.variables} CallStack[0].return %s %s run scoreboard players get r0 {config.expressions}", type.getMinecraftName(), type.scaleDown(compiler.config))));
+        return appendToFile(target, file -> file.println(applyConfig("execute store result storage {config.variables} FunctionReturn %s %s run scoreboard players get r%s {config.expressions}", type.getMinecraftName(), type.scaleDown(compiler.config), register)));
+    }
+    public MCLError accessReturn(Path target, RuntimeType type, int register)
+    {
+        return appendToFile(target, file -> file.println(applyConfig("execute store result score r%s {config.expressions} run data get storage {config.variables} FunctionReturn %s", register, type.scaleUp(compiler.config))));
     }
     //endregion
     //region Helpers

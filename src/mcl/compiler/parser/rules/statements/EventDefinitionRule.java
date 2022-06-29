@@ -9,7 +9,7 @@ import mcl.compiler.parser.GrammarRules;
 import mcl.compiler.parser.MCLParser;
 import mcl.compiler.parser.ParseResult;
 import mcl.compiler.parser.nodes.ParameterListNode;
-import mcl.compiler.parser.nodes.events.EventDefinitionNode;
+import mcl.compiler.parser.nodes.statements.EventDefinitionNode;
 
 public class EventDefinitionRule implements GrammarRule
 {

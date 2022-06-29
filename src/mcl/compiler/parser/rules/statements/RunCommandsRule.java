@@ -7,7 +7,7 @@ import mcl.compiler.lexer.TokenType;
 import mcl.compiler.parser.GrammarRule;
 import mcl.compiler.parser.MCLParser;
 import mcl.compiler.parser.ParseResult;
-import mcl.compiler.parser.nodes.RunCommandsNode;
+import mcl.compiler.parser.nodes.statements.RunCommandsNode;
 
 import java.util.ArrayList;
 import java.util.List;

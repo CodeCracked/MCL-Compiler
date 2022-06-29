@@ -11,6 +11,7 @@ statement	: event_def
 			: func_def
 			: listener
 			: run
+			: return
 			: if
 
 
@@ -36,6 +37,8 @@ func_call	: location LPAREN (expr (COMMA expr)*)? RPAREN
 listener	: KEYWORD:listener location par_list block
 
 run			: KEYWORD:run NEWLINE? STRING (NEWLINE STRING)*
+
+return		: KEYWORD:return expr
 
 
 

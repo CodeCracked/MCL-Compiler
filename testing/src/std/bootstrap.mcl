@@ -4,6 +4,18 @@ namespace minecraft
 
 namespace mcl_bootstrap
 	listener minecraft:load() run
+		"scoreboard objectives add mcl.constants dummy"
+		"scoreboard players set -1 mcl.constants -1"
+
     	"scoreboard objectives add mcl.expressions dummy"
     	"execute unless data storage mcl:variables CallStack[0] run data modify storage mcl:variables CallStack set value [{}]"
     	"execute unless data storage mcl:variables ExpressionStack[0] run data modify storage mcl:variables ExpressionStack set value [{}]"
+
+    func reset()
+    	run
+    		"scoreboard players reset * mcl.constants"
+    		"scoreboard players reset * mcl.expressions"
+    		"data remove storage mcl:variables CallStack"
+    		"data remove storage mcl:variables ExpressionStack"
+    		"data remove storage mcl:variables FunctionReturn"
+    		"function #minecraft:load"

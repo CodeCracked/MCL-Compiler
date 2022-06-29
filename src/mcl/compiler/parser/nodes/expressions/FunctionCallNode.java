@@ -101,24 +101,8 @@ public class FunctionCallNode extends ExpressionNode
         result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# FUNC_CALL " + location.toString()));
         if (result.error != null) return result;
 
-        // Push Call Stack
-        result.error = transpiler.pushStacks(transpileTarget);
-        if (result.error != null) return result;
-
-        // Backup Expressions Objective
-        if (depth > 0)
-        {
-            result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# BACKUP_EXPRESSION_STACK"));
-            if (result.error != null) return result;
-            for (int i = 0; i < depth; i++)
-            {
-                int register = i;
-                result.error = transpiler.appendToFile(transpileTarget, file -> file.println(transpiler.applyConfig("execute store result storage {config.variables} ExpressionStack[0].r%1$s int 1 run scoreboard players get r%1$s {config.expressions}", register)));
-                if (result.error != null) return result;
-            }
-            result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# END BACKUP_EXPRESSION_STACK"));
-            if (result.error != null) return result;
-        }
+        // Enter Block
+        result.error = transpiler.enterBlock(transpileTarget, depth);
 
         // Assign Arguments
         int currentDepth = depth + 1;
@@ -151,30 +135,17 @@ public class FunctionCallNode extends ExpressionNode
         result.error = transpiler.runFunctionFile(transpileTarget, function.mainFunctionFile);
         if (result.error != null) return result;
 
+        // Exit Block
+        result.error = transpiler.exitBlock(transpileTarget, depth);
+        if (result.error != null) return result;
+
         // Copy Return to Register
         if (!function.returnType.equals(RuntimeType.VOID))
         {
-            result.error = transpiler.accessVariable(transpileTarget, 0, "return", function.returnType, depth);
+            //result.error = transpiler.accessVariable(transpileTarget, 0, "return", function.returnType, depth);
+            result.error = transpiler.accessReturn(transpileTarget, function.returnType, depth);
             if (result.error != null) return result;
         }
-
-        // Restore Expressions Objective
-        if (depth > 0)
-        {
-            result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# RESTORE_EXPRESSION_STACK"));
-            if (result.error != null) return result;
-            for (int i = 0; i < depth; i++)
-            {
-                int register = i;
-                result.error = transpiler.appendToFile(transpileTarget, file -> file.println(transpiler.applyConfig("execute store result score r%1$s {config.expressions} run data get storage {config.variables} ExpressionStack[0].r%1$s 1", register)));
-                if (result.error != null) return result;
-            }
-            result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# END RESTORE_EXPRESSION_STACK"));
-        }
-
-        // Pop Call Stack
-        result.error = transpiler.popStacks(transpileTarget);
-        if (result.error != null) return result;
 
         // Print Footer Comment
         result.error = transpiler.appendToFile(transpileTarget, file -> file.println("# END FUNC_CALL " + location.toString()));

@@ -47,7 +47,7 @@ public class BlockStatementRule implements GrammarRule
                 statements.add(statement);
             }
         }
-        else
+        else if (parser.getCurrentToken().type() != TokenType.EOF)
         {
             AbstractNode inlineStatement = result.register(GrammarRules.STATEMENT.build(parser));
             if (result.error() != null) return result;

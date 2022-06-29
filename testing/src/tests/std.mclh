@@ -1,3 +1,5 @@
 namespace minecraft
 	event load()
 	event tick()
+namespace mcl_bootstrap
+	func reset()

@@ -6,10 +6,7 @@ import mcl.compiler.parser.nodes.expressions.ExpressionNode;
 import mcl.compiler.parser.rules.LocationRule;
 import mcl.compiler.parser.rules.blocks.*;
 import mcl.compiler.parser.rules.expressions.*;
-import mcl.compiler.parser.rules.statements.EventDefinitionRule;
-import mcl.compiler.parser.rules.statements.IfStatementRule;
-import mcl.compiler.parser.rules.statements.RunCommandsRule;
-import mcl.compiler.parser.rules.statements.StatementRule;
+import mcl.compiler.parser.rules.statements.*;
 import mcl.compiler.parser.rules.variables.ParameterListRule;
 import mcl.compiler.parser.rules.variables.VariableAssignmentRule;
 import mcl.compiler.parser.rules.variables.VariableDefinitionRule;
@@ -34,6 +31,7 @@ public class GrammarRules
     public static final GrammarRule FUNCTION_CALL = new FunctionCallRule();
     public static final GrammarRule LISTENER_DEFINITION = new ListenerDefinitionRule();
     public static final GrammarRule RUN_COMMANDS = new RunCommandsRule();
+    public static final GrammarRule RETURN_STATEMENT = new ReturnRule();
 
     public static final GrammarRule IF_STATEMENT = new IfStatementRule();
 

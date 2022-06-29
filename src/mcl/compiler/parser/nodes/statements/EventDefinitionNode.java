@@ -1,4 +1,4 @@
-package mcl.compiler.parser.nodes.events;
+package mcl.compiler.parser.nodes.statements;
 
 import mcl.compiler.MCLCompiler;
 import mcl.compiler.analyzer.RuntimeType;

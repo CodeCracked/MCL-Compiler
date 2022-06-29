@@ -1,4 +1,10 @@
 namespace transpiler_tests
-	func test_condition(int a, int b)
-		if (a > b) run "say True" else run "say False"
-		run "say Finally"
+	func run_tests(int number)
+		int value = abs(number)
+		print(value)
+
+	func abs(int number) return int
+		if (number > 0) return number else return -number
+
+	func print(int arg)
+		run |tellraw @s {"nbt":"CallStack[1].arg","storage":"mcl:variables"}|

@@ -1,4 +1,4 @@
-package mcl.compiler.parser.nodes;
+package mcl.compiler.parser.nodes.statements;
 
 import mcl.compiler.exceptions.MCLError;
 import mcl.compiler.lexer.Token;
@@ -83,6 +83,10 @@ public class IfStatementNode extends BlockDefinitionNode
         error = transpiler.comment(callFunctionPath, "END IF_CONDITION");
         if (error != null) return error;
 
+        // Transpile Enter Block
+        error = transpiler.enterBlock(callFunctionPath, 0);
+        if (error != null) return error;
+
         // Transpile True Check
         String trueBlockFunction = transpiler.getFunctionName(((BlockStatementNode)trueBlock).mainFunctionPath);
         error = transpiler.appendToFile(callFunctionPath, file -> file.println(transpiler.applyConfig("execute if score r0 {config.expressions} matches 1.. run function %s", trueBlockFunction)));
@@ -97,6 +101,10 @@ public class IfStatementNode extends BlockDefinitionNode
             error = transpiler.appendToFile(callFunctionPath, file -> file.println(transpiler.applyConfig("execute if score r0 {config.expressions} matches ..0 run function %s", falseBlockFunction)));
             if (error != null) return error;
         }
+
+        // Transpile Exit Block
+        error = transpiler.exitBlock(callFunctionPath, 0);
+        if (error != null) return error;
 
         // Transpile Finally
         if (finallyBlock != null)
