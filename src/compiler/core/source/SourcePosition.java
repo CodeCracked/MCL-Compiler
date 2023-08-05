@@ -19,6 +19,7 @@ public class SourcePosition
     
     public int getLine() { return line; }
     public int getColumn() { return column; }
+    public char getCharacter() { return source.getCharAt(this); }
     
     @Override
     public boolean equals(Object o)
