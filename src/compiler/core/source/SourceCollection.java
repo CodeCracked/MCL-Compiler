@@ -2,7 +2,6 @@ package compiler.core.source;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -13,7 +12,7 @@ import java.util.stream.Stream;
 
 public class SourceCollection
 {
-    private final CodeSource[] sources;
+    final CodeSource[] sources;
     
     public SourceCollection(CodeSource... sources)
     {
@@ -55,27 +54,7 @@ public class SourceCollection
     //region Public Methods
     public SourcePosition start()
     {
-        return new SourcePosition(sources[0], 0, 0, 0);
-    }
-    public SourcePosition advance(SourcePosition position)
-    {
-        // Get the next position in the same source
-        SourcePosition next = position.source.advance(position);
-        
-        // If the current source doesn't have a next position
-        if (next == null)
-        {
-            // Try to return the starting position of the next source
-            int nextIndex = position.sourceIndex + 1;
-            return nextIndex < sources.length ? new SourcePosition(sources[nextIndex], nextIndex, 0, 0) : null;
-        }
-        
-        // Return the next position
-        else return next;
-    }
-    public char charAt(SourcePosition position)
-    {
-        return position.source.getCharAt(position);
+        return new SourcePosition(this, 0, 0, 0);
     }
     //endregion
 }

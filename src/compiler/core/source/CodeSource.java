@@ -7,20 +7,40 @@ import java.util.UUID;
 
 public abstract class CodeSource
 {
+    //region Interface
+    /**
+     * Move a given source position to the start of this CodeSource
+     * @param position The {@link SourcePosition} to move
+     */
+    abstract void moveToStart(SourcePosition position);
+    
+    /**
+     * Move a given source position to the end of this CodeSource
+     * @param position The {@link SourcePosition} to move
+     */
+    abstract void moveToEnd(SourcePosition position);
+    
     /**
      * Attempt to advance a given source position using this CodeSource
      * @param position The position to advance
-     * @return The next position in the {@link CodeSource}, or null if there is none
+     * @return True if the advance was successful, false otherwise
      */
-    abstract SourcePosition advance(SourcePosition position);
+    abstract boolean advance(SourcePosition position);
+    
+    /**
+     * Attempt to retract a given source position using this CodeSource
+     * @param position The position to retract
+     * @return True if the retraction was successful, false otherwise
+     */
+    abstract boolean retract(SourcePosition position);
     
     /**
      * Get the character at a given {@link SourcePosition} in this {@link CodeSource}
      * @param position The {@link SourcePosition} to advance
      * @return The character at the given position
      */
-    abstract char getCharAt(SourcePosition position);
-    
+    abstract char charAt(SourcePosition position);
+    //endregion
     //region Implementations
     private static class Lines extends CodeSource
     {
@@ -33,30 +53,47 @@ public abstract class CodeSource
         }
     
         @Override
-        public SourcePosition advance(SourcePosition position)
+        void moveToStart(SourcePosition position)
         {
-            // Increment Column
-            int line = position.line;
-            int column = position.column + 1;
-        
-            // If the position reached the end of the current line
-            if (column >= lines[line].length())
-            {
-                // Increment line, reset column
-                line++;
-                column = 0;
-            
-                // If the position reached the end of the source, return null. Otherwise, return the next position
-                if (line >= lines.length) return null;
-                else return new SourcePosition(this, position.sourceIndex, line, column);
-            }
-        
-            // Return the new position
-            else return new SourcePosition(this, position.sourceIndex, line, column);
+            position.line = 0;
+            position.column = 0;
         }
     
         @Override
-        public char getCharAt(SourcePosition position)
+        void moveToEnd(SourcePosition position)
+        {
+            position.line = lines.length - 1;
+            position.column = lines[position.line].length() - 1;
+        }
+    
+        @Override
+        public boolean advance(SourcePosition position)
+        {
+            position.column++;
+            if (position.column >= lines[position.line].length())
+            {
+                position.line++;
+                position.column = 0;
+                return position.line < lines.length;
+            }
+            return true;
+        }
+    
+        @Override
+        boolean retract(SourcePosition position)
+        {
+            position.column--;
+            if (position.column < 0)
+            {
+                position.line--;
+                if (position.line < 0) return false;
+                else position.column = lines[position.line].length() - 1;
+            }
+            return true;
+        }
+    
+        @Override
+        public char charAt(SourcePosition position)
         {
             return lines[position.line].charAt(position.column);
         }

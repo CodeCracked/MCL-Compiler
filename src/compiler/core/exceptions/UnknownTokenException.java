@@ -1,22 +1,19 @@
 package compiler.core.exceptions;
 
-import compiler.core.source.SourceCollection;
 import compiler.core.source.SourcePosition;
 
 public class UnknownTokenException extends CompilerException
 {
-    public UnknownTokenException(SourceCollection source, SourcePosition position)
+    public UnknownTokenException(SourcePosition position)
     {
-        super(source, position);
+        super(position);
         StringBuilder message = new StringBuilder("Unknown token '");
         
         // Build unknown token
-        char c = position.getCharacter();
-        while (!Character.isWhitespace(c))
+        while (position.valid())
         {
-            message.append(c);
-            position = source.advance(position);
-            c = position.getCharacter();
+            message.append(position.getCharacter());
+            if (Character.isWhitespace(position.getCharacter()) || !position.advance()) break;
         }
         
         message.append("'!");

@@ -20,6 +20,9 @@ public class Main
         try
         {
             SourceCollection source = SourceCollection.fromDirectory(testPath, ".mcl");
+            
+            enumerateCharacters(source);
+            IO.Debug.println();
             tokenize(source);
         }
         catch (IOException e) { e.printStackTrace(); }
@@ -28,21 +31,20 @@ public class Main
     private static void tokenize(SourceCollection source)
     {
         // Create Lexer
-        Lexer<TokenType> lexer = new Lexer<>(true, new AbstractTokenBuilder<>()
-        {
+        Lexer<TokenType> lexer = new Lexer<>(false, new AbstractTokenBuilder<>() {
             @Override
-            public Token<TokenType> tryBuild(Lexer<TokenType> lexer)
+            public Token<TokenType> tryBuild(Lexer<TokenType> lexer, SourcePosition position)
             {
-                SourcePosition start = lexer.getPosition();
-                
+                SourcePosition start = position.copy();
                 StringBuilder content = new StringBuilder();
-                while (!Character.isWhitespace(lexer.getCharacter()))
+                
+                while (!Character.isWhitespace(position.getCharacter()))
                 {
-                    content.append(lexer.getCharacter());
-                    if (!lexer.advance()) break;
+                    content.append(position.getCharacter());
+                    if (!position.advance()) break;
                 }
                 
-                return content.length() > 0 ? new Token<>(TokenType.TEST, content.toString(), start, lexer.getPosition()) : null;
+                return content.length() > 0 ? new Token<>(TokenType.TEST, content.toString(), start, position.copy()) : null;
             }
         });
         
@@ -54,13 +56,12 @@ public class Main
     
     private static void enumerateCharacters(SourceCollection source)
     {
-        SourcePosition pos = source.start();
-        do
+        SourcePosition position = source.start();
+        while (position.valid())
         {
-            char c = source.charAt(pos);
-            String str = (c == '\n') ? "\\n" : Character.toString(c);
-            IO.Debug.println(pos + ": " + str);
+            if (position.getCharacter() == '\n') IO.Debug.println(position + ": \\n");
+            else IO.Debug.println(position + ": " + position.getCharacter());
+            position.advance();
         }
-        while ((pos = source.advance(pos)) != null);
     }
 }

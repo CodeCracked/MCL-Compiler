@@ -5,16 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/exceptions/CompilerException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/exceptions/UnknownTokenException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/AbstractTokenBuilder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/Lexer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/Token.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/util/IO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/util/Result.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/lexer/TokenType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/exceptions/CompilerException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/exceptions/CompilerException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/exceptions/UnknownTokenException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/exceptions/UnknownTokenException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/AbstractTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/AbstractTokenBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/Lexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/Lexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/CodeSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/CodeSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourceCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourceCollection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,5 +77,16 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/compiler/core/exceptions/UnknownTokenException.java</url>
+          <line>12</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
