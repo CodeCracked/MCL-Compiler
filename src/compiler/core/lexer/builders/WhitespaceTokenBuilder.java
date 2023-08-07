@@ -3,8 +3,9 @@ package compiler.core.lexer.builders;
 import compiler.core.lexer.AbstractTokenBuilder;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.Token;
-import compiler.core.lexer.base.GrammarTokenType;
-import compiler.core.lexer.base.TokenType;
+import compiler.core.lexer.types.GrammarTokenType;
+import compiler.core.lexer.types.MetaTokenType;
+import compiler.core.lexer.types.TokenType;
 import compiler.core.source.SourcePosition;
 
 public class WhitespaceTokenBuilder extends AbstractTokenBuilder
@@ -20,7 +21,7 @@ public class WhitespaceTokenBuilder extends AbstractTokenBuilder
     }
     
     public static WhitespaceTokenBuilder preserve() { return new WhitespaceTokenBuilder(GrammarTokenType.WHITESPACE, GrammarTokenType.NEWLINE); }
-    public static WhitespaceTokenBuilder ignore() { return new WhitespaceTokenBuilder(TokenType.IGNORED); }
+    public static WhitespaceTokenBuilder ignore() { return new WhitespaceTokenBuilder(MetaTokenType.IGNORED); }
     
     @Override
     public Token tryBuild(Lexer lexer, SourcePosition position)

@@ -5,11 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/TokenBuilderList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/GrammarSymbolsTokenBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/MetaTokenType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/exceptions/UnknownTokenException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/exceptions/UnknownTokenException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/Lexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/Lexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/base/GrammarTokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/GrammarTokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/base/LiteralTokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/LiteralTokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/base/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/TokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/CommentTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/CommentTokenBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/GrammarSymbolsTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/GrammarSymbolsTokenBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/IdentifierTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/IdentifierTokenBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/NumberLiteralsTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/NumberLiteralsTokenBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/StringLiteralTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/StringLiteralTokenBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/WhitespaceTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/WhitespaceTokenBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/Result.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mcl/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/test.mcl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

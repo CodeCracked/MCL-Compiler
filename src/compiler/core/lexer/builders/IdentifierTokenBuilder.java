@@ -3,7 +3,7 @@ package compiler.core.lexer.builders;
 import compiler.core.lexer.AbstractTokenBuilder;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.Token;
-import compiler.core.lexer.base.TokenType;
+import compiler.core.lexer.types.TokenType;
 import compiler.core.source.SourcePosition;
 
 import java.util.Set;

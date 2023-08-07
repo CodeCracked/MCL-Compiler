@@ -6,15 +6,17 @@ import java.util.List;
 public class Result<T>
 {
     private T value;
-    private Exception error;
+    private Exception failure;
     private int advanceCount = 0;
     private final List<Exception> warnings;
+    private final List<Exception> errors;
     
     public Result()
     {
         this.value = null;
-        this.error = null;
+        this.failure = null;
         this.warnings = new ArrayList<>();
+        this.errors = new ArrayList<>();
     }
     
     public static <T> Result<T> of(T value)
@@ -37,7 +39,8 @@ public class Result<T>
     {
         advanceCount += result.advanceCount;
         warnings.addAll(result.warnings);
-        if (result.error != null) error = result.error;
+        errors.addAll(result.errors);
+        if (result.failure != null) failure = result.failure;
         return result;
     }
     
@@ -45,25 +48,24 @@ public class Result<T>
     {
         advanceCount++;
     }
+    public void addWarning(Exception warning) { this.warnings.add(warning); }
+    public void addError(Exception error) { this.errors.add(error); }
+    
     public Result<T> success(T value)
     {
         this.value = value;
         return this;
     }
-    public Result<T> warn(Exception warning)
-    {
-        this.warnings.add(warning);
-        return this;
-    }
     public Result<T> failure(Exception error)
     {
-        if (this.error == null || advanceCount == 0) this.error = error;
+        if (this.failure == null || advanceCount == 0) this.failure = error;
         return this;
     }
     
     public T get() { return value; }
-    public List<Exception> warnings() { return Collections.unmodifiableList(warnings); }
-    public Exception error() { return error; }
+    public List<Exception> getWarnings() { return Collections.unmodifiableList(warnings); }
+    public List<Exception> getErrors() { return Collections.unmodifiableList(errors); }
+    public Exception getFailure() { return failure; }
     
     public void displayIssues()
     {
@@ -72,10 +74,15 @@ public class Result<T>
             IO.Warnings.println(warning.getMessage());
             warning.printStackTrace();
         }
-        if (error != null)
+        for (Exception error : errors)
         {
             IO.Errors.println(error.getMessage());
             error.printStackTrace();
+        }
+        if (failure != null)
+        {
+            IO.Errors.println(failure.getMessage());
+            failure.printStackTrace();
         }
     }
 }

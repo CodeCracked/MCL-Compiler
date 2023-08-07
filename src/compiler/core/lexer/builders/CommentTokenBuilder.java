@@ -3,7 +3,7 @@ package compiler.core.lexer.builders;
 import compiler.core.lexer.AbstractTokenBuilder;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.Token;
-import compiler.core.lexer.base.TokenType;
+import compiler.core.lexer.types.MetaTokenType;
 import compiler.core.source.SourcePosition;
 
 public class CommentTokenBuilder extends AbstractTokenBuilder
@@ -21,8 +21,8 @@ public class CommentTokenBuilder extends AbstractTokenBuilder
         this.blockCommentEnd = blockCommentEnd;
     }
     
-    public static CommentTokenBuilder preserve() { return new CommentTokenBuilder(TokenType.COMMENT, "//", "/*", "*/"); }
-    public static CommentTokenBuilder ignore() { return new CommentTokenBuilder(TokenType.IGNORED, "//", "/*", "*/"); }
+    public static CommentTokenBuilder preserve() { return new CommentTokenBuilder(MetaTokenType.COMMENT, "//", "/*", "*/"); }
+    public static CommentTokenBuilder ignore() { return new CommentTokenBuilder(MetaTokenType.IGNORED, "//", "/*", "*/"); }
     
     @Override
     public Token tryBuild(Lexer lexer, SourcePosition position)

@@ -3,7 +3,7 @@ package compiler.core.lexer.builders;
 import compiler.core.lexer.AbstractTokenBuilder;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.Token;
-import compiler.core.lexer.base.LiteralTokenType;
+import compiler.core.lexer.types.LiteralTokenType;
 import compiler.core.source.SourcePosition;
 
 public class StringLiteralTokenBuilder extends AbstractTokenBuilder

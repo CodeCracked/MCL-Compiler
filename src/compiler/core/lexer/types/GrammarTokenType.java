@@ -1,4 +1,4 @@
-package compiler.core.lexer.base;
+package compiler.core.lexer.types;
 
 public enum GrammarTokenType
 {

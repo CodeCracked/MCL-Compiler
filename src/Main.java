@@ -29,8 +29,8 @@ public class Main
         // Tokenize
         Lexer lexer = new MCLLexer();
         Result<List<Token>> tokens = lexer.tokenize(source);
-        if (tokens.error() != null) tokens.displayIssues();
-        else tokens.get().forEach(IO.Debug::println);
+        if (tokens.getFailure() == null) tokens.get().forEach(IO.Debug::println);
+        tokens.displayIssues();
     }
     
     private static void enumerateCharacters(SourceCollection source)
