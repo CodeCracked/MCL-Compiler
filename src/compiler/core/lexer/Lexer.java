@@ -11,11 +11,11 @@ import java.util.List;
 
 public class Lexer
 {
-    private final AbstractTokenBuilder[] tokenBuilders;
+    private final TokenBuilderList tokenBuilders;
     
     public Lexer(AbstractTokenBuilder... tokenBuilders)
     {
-        this.tokenBuilders = tokenBuilders;
+        this.tokenBuilders = new TokenBuilderList(tokenBuilders);
     }
     
     public Result<List<Token>> tokenize(SourceCollection source)
@@ -27,18 +27,7 @@ public class Lexer
         while (position.valid())
         {
             // Build token
-            Token token = null;
-            for (AbstractTokenBuilder builder : tokenBuilders)
-            {
-                position.markPosition();
-                token = builder.tryBuild(this, position);
-                if (token != null)
-                {
-                    position.unmarkPosition();
-                    break;
-                }
-                else position.revertPosition();
-            }
+            Token token = tokenBuilders.tryBuild(this, position);
             
             // Add token if successful, otherwise return a failed result
             if (token != null)
