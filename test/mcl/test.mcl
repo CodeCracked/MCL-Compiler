@@ -1,0 +1,20 @@
+namespace mcl
+{
+	event init();
+	event tick();
+
+	listener minecraft:load()
+	{
+		print("Minecraft Load...");
+		trigger init();
+	}
+
+	listener minecraft:tick()
+	{
+		print("Minecraft Tick...");
+		trigger tick();
+	}
+
+	listener init() { print("MCL Init..."); }
+	listener tick() { print("MCL Tick..."); }
+}

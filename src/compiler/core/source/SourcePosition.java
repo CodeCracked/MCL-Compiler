@@ -51,6 +51,7 @@ public class SourcePosition
     
     //region Getters
     public SourceCollection getSource() { return source; }
+    public int getSourceIndex() { return sourceIndex; }
     public int getLine() { return line; }
     public int getColumn() { return column; }
     public char getCharacter() { return character; }
@@ -58,7 +59,13 @@ public class SourcePosition
     //region Position Changing
     public boolean advance()
     {
-        if (!valid()) return false;
+        if (sourceIndex < 0)
+        {
+            source.sources[0].moveToStart(this);
+            return true;
+        }
+        else if (sourceIndex >= source.sources.length) return false;
+        
         if (!source.sources[sourceIndex].advance(this))
         {
             sourceIndex++;
@@ -77,7 +84,13 @@ public class SourcePosition
     }
     public boolean retract()
     {
-        if (!valid()) return false;
+        if (sourceIndex >= source.sources.length)
+        {
+            source.sources[source.sources.length - 1].moveToEnd(this);
+            return true;
+        }
+        else if (sourceIndex < 0) return false;
+        
         if (!source.sources[sourceIndex].retract(this))
         {
             sourceIndex--;

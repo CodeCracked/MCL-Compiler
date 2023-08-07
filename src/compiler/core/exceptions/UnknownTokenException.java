@@ -6,17 +6,23 @@ public class UnknownTokenException extends CompilerException
 {
     public UnknownTokenException(SourcePosition position)
     {
-        super(position);
-        StringBuilder message = new StringBuilder("Unknown token '");
+        super(position.copy());
         
-        // Build unknown token
-        while (position.valid())
+        if (position.valid())
         {
-            message.append(position.getCharacter());
-            if (Character.isWhitespace(position.getCharacter()) || !position.advance()) break;
+            StringBuilder message = new StringBuilder("Unknown token '");
+    
+            // Build unknown token
+            boolean matchingWhitespace = Character.isWhitespace(position.getCharacter());
+            while (position.valid() && Character.isWhitespace(position.getCharacter()) == matchingWhitespace)
+            {
+                message.append(position.getCharacter());
+                position.advance();
+            }
+    
+            message.append("'!");
+            this.message = message.toString();
         }
-        
-        message.append("'!");
-        this.message = message.toString();
+        else this.message = "Unexpected end-of-file!";
     }
 }
