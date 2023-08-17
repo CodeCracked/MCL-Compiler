@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TokenBuilderList extends AbstractTokenBuilder
 {
-    private final List<AbstractTokenBuilder> builders;
+    protected final List<AbstractTokenBuilder> builders;
     
     public TokenBuilderList(AbstractTokenBuilder... builders)
     {

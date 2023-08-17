@@ -24,6 +24,8 @@ public class Token
     public final SourcePosition start() { return start; }
     public final SourcePosition end() { return end; }
     
+    public boolean matches(Enum<?> type, Object contents) { return this.type.equals(type) && this.contents.equals(contents); }
+    
     @Override
     public boolean equals(Object o)
     {

@@ -5,7 +5,7 @@ import compiler.core.source.SourcePosition;
 public class CompilerException extends Exception
 {
     protected final SourcePosition position;
-    protected String message;
+    protected final String message;
     
     protected CompilerException(SourcePosition position)
     {

@@ -5,13 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/ComparisonSymbolsTokenBuilder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/MathSymbolsTokenBuilder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/ComparisonTokenType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/MathTokenType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/exceptions/UnexpectedTokenException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/KeywordTokenBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/IGrammarRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/BlockBracesRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/DefaultRules.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/IdentifierRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/BlockNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/IdentifierNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/MCL.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/grammar/MCLRules.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/grammar/NamespaceRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/grammar/ProgramRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLKeyword.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/nodes/NamespaceNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/nodes/ProgramNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/KeywordLists.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLLexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/Compiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/Compiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/exceptions/CompilerException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/exceptions/CompilerException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/TokenBuilderList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/TokenBuilderList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/IdentifierTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/IdentifierTokenBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/IO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/IO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/Result.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLLexer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mcl/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +44,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -43,19 +67,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "run.code.analysis.last.selected.profile": "pProject Default"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Git\Minecraft\MCL Compiler\test\mcl\src" />
       <recent name="D:\Git\Minecraft\MCL Compiler\src\compiler\core" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="compiler.core.exceptions" />
       <recent name="compiler.core.lexer.builders" />
     </key>
   </component>

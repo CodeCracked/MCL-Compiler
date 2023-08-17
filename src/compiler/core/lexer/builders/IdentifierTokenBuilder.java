@@ -6,27 +6,21 @@ import compiler.core.lexer.Token;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.source.SourcePosition;
 
-import java.util.Set;
-
 public class IdentifierTokenBuilder extends AbstractTokenBuilder
 {
     private final Enum<?> identifierType;
-    private final Enum<?> keywordType;
     private final String firstCharacters;
     private final String bodyCharacters;
-    private final Set<String> keywords;
     
-    public IdentifierTokenBuilder(Enum<?> identifierType, Enum<?> keywordType, String firstCharacters, String bodyCharacters, Set<String> keywords)
+    public IdentifierTokenBuilder(Enum<?> identifierType, String firstCharacters, String bodyCharacters)
     {
         this.identifierType = identifierType;
-        this.keywordType = keywordType;
         this.firstCharacters = firstCharacters;
         this.bodyCharacters = bodyCharacters;
-        this.keywords = keywords;
     }
     
-    public static  IdentifierTokenBuilder camelCase(Set<String> keywords) { return new IdentifierTokenBuilder(TokenType.IDENTIFIER, TokenType.KEYWORD, "abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvwxyz1234567890_", keywords); }
-    public static  IdentifierTokenBuilder normal(Set<String> keywords) { return new IdentifierTokenBuilder(TokenType.IDENTIFIER, TokenType.KEYWORD, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_", keywords); }
+    public static  IdentifierTokenBuilder camelCase() { return new IdentifierTokenBuilder(TokenType.IDENTIFIER, "abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvwxyz1234567890_"); }
+    public static  IdentifierTokenBuilder normal() { return new IdentifierTokenBuilder(TokenType.IDENTIFIER, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_"); }
     
     @Override
     public Token tryBuild(Lexer lexer, SourcePosition position)
@@ -50,7 +44,6 @@ public class IdentifierTokenBuilder extends AbstractTokenBuilder
         // Return Token
         String tokenContent = contents.toString();
         SourcePosition end = position.copy(); end.retract();
-        if (keywords.contains(tokenContent)) return new Token(keywordType, tokenContent, start, end);
-        else return new Token(identifierType, tokenContent, start, end);
+        return new Token(identifierType, tokenContent, start, end);
     }
 }

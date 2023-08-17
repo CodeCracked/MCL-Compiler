@@ -30,7 +30,7 @@ public class Result<T>
         return result.failure(e);
     }
     
-    public T register(Result<T> result)
+    public <T1> T1 register(Result<T1> result)
     {
         registerIssues(result);
         return result.value;

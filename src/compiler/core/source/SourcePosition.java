@@ -5,6 +5,7 @@ import compiler.core.util.IO;
 import java.util.Objects;
 import java.util.Stack;
 
+@SuppressWarnings("UnusedReturnValue")
 public class SourcePosition
 {
     SourceCollection source;

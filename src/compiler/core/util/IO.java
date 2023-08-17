@@ -11,10 +11,10 @@ public class IO
 {
     private static final Scanner defaultInput = new Scanner(System.in);
     
-    public static IPrinter Warnings = System.err::printf;
-    public static IPrinter Errors = System.err::printf;
+    public static final IPrinter Warnings = System.err::printf;
+    public static final IPrinter Errors = System.err::printf;
     public static IPrinter Output = System.out::printf;
-    public static IPrinter Debug = System.out::printf;
+    public static final IPrinter Debug = System.out::printf;
     public static IInput Input = callback -> callback.accept(defaultInput.nextLine());
     
     public interface IPrinter
