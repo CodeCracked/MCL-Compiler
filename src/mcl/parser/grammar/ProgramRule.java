@@ -1,10 +1,11 @@
-package mcl.grammar;
+package mcl.parser.grammar;
 
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
 import compiler.core.util.Result;
-import mcl.nodes.NamespaceNode;
-import mcl.nodes.ProgramNode;
+import mcl.parser.MCLRules;
+import mcl.parser.nodes.NamespaceNode;
+import mcl.parser.nodes.ProgramNode;
 
 import java.util.ArrayList;
 import java.util.List;

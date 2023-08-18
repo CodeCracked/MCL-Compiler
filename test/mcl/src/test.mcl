@@ -1,6 +1,6 @@
 namespace mcl
 {
-	event init();
+	event init(int test);
 	event tick();
 
     /*

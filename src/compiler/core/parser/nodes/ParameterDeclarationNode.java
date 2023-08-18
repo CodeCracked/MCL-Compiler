@@ -1,18 +1,20 @@
-package mcl.nodes.declarations;
+package compiler.core.parser.nodes;
 
 import compiler.core.lexer.Token;
+import compiler.core.lexer.types.DataType;
 import compiler.core.parser.AbstractNode;
-import compiler.core.parser.nodes.IdentifierNode;
 
 import java.util.function.Consumer;
 
-public class EventDeclarationNode extends AbstractNode
+public class ParameterDeclarationNode extends AbstractNode
 {
+    public final DataType dataType;
     public final IdentifierNode identifier;
     
-    public EventDeclarationNode(Token keyword, IdentifierNode identifier, Token semicolon)
+    public ParameterDeclarationNode(Token typeToken, DataType dataType, IdentifierNode identifier)
     {
-        super(keyword.start(), semicolon.end());
+        super(typeToken.start(), identifier.end());
+        this.dataType = dataType;
         this.identifier = identifier;
     }
     

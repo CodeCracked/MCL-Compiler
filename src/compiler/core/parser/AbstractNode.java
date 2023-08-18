@@ -1,5 +1,6 @@
 package compiler.core.parser;
 
+import compiler.core.lexer.types.DataType;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.IO;
 
@@ -13,6 +14,8 @@ import java.util.function.Consumer;
 
 public abstract class AbstractNode
 {
+    private static final String DEBUG_INDENT = "  ";
+    
     private final SourcePosition start;
     private final SourcePosition end;
     
@@ -34,7 +37,7 @@ public abstract class AbstractNode
     }
     protected void printDebugContents(int depth)
     {
-        List<Field> nodeFields = new ArrayList<>();
+        List<Field> nonCollectionFields = new ArrayList<>();
         List<Field> nodeCollectionFields = new ArrayList<>();
         
         // Use reflection to get fields
@@ -45,7 +48,10 @@ public abstract class AbstractNode
             for (Field field : currentClass.getFields())
             {
                 // If field is a single node
-                if (AbstractNode.class.isAssignableFrom(field.getType())) nodeFields.add(field);
+                if (AbstractNode.class.isAssignableFrom(field.getType())) nonCollectionFields.add(field);
+                
+                // If field is a single data type
+                else if (DataType.class.isAssignableFrom(field.getType())) nonCollectionFields.add(field);
                 
                 // If field is a collection
                 else if (Collection.class.isAssignableFrom(field.getType()))
@@ -71,10 +77,13 @@ public abstract class AbstractNode
         try
         {
             // Print single node fields
-            for (Field field : nodeFields)
+            for (Field field : nonCollectionFields)
             {
                 field.setAccessible(true);
-                printChildDebug(depth, field.getName(), (AbstractNode) field.get(this));
+                Object value = field.get(this);
+                
+                if (value instanceof AbstractNode node) printChildDebug(depth, field.getName(), node);
+                else if (value instanceof DataType type) IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ": " + type.keyword());
             }
             
             // Print node collection fields
@@ -84,8 +93,8 @@ public abstract class AbstractNode
                 Collection<AbstractNode> nodes = (Collection <AbstractNode>) field.get(this);
                 if (nodes.size() > 0)
                 {
-                    IO.Debug.println("    ".repeat(depth) + field.getName() + ":");
-                    IO.Debug.println("    ".repeat(depth) + "[");
+                    IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ":");
+                    IO.Debug.println(DEBUG_INDENT.repeat(depth) + "[");
                     
                     int remaining = nodes.size();
                     for (AbstractNode node : nodes)
@@ -95,16 +104,16 @@ public abstract class AbstractNode
                         if (remaining > 0) IO.Debug.println();
                     }
                     
-                    IO.Debug.println("    ".repeat(depth) + "]");
+                    IO.Debug.println(DEBUG_INDENT.repeat(depth) + "]");
                 }
-                else IO.Debug.println("    ".repeat(depth) + field.getName() + ": []");
+                else IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ": []");
             }
         }
         catch (Exception e) { throw new RuntimeException(e); }
     }
     protected void printChildDebug(int depth, String name, AbstractNode node)
     {
-        IO.Debug.print("    ".repeat(depth));
+        IO.Debug.print(DEBUG_INDENT.repeat(depth));
         if (name != null) IO.Debug.print(name + ": ");
         node.debugPrint(depth);
     }

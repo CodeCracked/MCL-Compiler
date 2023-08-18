@@ -1,12 +1,15 @@
 package compiler.core.parser;
 
 import compiler.core.lexer.Token;
+import compiler.core.lexer.types.DataType;
 import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.util.IO;
 import compiler.core.util.Result;
 
-import java.util.List;
-import java.util.Stack;
+import javax.xml.crypto.Data;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 import java.util.function.BiFunction;
 
 @SuppressWarnings("UnusedReturnValue")
@@ -15,6 +18,7 @@ public class Parser
     private final IGrammarRule<?> rootRule;
     private final Stack<Integer> revertStack;
     private final BiFunction<Parser, Token, Integer> scopeDepthFunction;
+    private final Map<Enum<?>, DataType> dataTypes;
     
     private List<Token> tokens;
     private int tokenIndex;
@@ -22,24 +26,40 @@ public class Parser
     private Token nextToken;
     private int currentScopeDepth;
     
-    public Parser(IGrammarRule<?> rootRule, BiFunction<Parser, Token, Integer> scopeDepthFunction)
+    public Parser(IGrammarRule<?> rootRule, BiFunction<Parser, Token, Integer> scopeDepthFunction, Class<?> dataTypes)
     {
         this.rootRule = rootRule;
         this.revertStack = new Stack<>();
         this.scopeDepthFunction = scopeDepthFunction;
+        this.dataTypes = new HashMap<>();
+        
+        // Load the data types from the provided class
+        try
+        {
+            for (Field field : dataTypes.getDeclaredFields())
+            {
+                if (Modifier.isStatic(field.getModifiers()) && DataType.class.isAssignableFrom(field.getType()))
+                {
+                    field.setAccessible(true);
+                    DataType dataType = (DataType) field.get(null);
+                    this.dataTypes.put(dataType.keyword(), dataType);
+                }
+            }
+        }
+        catch (Exception e) { throw new RuntimeException(e); }
     }
     
-    public static Parser bracedScope(IGrammarRule<?> rootRule)
+    public static Parser bracedScope(IGrammarRule<?> rootRule, Class<?> dataTypes)
     {
         return new Parser(rootRule, (parser, token) ->
         {
             if (token.type() == GrammarTokenType.LBRACE) return parser.currentScopeDepth + 1;
             else if (token.type() == GrammarTokenType.RBRACE) return parser.currentScopeDepth - 1;
             else return parser.currentScopeDepth;
-        });
+        }, dataTypes);
     }
     
-    // Parse Methods
+    //region Parse Methods
     public Result<? extends AbstractNode> parse(List<Token> tokens)
     {
         // Initialize Parser State
@@ -103,5 +123,9 @@ public class Parser
     public Token peekNextToken() { return nextToken; }
     public int getTokenIndex() { return tokenIndex; }
     public int getCurrentScopeDepth() { return currentScopeDepth; }
+    //endregion
+    //region Public Helpers
+    public boolean isDataType(Token token) { return dataTypes.containsKey(token.type()); }
+    public DataType getDataType(Token token) { return dataTypes.get(token.type()); }
     //endregion
 }

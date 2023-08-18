@@ -1,15 +1,16 @@
-package mcl.grammar;
+package mcl.parser.grammar;
 
 import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
-import compiler.core.parser.grammar.DefaultRules;
+import compiler.core.parser.DefaultRules;
 import compiler.core.parser.nodes.BlockNode;
 import compiler.core.parser.nodes.IdentifierNode;
 import compiler.core.util.Result;
 import mcl.lexer.MCLKeyword;
-import mcl.nodes.NamespaceNode;
+import mcl.parser.MCLRules;
+import mcl.parser.nodes.NamespaceNode;
 
 public class NamespaceRule implements IGrammarRule<NamespaceNode>
 {

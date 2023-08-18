@@ -5,5 +5,9 @@ public enum MCLKeyword
     NAMESPACE,
     EVENT,
     LISTENER,
-    TRIGGER
+    TRIGGER,
+    
+    INT,
+    FLOAT,
+    STRING,
 }

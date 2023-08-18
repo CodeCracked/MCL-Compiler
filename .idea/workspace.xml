@@ -5,11 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/mcl/grammar/declarations/EventDeclarationRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/nodes/declarations/EventDeclarationNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/DataType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/ParameterListRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/ParameterDeclarationNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/ParameterListNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/grammar/MCLRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/DefaultRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/MCL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/MCL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/NamespaceRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/NamespaceRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/ProgramRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/ProgramRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/declarations/EventDeclarationRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/declarations/EventDeclarationRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLKeyword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLKeyword.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/nodes/NamespaceNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/NamespaceNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/nodes/ProgramNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/ProgramNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/nodes/declarations/EventDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/EventDeclarationNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -20,8 +33,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -43,15 +56,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "run.code.analysis.last.selected.profile": "pProject Default"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Git\Minecraft\MCL Compiler\test\mcl\src" />
@@ -84,16 +97,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/mcl/grammar/declarations/EventDeclarationRule.java</url>
-          <line>21</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

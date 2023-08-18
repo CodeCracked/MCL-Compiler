@@ -4,7 +4,8 @@ import compiler.core.Compiler;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.builders.*;
 import compiler.core.parser.Parser;
-import mcl.grammar.MCLRules;
+import mcl.parser.MCLRules;
+import mcl.lexer.MCLDataTypes;
 import mcl.lexer.MCLKeyword;
 
 public final class MCL
@@ -27,7 +28,7 @@ public final class MCL
         KeywordTokenBuilder.from(MCLKeyword.values()),
         IdentifierTokenBuilder.camelCase()
     );
-    private static final Parser PARSER = Parser.bracedScope(MCLRules.PROGRAM);
+    private static final Parser PARSER = Parser.bracedScope(MCLRules.PROGRAM, MCLDataTypes.class);
     private static final Compiler COMPILER = new Compiler(LEXER, PARSER, true);
     
     public static Lexer lexer() { return LEXER; }

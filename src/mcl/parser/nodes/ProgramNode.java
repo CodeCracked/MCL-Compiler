@@ -1,4 +1,4 @@
-package mcl.nodes;
+package mcl.parser.nodes;
 
 import compiler.core.parser.AbstractNode;
 
