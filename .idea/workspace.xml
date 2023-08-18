@@ -5,36 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/exceptions/UnexpectedTokenException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/KeywordTokenBuilder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/IGrammarRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/BlockBracesRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/DefaultRules.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/IdentifierRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/BlockNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/IdentifierNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/MCL.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/grammar/MCLRules.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/grammar/NamespaceRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/grammar/ProgramRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLKeyword.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/nodes/NamespaceNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/nodes/ProgramNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/grammar/declarations/EventDeclarationRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/nodes/declarations/EventDeclarationNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/Compiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/Compiler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/exceptions/CompilerException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/exceptions/CompilerException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/Token.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/TokenBuilderList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/TokenBuilderList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/IdentifierTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/IdentifierTokenBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/IO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/IO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/Result.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLLexer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/mcl/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/grammar/MCLRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,5 +84,16 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/mcl/grammar/declarations/EventDeclarationRule.java</url>
+          <line>21</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

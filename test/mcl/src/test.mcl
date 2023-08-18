@@ -3,6 +3,7 @@ namespace mcl
 	event init();
 	event tick();
 
+    /*
 	listener minecraft:load()
 	{
 		print("Minecraft Load...");
@@ -17,4 +18,5 @@ namespace mcl
 
 	listener init() { print("MCL Init..."); }
 	listener tick() { print("MCL Tick..."); }
+    */
 }

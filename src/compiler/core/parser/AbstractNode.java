@@ -86,7 +86,15 @@ public abstract class AbstractNode
                 {
                     IO.Debug.println("    ".repeat(depth) + field.getName() + ":");
                     IO.Debug.println("    ".repeat(depth) + "[");
-                    for (AbstractNode node : nodes) printChildDebug(depth + 1, null, node);
+                    
+                    int remaining = nodes.size();
+                    for (AbstractNode node : nodes)
+                    {
+                        printChildDebug(depth + 1, null, node);
+                        remaining--;
+                        if (remaining > 0) IO.Debug.println();
+                    }
+                    
                     IO.Debug.println("    ".repeat(depth) + "]");
                 }
                 else IO.Debug.println("    ".repeat(depth) + field.getName() + ": []");
