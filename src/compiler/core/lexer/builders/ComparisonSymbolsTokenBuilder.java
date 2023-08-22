@@ -3,7 +3,6 @@ package compiler.core.lexer.builders;
 import compiler.core.lexer.AbstractTokenBuilder;
 import compiler.core.lexer.TokenBuilderList;
 import compiler.core.lexer.types.ComparisonTokenType;
-import compiler.core.lexer.types.MathTokenType;
 
 public class ComparisonSymbolsTokenBuilder extends TokenBuilderList
 {

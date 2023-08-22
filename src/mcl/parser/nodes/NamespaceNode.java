@@ -5,8 +5,6 @@ import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.components.BlockNode;
 import compiler.core.parser.nodes.components.IdentifierNode;
 
-import java.util.function.Consumer;
-
 public class NamespaceNode extends AbstractNode
 {
     public final IdentifierNode identifier;

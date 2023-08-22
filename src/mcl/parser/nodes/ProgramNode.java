@@ -3,7 +3,6 @@ package mcl.parser.nodes;
 import compiler.core.parser.AbstractNode;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ProgramNode extends AbstractNode
 {

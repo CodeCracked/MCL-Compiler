@@ -5,8 +5,6 @@ import compiler.core.lexer.types.DataType;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.parser.AbstractNode;
 
-import java.util.function.Consumer;
-
 public class DataTypeNode extends AbstractNode
 {
     public final DataType value;

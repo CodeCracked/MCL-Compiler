@@ -2,7 +2,6 @@ package compiler.core.lexer.builders;
 
 import compiler.core.lexer.AbstractTokenBuilder;
 import compiler.core.lexer.TokenBuilderList;
-import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.lexer.types.MathTokenType;
 
 public class MathSymbolsTokenBuilder extends TokenBuilderList

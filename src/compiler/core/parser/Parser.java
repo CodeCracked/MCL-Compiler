@@ -1,15 +1,12 @@
 package compiler.core.parser;
 
 import compiler.core.lexer.Token;
-import compiler.core.lexer.types.DataType;
 import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.util.IO;
 import compiler.core.util.Result;
 
-import javax.xml.crypto.Data;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.List;
+import java.util.Stack;
 import java.util.function.BiFunction;
 
 @SuppressWarnings("UnusedReturnValue")

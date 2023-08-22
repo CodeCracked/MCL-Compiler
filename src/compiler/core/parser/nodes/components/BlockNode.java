@@ -4,7 +4,6 @@ import compiler.core.parser.AbstractNode;
 import compiler.core.source.SourcePosition;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class BlockNode extends AbstractNode
 {

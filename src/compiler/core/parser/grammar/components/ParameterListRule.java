@@ -1,10 +1,8 @@
-package compiler.core.parser.grammar;
+package compiler.core.parser.grammar.components;
 
 import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;
-import compiler.core.lexer.types.DataType;
 import compiler.core.lexer.types.GrammarTokenType;
-import compiler.core.lexer.types.TokenType;
 import compiler.core.parser.DefaultRules;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;

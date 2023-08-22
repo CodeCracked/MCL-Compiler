@@ -5,8 +5,6 @@ import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.parser.nodes.components.ParameterListNode;
 
-import java.util.function.Consumer;
-
 public class EventDeclarationNode extends AbstractNode
 {
     public final IdentifierNode identifier;

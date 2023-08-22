@@ -5,7 +5,6 @@ import compiler.core.source.SourcePosition;
 import compiler.core.util.IO;
 import compiler.core.util.Result;
 
-import javax.swing.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

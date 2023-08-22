@@ -1,4 +1,4 @@
-package compiler.core.parser.grammar;
+package compiler.core.parser.grammar.components;
 
 import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;

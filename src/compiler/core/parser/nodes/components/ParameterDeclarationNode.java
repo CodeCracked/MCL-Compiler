@@ -1,10 +1,6 @@
 package compiler.core.parser.nodes.components;
 
-import compiler.core.lexer.Token;
-import compiler.core.lexer.types.DataType;
 import compiler.core.parser.AbstractNode;
-
-import java.util.function.Consumer;
 
 public class ParameterDeclarationNode extends AbstractNode
 {

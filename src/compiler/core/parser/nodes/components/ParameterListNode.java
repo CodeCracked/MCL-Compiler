@@ -6,7 +6,6 @@ import compiler.core.parser.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ParameterListNode extends AbstractNode
 {

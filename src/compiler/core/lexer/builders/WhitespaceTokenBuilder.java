@@ -5,7 +5,6 @@ import compiler.core.lexer.Lexer;
 import compiler.core.lexer.Token;
 import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.lexer.types.MetaTokenType;
-import compiler.core.lexer.types.TokenType;
 import compiler.core.source.SourcePosition;
 
 public class WhitespaceTokenBuilder extends AbstractTokenBuilder

@@ -1,8 +1,8 @@
 package compiler.core.parser;
 
-import compiler.core.parser.grammar.DataTypeRule;
-import compiler.core.parser.grammar.IdentifierRule;
-import compiler.core.parser.grammar.ParameterListRule;
+import compiler.core.parser.grammar.components.DataTypeRule;
+import compiler.core.parser.grammar.components.IdentifierRule;
+import compiler.core.parser.grammar.components.ParameterListRule;
 
 public class DefaultRules
 {

@@ -2,7 +2,7 @@ package mcl.parser;
 
 import compiler.core.parser.GrammarRuleList;
 import compiler.core.parser.IGrammarRule;
-import compiler.core.parser.grammar.BlockBracesRule;
+import compiler.core.parser.grammar.components.BlockBracesRule;
 import mcl.parser.grammar.NamespaceRule;
 import mcl.parser.grammar.ProgramRule;
 import mcl.parser.grammar.components.QualifiedIdentifierRule;

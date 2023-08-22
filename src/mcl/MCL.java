@@ -4,9 +4,9 @@ import compiler.core.Compiler;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.builders.*;
 import compiler.core.parser.Parser;
-import mcl.parser.MCLRules;
 import mcl.lexer.MCLDataTypes;
 import mcl.lexer.MCLKeyword;
+import mcl.parser.MCLRules;
 
 public final class MCL
 {
