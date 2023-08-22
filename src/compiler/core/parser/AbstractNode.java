@@ -1,6 +1,5 @@
 package compiler.core.parser;
 
-import compiler.core.lexer.types.DataType;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.IO;
 
@@ -50,9 +49,6 @@ public abstract class AbstractNode
                 // If field is a single node
                 if (AbstractNode.class.isAssignableFrom(field.getType())) nonCollectionFields.add(field);
                 
-                // If field is a single data type
-                else if (DataType.class.isAssignableFrom(field.getType())) nonCollectionFields.add(field);
-                
                 // If field is a collection
                 else if (Collection.class.isAssignableFrom(field.getType()))
                 {
@@ -83,7 +79,6 @@ public abstract class AbstractNode
                 Object value = field.get(this);
                 
                 if (value instanceof AbstractNode node) printChildDebug(depth, field.getName(), node);
-                else if (value instanceof DataType type) IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ": " + type.keyword());
             }
             
             // Print node collection fields

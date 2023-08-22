@@ -14,8 +14,8 @@ public class Main
 {
     public static void main(String[] args)
     {
-        Path testSource = Path.of("D:\\Git\\Minecraft\\MCL Compiler\\test\\mcl\\src");
-        Path testDestination = Path.of("D:\\Git\\Minecraft\\MCL Compiler\\test\\mcl\\out");
+        Path testSource = Path.of("test/mcl/src");
+        Path testDestination = Path.of("test/mcl/out");
         
         try
         {

@@ -25,10 +25,11 @@ public final class MCL
         GrammarSymbolsTokenBuilder.normal(),
         
         // Complex Tokens
+        DataTypeTokenBuilder.create(MCLDataTypes.class),
         KeywordTokenBuilder.from(MCLKeyword.values()),
         IdentifierTokenBuilder.camelCase()
     );
-    private static final Parser PARSER = Parser.bracedScope(MCLRules.PROGRAM, MCLDataTypes.class);
+    private static final Parser PARSER = Parser.bracedScope(MCLRules.PROGRAM);
     private static final Compiler COMPILER = new Compiler(LEXER, PARSER, true);
     
     public static Lexer lexer() { return LEXER; }

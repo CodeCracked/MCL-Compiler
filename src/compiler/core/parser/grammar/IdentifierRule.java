@@ -5,7 +5,7 @@ import compiler.core.lexer.Token;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
-import compiler.core.parser.nodes.IdentifierNode;
+import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.util.Result;
 
 public class IdentifierRule implements IGrammarRule<IdentifierNode>

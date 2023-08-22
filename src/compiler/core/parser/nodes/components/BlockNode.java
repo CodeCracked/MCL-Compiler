@@ -1,4 +1,4 @@
-package compiler.core.parser.nodes;
+package compiler.core.parser.nodes.components;
 
 import compiler.core.parser.AbstractNode;
 import compiler.core.source.SourcePosition;

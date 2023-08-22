@@ -6,7 +6,7 @@ import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
-import compiler.core.parser.nodes.BlockNode;
+import compiler.core.parser.nodes.components.BlockNode;
 import compiler.core.util.Result;
 
 import java.util.ArrayList;

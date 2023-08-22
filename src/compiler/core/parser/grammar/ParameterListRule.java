@@ -4,12 +4,14 @@ import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;
 import compiler.core.lexer.types.DataType;
 import compiler.core.lexer.types.GrammarTokenType;
+import compiler.core.lexer.types.TokenType;
 import compiler.core.parser.DefaultRules;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
-import compiler.core.parser.nodes.IdentifierNode;
-import compiler.core.parser.nodes.ParameterDeclarationNode;
-import compiler.core.parser.nodes.ParameterListNode;
+import compiler.core.parser.nodes.components.DataTypeNode;
+import compiler.core.parser.nodes.components.IdentifierNode;
+import compiler.core.parser.nodes.components.ParameterDeclarationNode;
+import compiler.core.parser.nodes.components.ParameterListNode;
 import compiler.core.util.Result;
 
 import java.util.ArrayList;
@@ -64,16 +66,13 @@ public class ParameterListRule implements IGrammarRule<ParameterListNode>
         Result<ParameterDeclarationNode> result = new Result<>();
         
         // Data Type
-        Token typeKeyword = parser.getCurrentToken();
-        DataType dataType = parser.getDataType(typeKeyword);
-        if (dataType == null) return result.failure(UnexpectedTokenException.explicit(parser, "Not a data type!"));
-        parser.advance();
-        result.registerAdvancement();
+        DataTypeNode dataType = result.register(DefaultRules.DATA_TYPE.build(parser));
+        if (result.getFailure() != null) return result;
         
         // Identifier
         IdentifierNode identifier = result.register(DefaultRules.IDENTIFIER.build(parser));
         if (result.getFailure() != null) return result;
         
-        return result.success(new ParameterDeclarationNode(typeKeyword, dataType, identifier));
+        return result.success(new ParameterDeclarationNode(dataType, identifier));
     }
 }

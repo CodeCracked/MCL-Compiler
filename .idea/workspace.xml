@@ -5,25 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/DataType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/ParameterListRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/ParameterDeclarationNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/ParameterListNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/DataTypeTokenBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/DataTypeRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/DataTypeNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/types/DataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/DataType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/types/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/TokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/DefaultRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/BlockBracesRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/BlockBracesRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/IdentifierRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/IdentifierRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/ParameterListRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/ParameterListRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/BlockNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/BlockNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/IdentifierNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/IdentifierNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/ParameterDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/ParameterDeclarationNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/ParameterListNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/ParameterListNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/MCL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/MCL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/NamespaceRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/NamespaceRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/ProgramRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/ProgramRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/grammar/declarations/EventDeclarationRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/declarations/EventDeclarationRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLKeyword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLKeyword.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/nodes/NamespaceNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/NamespaceNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/nodes/ProgramNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/ProgramNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/nodes/declarations/EventDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/EventDeclarationNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/grammar/NamespaceRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/NamespaceRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/grammar/declarations/EventDeclarationRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/declarations/EventDeclarationRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/NamespaceNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/NamespaceNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/EventDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/EventDeclarationNode.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,27 +60,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;
-  }
-}</component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Git\Minecraft\MCL Compiler\test\mcl\src" />
       <recent name="D:\Git\Minecraft\MCL Compiler\src\compiler\core" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="compiler.core.parser.nodes.components" />
       <recent name="compiler.core.exceptions" />
       <recent name="compiler.core.lexer.builders" />
     </key>
   </component>
   <component name="RunManager">
     <configuration name="Test" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/.jdks/azul-17.0.3" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="MCL Compiler" />
       <method v="2">
@@ -94,6 +96,17 @@
       <updated>1691114431356</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />

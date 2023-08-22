@@ -2,8 +2,8 @@ package mcl.parser.nodes.declarations;
 
 import compiler.core.lexer.Token;
 import compiler.core.parser.AbstractNode;
-import compiler.core.parser.nodes.IdentifierNode;
-import compiler.core.parser.nodes.ParameterListNode;
+import compiler.core.parser.nodes.components.IdentifierNode;
+import compiler.core.parser.nodes.components.ParameterListNode;
 
 import java.util.function.Consumer;
 
