@@ -55,7 +55,7 @@ public class Parser
         // Try to parse the AST
         Result<? extends AbstractNode> result = rootRule.build(this);
         if (result.getFailure() != null) return result;
-        result.get().decorate();
+        else result.register(result.get().decorate());
         
         // Return Result
         return result;

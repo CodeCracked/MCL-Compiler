@@ -1,8 +1,11 @@
 package compiler.core.parser;
 
+import compiler.core.annotations.OptionalChild;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.IO;
+import compiler.core.util.Result;
 
+import javax.swing.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -31,7 +34,16 @@ public abstract class AbstractNode
         populateFieldLists();
     }
     
-    public void decorate() { forEachChild(child -> child.parent = this, true); }
+    public Result<Void> decorate()
+    {
+        Result<Void> result = new Result<>();
+        
+        // Build Hierarchy
+        result.register(forEachChild(child -> child.parent = this, true));
+        if (result.getFailure() != null) return result;
+        
+        return result.success(null);
+    }
     
     //region Reflection
     private void populateFieldLists()
@@ -89,6 +101,11 @@ public abstract class AbstractNode
                 Object value = field.get(this);
                 
                 if (value instanceof AbstractNode node) printChildDebug(depth, field.getName(), node);
+                else if (value == null)
+                {
+                    OptionalChild annotation = field.getAnnotation(OptionalChild.class);
+                    if (annotation != null && annotation.alwaysShow) IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ": null");
+                }
             }
             
             // Print node collection fields
@@ -96,7 +113,12 @@ public abstract class AbstractNode
             {
                 field.setAccessible(true);
                 Collection<AbstractNode> nodes = (Collection <AbstractNode>) field.get(this);
-                if (nodes.size() > 0)
+                if (nodes == null)
+                {
+                    OptionalChild annotation = field.getAnnotation(OptionalChild.class);
+                    if (annotation != null && annotation.alwaysShow) IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ": null");
+                }
+                else if (nodes.size() > 0)
                 {
                     IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ":");
                     IO.Debug.println(DEBUG_INDENT.repeat(depth) + "[");
@@ -124,20 +146,35 @@ public abstract class AbstractNode
     }
     //endregion
     //region Iteration
-    public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
+    public Result<Void> forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
     {
+        Result<Void> result = new Result<>();
+        
         try
         {
             // Accept Nodes
             for (Field field : nodeFields)
             {
                 AbstractNode node = (AbstractNode) field.get(this);
-                consumer.accept(node);
+                if (node != null) consumer.accept(node);
+                else
+                {
+                    OptionalChild annotation = field.getAnnotation(OptionalChild.class);
+                    if (annotation == null) result.addError(new IllegalStateException(getClass().getSimpleName() + "'s non-optional child '" + field.getName() + "' is null!"));
+                    else if (annotation.warn) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
+                }
             }
             for (Field field : nodeCollectionFields)
             {
                 Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
-                for (AbstractNode node : nodeCollection) consumer.accept(node);
+                if (nodeCollection != null) for (AbstractNode node : nodeCollection) consumer.accept(node);
+                else
+                {
+                    
+                    OptionalChild annotation = field.getAnnotation(OptionalChild.class);
+                    if (annotation == null) result.addError(new IllegalStateException(getClass().getSimpleName() + "'s non-optional child '" + field.getName() + "' is null!"));
+                    else if (annotation.warn) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
+                }
             }
             
             // Recursion
@@ -146,16 +183,18 @@ public abstract class AbstractNode
                 for (Field field : nodeFields)
                 {
                     AbstractNode node = (AbstractNode) field.get(this);
-                    node.forEachChild(consumer, true);
+                    if (node != null) result.register(node.forEachChild(consumer, true));
                 }
                 for (Field field : nodeCollectionFields)
                 {
                     Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
-                    for (AbstractNode node : nodeCollection) node.forEachChild(consumer, true);
+                    if (nodeCollection != null) for (AbstractNode node : nodeCollection) result.register(node.forEachChild(consumer, true));
                 }
             }
         }
-        catch (Exception e) { e.printStackTrace(); }
+        catch (Exception e) { return result.failure(e); }
+        
+        return result.success(null);
     }
     //endregion
     //region Getters
