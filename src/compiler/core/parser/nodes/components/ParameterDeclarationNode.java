@@ -17,11 +17,4 @@ public class ParameterDeclarationNode extends AbstractNode
         this.dataType = dataType;
         this.identifier = identifier;
     }
-    
-    @Override
-    public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
-    {
-        consumer.accept(identifier);
-        if (recursive) identifier.forEachChild(consumer, true);
-    }
 }

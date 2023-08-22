@@ -18,17 +18,4 @@ public class EventDeclarationNode extends AbstractNode
         this.identifier = identifier;
         this.parameterList = parameterList;
     }
-    
-    @Override
-    public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
-    {
-        consumer.accept(identifier);
-        consumer.accept(parameterList);
-        
-        if (recursive)
-        {
-            identifier.forEachChild(consumer, true);
-            parameterList.forEachChild(consumer, true);
-        }
-    }
 }

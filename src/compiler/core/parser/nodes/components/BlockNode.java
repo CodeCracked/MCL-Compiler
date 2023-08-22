@@ -15,11 +15,4 @@ public class BlockNode extends AbstractNode
         super(start, end);
         this.children = children;
     }
-    
-    @Override
-    public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
-    {
-        children.forEach(consumer);
-        if (recursive) children.forEach(child -> child.forEachChild(consumer, true));
-    }
 }

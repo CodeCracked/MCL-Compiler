@@ -14,11 +14,4 @@ public class ProgramNode extends AbstractNode
         super(namespaces.get(0).start(), namespaces.get(namespaces.size() - 1).end());
         this.namespaces = namespaces;
     }
-    
-    @Override
-    public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
-    {
-        namespaces.forEach(consumer);
-        if (recursive) namespaces.forEach(namespace -> namespace.forEachChild(consumer, true));
-    }
 }

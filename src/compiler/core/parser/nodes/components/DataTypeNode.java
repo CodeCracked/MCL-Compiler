@@ -18,6 +18,5 @@ public class DataTypeNode extends AbstractNode
         this.value = (DataType) token.contents();
     }
     
-    @Override public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive) { }
     @Override public String toString() { return value.keyword(); }
 }

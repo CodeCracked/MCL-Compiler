@@ -22,11 +22,4 @@ public class ParameterListNode extends AbstractNode
     {
         return new ParameterListNode(parser.getCurrentToken(), new ArrayList<>(), parser.getCurrentToken());
     }
-    
-    @Override
-    public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
-    {
-        parameters.forEach(consumer);
-        if (recursive) for (ParameterDeclarationNode parameter : parameters) parameter.forEachChild(consumer, true);
-    }
 }

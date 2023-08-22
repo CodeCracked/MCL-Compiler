@@ -19,17 +19,4 @@ public class NamespaceNode extends AbstractNode
         this.identifier = identifier;
         this.body = body;
     }
-    
-    @Override
-    public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
-    {
-        consumer.accept(identifier);
-        consumer.accept(body);
-        
-        if (recursive)
-        {
-            identifier.forEachChild(consumer, true);
-            body.forEachChild(consumer, true);
-        }
-    }
 }

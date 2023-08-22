@@ -17,6 +17,5 @@ public class IdentifierNode extends AbstractNode
         this.value = (String)token.contents();
     }
     
-    @Override public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive) { }
     @Override public String toString() { return '"' + value + '"'; }
 }

@@ -17,6 +17,8 @@ public abstract class AbstractNode
     
     private final SourcePosition start;
     private final SourcePosition end;
+    private final List<Field> nodeFields;
+    private final List<Field> nodeCollectionFields;
     
     AbstractNode parent;
     
@@ -24,21 +26,16 @@ public abstract class AbstractNode
     {
         this.start = start;
         this.end = end;
+        this.nodeFields = new ArrayList<>();
+        this.nodeCollectionFields = new ArrayList<>();
+        populateFieldLists();
     }
     
-    public abstract void forEachChild(Consumer<AbstractNode> consumer, boolean recursive);
     public void decorate() { forEachChild(child -> child.parent = this, true); }
     
-    public void debugPrint(int depth)
+    //region Reflection
+    private void populateFieldLists()
     {
-        IO.Debug.println(this);
-        printDebugContents(depth + 1);
-    }
-    protected void printDebugContents(int depth)
-    {
-        List<Field> nonCollectionFields = new ArrayList<>();
-        List<Field> nodeCollectionFields = new ArrayList<>();
-        
         // Use reflection to get fields
         Class<?> currentClass = getClass();
         while (!currentClass.equals(AbstractNode.class))
@@ -47,7 +44,7 @@ public abstract class AbstractNode
             for (Field field : currentClass.getFields())
             {
                 // If field is a single node
-                if (AbstractNode.class.isAssignableFrom(field.getType())) nonCollectionFields.add(field);
+                if (AbstractNode.class.isAssignableFrom(field.getType())) nodeFields.add(field);
                 
                 // If field is a collection
                 else if (Collection.class.isAssignableFrom(field.getType()))
@@ -64,16 +61,29 @@ public abstract class AbstractNode
                     }
                 }
             }
-            
+        
             // Process superclass
             currentClass = currentClass.getSuperclass();
         }
         
+        // Set all fields to accessible
+        for (Field field : nodeFields) field.setAccessible(true);
+        for (Field field : nodeCollectionFields) field.setAccessible(true);
+    }
+    //endregion
+    //region Debug Printing
+    public void debugPrint(int depth)
+    {
+        IO.Debug.println(this);
+        printDebugContents(depth + 1);
+    }
+    protected void printDebugContents(int depth)
+    {
         // Use reflection to print field debug info
         try
         {
             // Print single node fields
-            for (Field field : nonCollectionFields)
+            for (Field field : nodeFields)
             {
                 field.setAccessible(true);
                 Object value = field.get(this);
@@ -112,10 +122,47 @@ public abstract class AbstractNode
         if (name != null) IO.Debug.print(name + ": ");
         node.debugPrint(depth);
     }
-    
+    //endregion
+    //region Iteration
+    public void forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
+    {
+        try
+        {
+            // Accept Nodes
+            for (Field field : nodeFields)
+            {
+                AbstractNode node = (AbstractNode) field.get(this);
+                consumer.accept(node);
+            }
+            for (Field field : nodeCollectionFields)
+            {
+                Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
+                for (AbstractNode node : nodeCollection) consumer.accept(node);
+            }
+            
+            // Recursion
+            if (recursive)
+            {
+                for (Field field : nodeFields)
+                {
+                    AbstractNode node = (AbstractNode) field.get(this);
+                    node.forEachChild(consumer, true);
+                }
+                for (Field field : nodeCollectionFields)
+                {
+                    Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
+                    for (AbstractNode node : nodeCollection) node.forEachChild(consumer, true);
+                }
+            }
+        }
+        catch (Exception e) { e.printStackTrace(); }
+    }
+    //endregion
+    //region Getters
     public AbstractNode parent() { return parent; }
     public SourcePosition start() { return start; }
     public SourcePosition end() { return end; }
+    //endregion
     
     @Override
     public String toString()
