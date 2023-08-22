@@ -4,19 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class SourceCollection
 {
-    final CodeSource[] sources;
+    final List<CodeSource> sources;
     
     public SourceCollection(CodeSource... sources)
     {
-        this.sources = sources;
+        this.sources = new ArrayList<>();
+        for (CodeSource source : sources) if (!source.empty()) this.sources.add(source);
     }
     
     //region Builders
@@ -52,9 +51,11 @@ public class SourceCollection
     }
     //endregion
     //region Public Methods
-    public SourcePosition start()
+    public SourcePosition[] starts()
     {
-        return new SourcePosition(this, 0, 0, 0);
+        SourcePosition[] starts = new SourcePosition[sources.size()];
+        for (int i = 0; i < sources.size(); i++) starts[i] = new SourcePosition(sources.get(i), 0, 0);
+        return starts;
     }
     //endregion
 }

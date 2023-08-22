@@ -1,7 +1,6 @@
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.Token;
 import compiler.core.source.SourceCollection;
-import compiler.core.source.SourcePosition;
 import compiler.core.util.IO;
 import compiler.core.util.Result;
 import mcl.MCL;
@@ -35,19 +34,15 @@ public class Main
     {
         // Tokenize
         Lexer lexer = MCL.lexer();
-        Result<List<Token>> tokens = lexer.tokenize(source);
-        if (tokens.getFailure() == null) tokens.get().forEach(IO.Debug::println);
-        tokens.displayIssues();
-    }
-    
-    private static void enumerateCharacters(SourceCollection source)
-    {
-        SourcePosition position = source.start();
-        while (position.valid())
+        Result<List<Token>[]> tokens = lexer.tokenize(source);
+        if (tokens.getFailure() == null)
         {
-            if (position.getCharacter() == '\n') IO.Debug.println(position + ": \\n");
-            else IO.Debug.println(position + ": " + position.getCharacter());
-            position.advance();
+            for (List<Token> file : tokens.get())
+            {
+                file.forEach(IO.Debug::println);
+                IO.Debug.println();
+            }
         }
+        tokens.displayIssues();
     }
 }

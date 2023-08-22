@@ -3,8 +3,8 @@ package mcl.parser;
 import compiler.core.parser.GrammarRuleList;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.grammar.components.BlockBracesRule;
+import mcl.parser.grammar.MCLFileRule;
 import mcl.parser.grammar.NamespaceRule;
-import mcl.parser.grammar.ProgramRule;
 import mcl.parser.grammar.components.QualifiedIdentifierRule;
 import mcl.parser.grammar.declarations.EventDeclarationRule;
 import mcl.parser.grammar.declarations.ListenerDeclarationRule;
@@ -23,5 +23,5 @@ public final class MCLRules
     public static final BlockBracesRule NAMESPACE_BODY = new BlockBracesRule(NAMESPACE_STATEMENT);
     public static final NamespaceRule NAMESPACE = new NamespaceRule();
     
-    public static final ProgramRule PROGRAM = new ProgramRule();
+    public static final MCLFileRule SOURCE_FILE = new MCLFileRule();
 }

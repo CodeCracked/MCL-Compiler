@@ -21,6 +21,11 @@ public abstract class CodeSource
     abstract void moveToEnd(SourcePosition position);
     
     /**
+     * @return True if this CodeSource doesn't contain anything, false otherwise
+     */
+    abstract boolean empty();
+    
+    /**
      * Attempt to advance a given source position using this CodeSource
      * @param position The position to advance
      * @return True if the advance was successful, false otherwise
@@ -33,6 +38,13 @@ public abstract class CodeSource
      * @return True if the retraction was successful, false otherwise
      */
     abstract boolean retract(SourcePosition position);
+    
+    /**
+     * Check whether the source position is a valid position within this CodeSource
+     * @param position The position to check
+     * @return True if the position is valid, false otherwise
+     */
+    abstract boolean valid(SourcePosition position);
     
     /**
      * Get the character at a given {@link SourcePosition} in this {@link CodeSource}
@@ -67,6 +79,13 @@ public abstract class CodeSource
         }
     
         @Override
+        boolean empty()
+        {
+            for (String line : lines) if (line.trim().length() > 0) return false;
+            return true;
+        }
+    
+        @Override
         public boolean advance(SourcePosition position)
         {
             position.column++;
@@ -90,6 +109,12 @@ public abstract class CodeSource
                 else position.column = lines[position.line].length() - 1;
             }
             return true;
+        }
+    
+        @Override
+        boolean valid(SourcePosition position)
+        {
+            return position.line >= 0 && position.line < lines.length;
         }
     
         @Override

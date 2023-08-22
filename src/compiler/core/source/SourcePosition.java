@@ -8,8 +8,7 @@ import java.util.Stack;
 @SuppressWarnings("UnusedReturnValue")
 public class SourcePosition
 {
-    SourceCollection source;
-    int sourceIndex;
+    final CodeSource source;
     int line;
     int column;
     char character;
@@ -19,7 +18,6 @@ public class SourcePosition
     private SourcePosition(SourcePosition other)
     {
         this.source = other.source;
-        this.sourceIndex = other.sourceIndex;
         this.line = other.line;
         this.column = other.column;
         this.character = other.character;
@@ -27,13 +25,12 @@ public class SourcePosition
         this.revertStack = new Stack<>();
         for (SourcePosition revert : other.revertStack) this.revertStack.push(revert);
     }
-    SourcePosition(SourceCollection source, int sourceIndex, int line, int column)
+    SourcePosition(CodeSource source, int line, int column)
     {
         this.source = source;
-        this.sourceIndex = sourceIndex;
         this.line = line;
         this.column = column;
-        this.character = source.sources[sourceIndex].charAt(this);
+        this.character = source.charAt(this);
         this.revertStack = new Stack<>();
     }
     
@@ -43,16 +40,13 @@ public class SourcePosition
     }
     public void moveTo(SourcePosition position)
     {
-        this.source = position.source;
-        this.sourceIndex = position.sourceIndex;
+        assert position.source.equals(source);
         this.line = position.line;
         this.column = position.column;
         this.character = position.character;
     }
     
     //region Getters
-    public SourceCollection getSource() { return source; }
-    public int getSourceIndex() { return sourceIndex; }
     public int getLine() { return line; }
     public int getColumn() { return column; }
     public char getCharacter() { return character; }
@@ -60,61 +54,23 @@ public class SourcePosition
     //region Position Changing
     public boolean advance()
     {
-        if (sourceIndex < 0)
-        {
-            source.sources[0].moveToStart(this);
-            return true;
-        }
-        else if (sourceIndex >= source.sources.length) return false;
-        
-        if (!source.sources[sourceIndex].advance(this))
-        {
-            sourceIndex++;
-            if (sourceIndex >= source.sources.length)
-            {
-                line = 0;
-                column = 0;
-                character = '!';
-                return false;
-            }
-            else source.sources[sourceIndex].moveToStart(this);
-        }
-    
-        character = source.sources[sourceIndex].charAt(this);
+        if (!source.advance(this)) return false;
+        character = source.charAt(this);
         return true;
     }
     public boolean retract()
     {
-        if (sourceIndex >= source.sources.length)
-        {
-            source.sources[source.sources.length - 1].moveToEnd(this);
-            return true;
-        }
-        else if (sourceIndex < 0) return false;
-        
-        if (!source.sources[sourceIndex].retract(this))
-        {
-            sourceIndex--;
-            if (sourceIndex < 0)
-            {
-                line = 0;
-                column = 0;
-                character = '!';
-                return false;
-            }
-            else source.sources[sourceIndex].moveToEnd(this);
-        }
-    
-        character = source.sources[sourceIndex].charAt(this);
+        if (!source.retract(this)) return false;
+        character = source.charAt(this);
         return true;
     }
     public boolean valid()
     {
-        return sourceIndex >= 0 && sourceIndex < source.sources.length;
+        return source.valid(this);
     }
     //endregion
     //region Position Marking
-    public void markPosition() { this.revertStack.push(new SourcePosition(source, sourceIndex, line, column)); }
+    public void markPosition() { this.revertStack.push(new SourcePosition(source, line, column)); }
     public void unmarkPosition()
     {
         if (revertStack.size() == 0)
@@ -153,7 +109,7 @@ public class SourcePosition
     @Override
     public String toString()
     {
-        return source.sources[sourceIndex].toString() + ", Line " + (line + 1) + " Column " + (column + 1);
+        return source.toString() + ", Line " + (line + 1) + " Column " + (column + 1);
     }
     //endregion
 }

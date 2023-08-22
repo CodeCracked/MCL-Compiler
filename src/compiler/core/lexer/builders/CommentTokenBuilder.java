@@ -47,10 +47,9 @@ public class CommentTokenBuilder extends AbstractTokenBuilder
         {
             position.unmarkPosition();
             int line = start.getLine();
-            int source = start.getSourceIndex();
             
             StringBuilder contents = new StringBuilder();
-            while (position.valid() && position.getLine() == line && position.getSourceIndex() == source)
+            while (position.valid() && position.getLine() == line)
             {
                 contents.append(position.getCharacter());
                 position.advance();

@@ -29,7 +29,7 @@ public final class MCL
         KeywordTokenBuilder.from(MCLKeyword.values()),
         IdentifierTokenBuilder.camelCase()
     );
-    private static final Parser PARSER = Parser.bracedScope(MCLRules.PROGRAM);
+    private static final Parser PARSER = Parser.bracedScope(MCLRules.SOURCE_FILE);
     private static final Compiler COMPILER = new Compiler(LEXER, PARSER, true);
     
     public static Lexer lexer() { return LEXER; }

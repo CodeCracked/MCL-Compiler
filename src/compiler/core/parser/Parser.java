@@ -2,9 +2,11 @@ package compiler.core.parser;
 
 import compiler.core.lexer.Token;
 import compiler.core.lexer.types.GrammarTokenType;
+import compiler.core.parser.nodes.RootNode;
 import compiler.core.util.IO;
 import compiler.core.util.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.BiFunction;
@@ -40,7 +42,26 @@ public class Parser
     }
     
     //region Parse Methods
-    public Result<? extends AbstractNode> parse(List<Token> tokens)
+    public Result<RootNode> parse(List<Token>[] tokens)
+    {
+        Result<RootNode> result = new Result<>();
+        
+        List<AbstractNode> fileNodes = new ArrayList<>();
+        int failedSourceCount = 0;
+        for (List<Token> file : tokens)
+        {
+            Result<? extends AbstractNode> fileAST = parseFile(file);
+            if (fileAST.getFailure() == null) fileNodes.add(fileAST.get());
+            else
+            {
+                result.appendIssues(fileAST);
+                failedSourceCount++;
+            }
+        }
+        
+        return result.success(new RootNode(fileNodes, failedSourceCount));
+    }
+    private Result<? extends AbstractNode> parseFile(List<Token> tokens)
     {
         // Initialize Parser State
         this.tokens = tokens;

@@ -2,8 +2,8 @@ package compiler.core;
 
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.Token;
-import compiler.core.parser.AbstractNode;
 import compiler.core.parser.Parser;
+import compiler.core.parser.nodes.RootNode;
 import compiler.core.source.SourceCollection;
 import compiler.core.util.IO;
 import compiler.core.util.Result;
@@ -31,16 +31,20 @@ public class Compiler
         Result<Void> result = new Result<>();
         
         // Lexical Analysis
-        Result<List<Token>> tokens = result.registerIssues(lexer.tokenize(source));
+        Result<List<Token>[]> tokens = result.registerIssues(lexer.tokenize(source));
         if (result.getFailure() != null) return result;
         if (debug)
         {
-            tokens.get().forEach(IO.Debug::println);
+            for (List<Token> file : tokens.get())
+            {
+                file.forEach(IO.Debug::println);
+                IO.Debug.println();
+            }
             IO.Debug.println();
         }
         
         // Parsing
-        Result<? extends AbstractNode> ast = result.registerIssues(parser.parse(tokens.get()));
+        Result<RootNode> ast = result.registerIssues(parser.parse(tokens.get()));
         if (result.getFailure() != null) return result;
         if (debug)
         {

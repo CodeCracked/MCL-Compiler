@@ -35,6 +35,14 @@ public class Result<T>
         registerIssues(result);
         return result.value;
     }
+    public <T1> Result<T1> appendIssues(Result<T1> result)
+    {
+        advanceCount += result.advanceCount;
+        warnings.addAll(result.warnings);
+        errors.addAll(result.errors);
+        if (result.failure != null) errors.add(result.failure);
+        return result;
+    }
     public <T1> Result<T1> registerIssues(Result<T1> result)
     {
         advanceCount += result.advanceCount;
