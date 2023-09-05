@@ -1,4 +1,4 @@
-package compiler.core.exceptions;
+package compiler.core.util.exceptions;
 
 import compiler.core.parser.Parser;
 

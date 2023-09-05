@@ -1,8 +1,8 @@
 package compiler.core.parser.nodes.expression;
 
-import compiler.core.types.DataType;
 import compiler.core.parser.AbstractNode;
 import compiler.core.source.SourcePosition;
+import compiler.core.util.types.DataType;
 
 import java.util.Optional;
 

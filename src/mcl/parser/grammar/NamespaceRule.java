@@ -1,6 +1,5 @@
 package mcl.parser.grammar;
 
-import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;
 import compiler.core.parser.DefaultRules;
 import compiler.core.parser.IGrammarRule;
@@ -8,6 +7,7 @@ import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.components.BlockNode;
 import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.UnexpectedTokenException;
 import mcl.lexer.MCLKeyword;
 import mcl.parser.MCLRules;
 import mcl.parser.nodes.NamespaceNode;

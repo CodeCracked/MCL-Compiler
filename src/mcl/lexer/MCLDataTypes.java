@@ -1,7 +1,7 @@
 package mcl.lexer;
 
 import compiler.core.lexer.types.LiteralTokenType;
-import compiler.core.types.DataType;
+import compiler.core.util.types.DataType;
 
 public final class MCLDataTypes
 {

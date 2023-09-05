@@ -1,9 +1,9 @@
 package compiler.core.parser;
 
-import compiler.core.annotations.OptionalChild;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.IO;
 import compiler.core.util.Result;
+import compiler.core.util.annotations.OptionalChild;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;

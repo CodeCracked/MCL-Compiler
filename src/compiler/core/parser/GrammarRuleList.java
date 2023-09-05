@@ -1,7 +1,7 @@
 package compiler.core.parser;
 
-import compiler.core.exceptions.CompilerException;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.CompilerException;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,6 +1,5 @@
 package compiler.core.parser.grammar.expression;
 
-import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;
 import compiler.core.lexer.types.ComparisonTokenType;
 import compiler.core.lexer.types.GrammarTokenType;
@@ -11,6 +10,7 @@ import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.parser.nodes.expression.BinaryOperationNode;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.UnexpectedTokenException;
 
 import java.util.HashSet;
 import java.util.Set;

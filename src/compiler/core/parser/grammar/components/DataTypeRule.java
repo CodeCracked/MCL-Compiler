@@ -1,12 +1,12 @@
 package compiler.core.parser.grammar.components;
 
-import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.components.DataTypeNode;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.UnexpectedTokenException;
 
 public class DataTypeRule implements IGrammarRule<DataTypeNode>
 {

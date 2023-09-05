@@ -1,12 +1,12 @@
 package compiler.core.parser.grammar.expression;
 
-import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.parser.nodes.expression.BinaryOperationNode;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.UnexpectedTokenException;
 
 class BinaryExpressionRule implements IGrammarRule<BinaryOperationNode>
 {

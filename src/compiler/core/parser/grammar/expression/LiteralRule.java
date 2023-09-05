@@ -1,12 +1,12 @@
 package compiler.core.parser.grammar.expression;
 
-import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.expression.LiteralNode;
-import compiler.core.types.DataType;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.UnexpectedTokenException;
+import compiler.core.util.types.DataType;
 
 public class LiteralRule implements IGrammarRule<LiteralNode>
 {

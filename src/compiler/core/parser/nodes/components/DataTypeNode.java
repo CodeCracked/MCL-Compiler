@@ -1,9 +1,9 @@
 package compiler.core.parser.nodes.components;
 
 import compiler.core.lexer.Token;
-import compiler.core.types.DataType;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.parser.AbstractNode;
+import compiler.core.util.types.DataType;
 
 public class DataTypeNode extends AbstractNode
 {

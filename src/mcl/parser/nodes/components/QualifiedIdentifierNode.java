@@ -1,8 +1,8 @@
 package mcl.parser.nodes.components;
 
-import compiler.core.annotations.OptionalChild;
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.components.IdentifierNode;
+import compiler.core.util.annotations.OptionalChild;
 
 public class QualifiedIdentifierNode extends AbstractNode
 {

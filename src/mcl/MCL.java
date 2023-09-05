@@ -4,7 +4,7 @@ import compiler.core.Compiler;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.builders.*;
 import compiler.core.parser.Parser;
-import compiler.core.types.DataTypeList;
+import compiler.core.util.types.DataTypeList;
 import mcl.lexer.MCLDataTypes;
 import mcl.lexer.MCLKeyword;
 import mcl.parser.MCLRules;

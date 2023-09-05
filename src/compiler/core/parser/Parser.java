@@ -4,9 +4,9 @@ import compiler.core.lexer.Token;
 import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.parser.nodes.RootNode;
 import compiler.core.source.SourcePosition;
-import compiler.core.types.DataTypeList;
 import compiler.core.util.IO;
 import compiler.core.util.Result;
+import compiler.core.util.types.DataTypeList;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,5 @@
 package compiler.core.parser.grammar.components;
 
-import compiler.core.exceptions.UnexpectedTokenException;
 import compiler.core.lexer.Token;
 import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.parser.DefaultRules;
@@ -11,6 +10,7 @@ import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.parser.nodes.components.ParameterDeclarationNode;
 import compiler.core.parser.nodes.components.ParameterListNode;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.UnexpectedTokenException;
 
 import java.util.ArrayList;
 import java.util.List;

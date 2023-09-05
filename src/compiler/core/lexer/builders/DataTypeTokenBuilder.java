@@ -5,8 +5,8 @@ import compiler.core.lexer.Token;
 import compiler.core.lexer.TokenBuilderList;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.source.SourcePosition;
-import compiler.core.types.DataType;
-import compiler.core.types.DataTypeList;
+import compiler.core.util.types.DataType;
+import compiler.core.util.types.DataTypeList;
 
 public class DataTypeTokenBuilder extends TokenBuilderList
 {

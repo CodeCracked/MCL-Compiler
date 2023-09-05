@@ -1,4 +1,4 @@
-package compiler.core.types;
+package compiler.core.util.types;
 
 import java.util.HashMap;
 import java.util.Map;

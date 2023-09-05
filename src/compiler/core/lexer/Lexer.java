@@ -1,11 +1,11 @@
 package compiler.core.lexer;
 
-import compiler.core.exceptions.UnknownTokenException;
 import compiler.core.lexer.types.MetaTokenType;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.source.SourceCollection;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.UnknownTokenException;
 
 import java.util.ArrayList;
 import java.util.List;
