@@ -5,18 +5,18 @@ import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
 import compiler.core.util.Result;
 import mcl.parser.MCLRules;
-import mcl.parser.nodes.MCLFileNode;
+import mcl.parser.nodes.MCLSourceNode;
 import mcl.parser.nodes.NamespaceNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MCLFileRule implements IGrammarRule<MCLFileNode>
+public class MCLFileRule implements IGrammarRule<MCLSourceNode>
 {
     @Override
-    public Result<MCLFileNode> build(Parser parser)
+    public Result<MCLSourceNode> build(Parser parser)
     {
-        Result<MCLFileNode> result = new Result<>();
+        Result<MCLSourceNode> result = new Result<>();
         List<NamespaceNode> namespaces = new ArrayList<>();
         
         while (parser.getCurrentToken().type() != TokenType.END_OF_FILE)
@@ -29,6 +29,6 @@ public class MCLFileRule implements IGrammarRule<MCLFileNode>
         parser.advance();
         result.registerAdvancement();
         
-        return result.success(new MCLFileNode(namespaces));
+        return result.success(new MCLSourceNode(namespaces));
     }
 }

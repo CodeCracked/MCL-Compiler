@@ -7,22 +7,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GrammarRuleList implements IGrammarRule<AbstractNode>
+public class GrammarRuleList<T extends AbstractNode> implements IGrammarRule<T>
 {
     protected final String error;
-    protected final List<IGrammarRule<?>> rules;
+    protected final List<IGrammarRule<? extends T>> rules;
     
-    public GrammarRuleList(String error, IGrammarRule<?>... rules)
+    @SafeVarargs
+    public GrammarRuleList(String error, IGrammarRule<? extends T>... rules)
     {
         this.error = error;
         this.rules = new ArrayList<>();
         Collections.addAll(this.rules, rules);
     }
     
+    public void addRule(IGrammarRule<? extends T> rule) { this.rules.add(rule); }
+    
     @Override
-    public Result<AbstractNode> build(Parser parser)
+    public Result<T> build(Parser parser)
     {
-        for (IGrammarRule<?> rule : rules)
+        for (IGrammarRule<? extends T> rule : rules)
         {
             parser.markPosition();
             Result<?> result = rule.build(parser);
@@ -31,7 +34,7 @@ public class GrammarRuleList implements IGrammarRule<AbstractNode>
             else
             {
                 parser.unmarkPosition();
-                return Result.of((AbstractNode) result.get());
+                return Result.of((T)result.get());
             }
         }
         return Result.fail(new CompilerException(parser.getCurrentToken().start(), error));

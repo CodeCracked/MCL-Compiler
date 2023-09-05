@@ -4,12 +4,14 @@ import compiler.core.Compiler;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.builders.*;
 import compiler.core.parser.Parser;
+import compiler.core.types.DataTypeList;
 import mcl.lexer.MCLDataTypes;
 import mcl.lexer.MCLKeyword;
 import mcl.parser.MCLRules;
 
 public final class MCL
 {
+    private static final DataTypeList DATA_TYPES = DataTypeList.create(MCLDataTypes.class);
     private static final Lexer LEXER = new Lexer
     (
         // Ignored Tokens
@@ -25,11 +27,11 @@ public final class MCL
         GrammarSymbolsTokenBuilder.normal(),
         
         // Complex Tokens
-        DataTypeTokenBuilder.create(MCLDataTypes.class),
+        new DataTypeTokenBuilder(DATA_TYPES),
         KeywordTokenBuilder.from(MCLKeyword.values()),
         IdentifierTokenBuilder.camelCase()
     );
-    private static final Parser PARSER = Parser.bracedScope(MCLRules.SOURCE_FILE);
+    private static final Parser PARSER = Parser.bracedScope(DATA_TYPES, MCLRules.SOURCE_FILE);
     private static final Compiler COMPILER = new Compiler(LEXER, PARSER, true);
     
     public static Lexer lexer() { return LEXER; }

@@ -5,23 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/RootNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/mcl/src/test2.mcl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expression/BinaryExpressionRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expression/ExpressionRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expression/LiteralRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/AbstractValueNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/BinaryOperationNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/LiteralNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/types/DataType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/types/DataTypeList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/Compiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/Compiler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/Lexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/Lexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/CommentTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/CommentTokenBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/types/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/TokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/builders/DataTypeTokenBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/builders/DataTypeTokenBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/types/DataType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/lexer/types/MathTokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/lexer/types/MathTokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/CodeSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/CodeSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourceCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourceCollection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/Result.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/RootNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/RootNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/DataTypeNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/DataTypeNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/MCL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/MCL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/parser/grammar/ProgramRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/MCLFileRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/ProgramNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/MCLFileNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/grammar/MCLFileRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/MCLFileRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/MCLFileNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/MCLSourceNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,9 +37,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Enum" />
         <option value="AnnotationType" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -114,5 +119,10 @@
         <breakpoint enabled="true" type="java-exception" />
       </default-breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="parser.getCurrentToken()" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>
