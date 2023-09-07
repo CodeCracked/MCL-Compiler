@@ -5,16 +5,16 @@ namespace mcl
 
 	listener minecraft:load()
 	{
-		print("Minecraft Load...");
-		trigger init();
+		//print("Minecraft Load...");
+        trigger init();
 	}
 
 	listener minecraft:tick()
 	{
-		print("Minecraft Tick...");
+		//print("Minecraft Tick...");
 		trigger tick();
 	}
 
-	listener init() { print("MCL Init..."); }
-	listener tick() { print("MCL Tick..."); }
+	//listener init() { print("MCL Init..."); }
+	//listener tick() { print("MCL Tick..."); }
 }

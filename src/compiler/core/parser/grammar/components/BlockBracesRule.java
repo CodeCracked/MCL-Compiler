@@ -39,8 +39,9 @@ public class BlockBracesRule implements IGrammarRule<BlockNode>
         {
             while (parser.getCurrentToken() != null && parser.getCurrentToken().type() != GrammarTokenType.RBRACE)
             {
-                contents.add(result.register(bodyRule.build(parser)));
+                AbstractNode bodyComponent = result.register(bodyRule.build(parser));
                 if (result.getFailure() != null) return result;
+                contents.add(bodyComponent);
             }
         }
         else

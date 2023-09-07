@@ -5,8 +5,9 @@ import compiler.core.lexer.types.ComparisonTokenType;
 import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.lexer.types.MathTokenType;
 import compiler.core.parser.DefaultRules;
-import compiler.core.parser.GrammarRuleList;
+import compiler.core.parser.GrammarRuleChooser;
 import compiler.core.parser.IGrammarRule;
+import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.parser.nodes.expression.BinaryOperationNode;
 import compiler.core.util.Result;
@@ -26,31 +27,31 @@ public final class ExpressionRule
     {
         return compose(comparison(), booleanAlgebra(), arithmetic(true));
     }
-    public static IGrammarRule<AbstractValueNode> buildExpressionRule(Precedence orderOfPrecedence, GrammarRuleList<AbstractValueNode> atomRule)
+    public static IGrammarRule<AbstractValueNode> buildExpressionRule(Precedence orderOfPrecedence, GrammarRuleChooser<AbstractValueNode> atomRule)
     {
         IGrammarRule<AbstractValueNode> expressionRule = orderOfPrecedence.build(atomRule);
         atomRule.addRule(parser ->
         {
             Result<AbstractValueNode> result = new Result<>();
-            
+
             // Opening Parenthesis
             Token openingParenthesis = parser.getCurrentToken();
             if (openingParenthesis.type() != GrammarTokenType.LPAREN) return result.failure(UnexpectedTokenException.expected(parser, "'('"));
             parser.advance();
             result.registerAdvancement();
-            
+
             // Expression
-            AbstractValueNode expression = result.register(expressionRule.build(parser));
+            AbstractValueNode expressionNode = result.register(expressionRule.build(parser));
             if (result.getFailure() != null) return result;
-    
+
             // Closing Parenthesis
             Token closingParenthesis = parser.getCurrentToken();
             if (closingParenthesis.type() != GrammarTokenType.RPAREN) return result.failure(UnexpectedTokenException.expected(parser, "')'"));
             parser.advance();
             result.registerAdvancement();
             
-            return result.success(expression);
-        });
+            return result.success(expressionNode);
+        }, GrammarTokenType.LPAREN);
         return expressionRule;
     }
     //endregion
