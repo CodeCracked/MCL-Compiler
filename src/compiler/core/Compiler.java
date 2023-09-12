@@ -1,5 +1,6 @@
 package compiler.core;
 
+import compiler.core.codegen.CodeGenerator;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.Token;
 import compiler.core.parser.Parser;
@@ -16,12 +17,14 @@ public class Compiler
 {
     private final Lexer lexer;
     private final Parser parser;
+    private final CodeGenerator codeGenerator;
     private final boolean debug;
     
-    public Compiler(Lexer lexer, Parser parser, boolean debug)
+    public Compiler(Lexer lexer, Parser parser, CodeGenerator codeGenerator, boolean debug)
     {
         this.lexer = lexer;
         this.parser = parser;
+        this.codeGenerator = codeGenerator;
         this.debug = debug;
     }
     
@@ -52,6 +55,8 @@ public class Compiler
             IO.Debug.println();
         }
         
+        // Code Generation
+        Result<Void> generation = result.registerIssues(codeGenerator.generate(ast.get(), destination));
         return result;
     }
 }

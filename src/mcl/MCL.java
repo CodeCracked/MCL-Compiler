@@ -1,10 +1,12 @@
 package mcl;
 
 import compiler.core.Compiler;
+import compiler.core.codegen.CodeGenerator;
 import compiler.core.lexer.Lexer;
 import compiler.core.lexer.builders.*;
 import compiler.core.parser.Parser;
 import compiler.core.util.types.DataTypeList;
+import mcl.codegen.MCLCodeGenerator;
 import mcl.lexer.MCLDataTypes;
 import mcl.lexer.MCLKeyword;
 import mcl.parser.MCLRules;
@@ -32,7 +34,8 @@ public final class MCL
         IdentifierTokenBuilder.camelCase()
     );
     private static final Parser PARSER = Parser.bracedScope(DATA_TYPES, MCLRules.SOURCE_FILE);
-    private static final Compiler COMPILER = new Compiler(LEXER, PARSER, true);
+    private static final CodeGenerator CODE_GENERATOR = new MCLCodeGenerator();
+    private static final Compiler COMPILER = new Compiler(LEXER, PARSER, CODE_GENERATOR, true);
     
     public static Lexer lexer() { return LEXER; }
     public static Parser parser() { return PARSER; }
