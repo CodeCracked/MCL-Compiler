@@ -2,11 +2,9 @@ package compiler.core.parser.grammar.components;
 
 import compiler.core.lexer.Token;
 import compiler.core.lexer.types.GrammarTokenType;
-import compiler.core.parser.DefaultRules;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
-import compiler.core.parser.grammar.expression.ExpressionRule;
-import compiler.core.parser.nodes.components.*;
+import compiler.core.parser.nodes.components.ArgumentListNode;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.UnexpectedTokenException;

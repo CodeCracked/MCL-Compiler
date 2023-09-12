@@ -7,7 +7,6 @@ import compiler.core.lexer.types.MathTokenType;
 import compiler.core.parser.DefaultRules;
 import compiler.core.parser.GrammarRuleChooser;
 import compiler.core.parser.IGrammarRule;
-import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.parser.nodes.expression.BinaryOperationNode;
 import compiler.core.util.Result;

@@ -5,16 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleChooser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/components/ArgumentListRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/ArgumentListNode.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/util/Pair.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/statements/TriggerEventStatementRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/statements/TriggerEventStatementNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/components/FunctionCallRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/statements/FunctionCallStatementRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/components/FunctionCallNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/statements/FunctionCallStatementNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/components/BlockBracesRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/components/BlockBracesRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/IGrammarRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/IGrammarRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/components/ArgumentListRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/components/ArgumentListRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expression/ExpressionRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expression/ExpressionRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
@@ -30,8 +28,8 @@
         <option value="Enum" />
         <option value="AnnotationType" />
         <option value="Interface" />
-        <option value="Class" />
         <option value="Record" />
+        <option value="Class" />
       </list>
     </option>
   </component>
