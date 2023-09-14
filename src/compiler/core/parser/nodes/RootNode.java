@@ -1,6 +1,7 @@
 package compiler.core.parser.nodes;
 
 import compiler.core.parser.AbstractNode;
+import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.source.SourcePosition;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class RootNode extends AbstractNode
         super(start, end);
         this.sources = sources;
         this.failedSourceCount = failedSourceCount;
+        setSymbolTable(SymbolTable.createRootTable());
     }
     
     @Override

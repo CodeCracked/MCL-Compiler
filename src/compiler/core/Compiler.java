@@ -48,15 +48,15 @@ public class Compiler
         
         // Parsing
         Result<RootNode> ast = result.registerIssues(parser.parse(tokens.get()));
-        if (result.getFailure() != null) return result;
-        if (debug)
+        if (debug && ast.get() != null)
         {
             ast.get().debugPrint(0);
             IO.Debug.println();
         }
+        if (result.getFailure() != null) return result;
         
         // Code Generation
-        Result<Void> generation = result.registerIssues(codeGenerator.generate(ast.get(), destination));
+        if (codeGenerator != null) result.registerIssues(codeGenerator.generate(ast.get(), destination));
         return result;
     }
 }

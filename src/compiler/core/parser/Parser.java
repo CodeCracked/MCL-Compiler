@@ -50,6 +50,7 @@ public class Parser
     {
         Result<RootNode> result = new Result<>();
         
+        // Parse Sources
         List<AbstractNode> fileNodes = new ArrayList<>();
         int failedSourceCount = 0;
         for (List<Token> file : tokens)
@@ -63,9 +64,14 @@ public class Parser
             }
         }
     
+        // Merge Source ASTs into one root AST
         SourcePosition start = tokens[0].get(0).start();
         SourcePosition end = tokens[tokens.length - 1].get(tokens[tokens.length - 1].size() - 1).end();
-        return result.success(new RootNode(start, end, fileNodes, failedSourceCount));
+        RootNode ast = new RootNode(start, end, fileNodes, failedSourceCount);
+        
+        // Decorate AST
+        result.registerIssues(decorateAST(ast));
+        return result.success(ast);
     }
     private Result<? extends AbstractNode> parseFile(List<Token> tokens)
     {
@@ -77,12 +83,29 @@ public class Parser
         advance();
         
         // Try to parse the AST
-        Result<? extends AbstractNode> result = sourceRule.build(this);
-        if (result.getFailure() != null) return result;
-        else result.register(result.get().decorate());
+        return sourceRule.build(this);
+    }
+    private Result<Void> decorateAST(RootNode ast)
+    {
+        Result<Void> result = new Result<>();
         
-        // Return Result
-        return result;
+        // Link Hierarchy
+        result.register(((AbstractNode)ast).linkHierarchy());
+        if (result.getFailure() != null) return result;
+        
+        // Populate Nodes
+        result.register(ast.forEachChildWithResult((parent, child) -> child.populate(), true));
+        if (result.getFailure() != null) return result;
+        
+        // Assign Symbol Tables
+        result.register(((AbstractNode)ast).assignSymbolTables());
+        if (result.getFailure() != null) return result;
+        
+        // Create Symbols
+        result.register(ast.forEachChildWithResult((parent, child) -> child.createSymbols(), true));
+        if (result.getFailure() != null) return result;
+        
+        return result.success(null);
     }
     //endregion
     //region Position Handling

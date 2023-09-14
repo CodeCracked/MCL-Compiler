@@ -1,5 +1,16 @@
 namespace mcl
 {
+    event test();
+}
+
+namespace mcl
+{
+    event test();
+}
+
+/*
+namespace mcl
+{
 	event init(int test);
 	event tick();
 
@@ -18,3 +29,4 @@ namespace mcl
 	listener init() { print("MCL Init..."); }
 	listener tick() { print("MCL Tick..."); }
 }
+*/

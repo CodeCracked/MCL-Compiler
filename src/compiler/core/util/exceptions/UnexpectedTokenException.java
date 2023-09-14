@@ -6,7 +6,7 @@ public class UnexpectedTokenException extends CompilerException
 {
     private UnexpectedTokenException(Parser parser, String error)
     {
-        super(parser.getCurrentToken().start(), error);
+        super(parser.getCurrentToken().start(), parser.getCurrentToken().end(), error);
     }
     
     public static UnexpectedTokenException expected(Parser parser, String expected)

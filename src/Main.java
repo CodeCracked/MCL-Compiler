@@ -27,7 +27,7 @@ public class Main
     private static void compile(SourceCollection source, Path destination)
     {
         Result<Void> compileResult = MCL.compiler().compile(source, destination);
-        compileResult.displayIssues();
+        compileResult.displayIssues(false);
     }
     
     private static void tokenize(SourceCollection source)
@@ -43,6 +43,6 @@ public class Main
                 IO.Debug.println();
             }
         }
-        tokens.displayIssues();
+        tokens.displayIssues(false);
     }
 }

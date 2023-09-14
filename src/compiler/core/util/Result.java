@@ -75,22 +75,22 @@ public class Result<T>
     public List<Exception> getErrors() { return Collections.unmodifiableList(errors); }
     public Exception getFailure() { return failure; }
     
-    public void displayIssues()
+    public void displayIssues(boolean includeStackTrace)
     {
         for (Exception warning : warnings)
         {
             IO.Warnings.println(warning.getMessage());
-            warning.printStackTrace();
+            if (includeStackTrace) warning.printStackTrace();
         }
         for (Exception error : errors)
         {
             IO.Errors.println(error.getMessage());
-            error.printStackTrace();
+            if (includeStackTrace) error.printStackTrace();
         }
         if (failure != null)
         {
             IO.Errors.println(failure.getMessage());
-            failure.printStackTrace();
+            if (includeStackTrace) failure.printStackTrace();
         }
     }
 }

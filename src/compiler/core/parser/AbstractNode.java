@@ -1,5 +1,6 @@
 package compiler.core.parser;
 
+import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.IO;
 import compiler.core.util.Result;
@@ -11,7 +12,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public abstract class AbstractNode
 {
@@ -24,6 +28,7 @@ public abstract class AbstractNode
     private final List<Field> nodeCollectionFields;
     
     AbstractNode parent;
+    private SymbolTable symbolTable;
     
     public AbstractNode(SourcePosition start, SourcePosition end) { this(start, end, true); }
     public AbstractNode(SourcePosition start, SourcePosition end, boolean hasCodeGen)
@@ -36,15 +41,25 @@ public abstract class AbstractNode
         populateFieldLists();
     }
     
-    public Result<Void> decorate()
+    protected SymbolTable getChildSymbolTable(AbstractNode child) { return symbolTable; }
+    protected void setSymbolTable(SymbolTable table) { this.symbolTable = table; }
+    
+    final Result<Void> linkHierarchy() { return forEachChild((parent, child) -> child.parent = parent, true); }
+    protected Result<Void> populate() { return Result.of(null); }
+    final Result<Void> assignSymbolTables() { return forEachChild((parent, child) -> child.setSymbolTable(parent.getChildSymbolTable(child)), true); }
+    protected Result<Void> createSymbols() { return Result.of(null); }
+    
+    public <T extends AbstractNode> Result<T> findParentNode(Class<T> clazz)
     {
-        Result<Void> result = new Result<>();
+        AbstractNode node = parent;
+        while (node != null)
+        {
+            if (node.getClass() == clazz) break;
+            else node = node.parent;
+        }
         
-        // Build Hierarchy
-        result.register(forEachChild(child -> child.parent = this, true));
-        if (result.getFailure() != null) return result;
-        
-        return result.success(null);
+        if (node == null) return Result.fail(new IllegalStateException("Node does not contain an ancestor of type " + clazz.getSimpleName() + "!"));
+        else return Result.of((T)node);
     }
     
     //region Reflection
@@ -148,7 +163,11 @@ public abstract class AbstractNode
     }
     //endregion
     //region Iteration
-    public Result<Void> forEachChild(Consumer<AbstractNode> consumer, boolean recursive)
+    public Result<Void> forEachChild(BiConsumer<AbstractNode, AbstractNode> consumer, boolean recursive)
+    {
+        return forEachChildWithResult((parent, child) -> { consumer.accept(parent, child); return Result.of((Void)null); }, recursive);
+    }
+    public Result<Void> forEachChildWithResult(BiFunction<AbstractNode, AbstractNode, Result<?>> consumer, boolean recursive)
     {
         Result<Void> result = new Result<>();
         
@@ -158,7 +177,11 @@ public abstract class AbstractNode
             for (Field field : nodeFields)
             {
                 AbstractNode node = (AbstractNode) field.get(this);
-                if (node != null) consumer.accept(node);
+                if (node != null)
+                {
+                    result.register(consumer.apply(this, node));
+                    if (result.getFailure() != null) return result;
+                }
                 else
                 {
                     OptionalChild annotation = field.getAnnotation(OptionalChild.class);
@@ -169,7 +192,14 @@ public abstract class AbstractNode
             for (Field field : nodeCollectionFields)
             {
                 Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
-                if (nodeCollection != null) for (AbstractNode node : nodeCollection) consumer.accept(node);
+                if (nodeCollection != null)
+                {
+                    for (AbstractNode node : nodeCollection)
+                    {
+                        result.register(consumer.apply(this, node));
+                        if (result.getFailure() != null) return result;
+                    }
+                }
                 else
                 {
                     
@@ -185,12 +215,12 @@ public abstract class AbstractNode
                 for (Field field : nodeFields)
                 {
                     AbstractNode node = (AbstractNode) field.get(this);
-                    if (node != null) result.register(node.forEachChild(consumer, true));
+                    if (node != null) result.register(node.forEachChildWithResult(consumer, true));
                 }
                 for (Field field : nodeCollectionFields)
                 {
                     Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
-                    if (nodeCollection != null) for (AbstractNode node : nodeCollection) result.register(node.forEachChild(consumer, true));
+                    if (nodeCollection != null) for (AbstractNode node : nodeCollection) result.register(node.forEachChildWithResult(consumer, true));
                 }
             }
         }
@@ -204,11 +234,13 @@ public abstract class AbstractNode
     public SourcePosition start() { return start; }
     public SourcePosition end() { return end; }
     public boolean hasCodeGen() { return hasCodeGen; }
+    public SymbolTable symbolTable() { return symbolTable; }
     //endregion
     
     @Override
     public String toString()
     {
-        return getClass().getSimpleName();
+        if (parent == null || !parent.symbolTable.equals(symbolTable)) return getClass().getSimpleName() + " <" + symbolTable.name() + ">";
+        else return getClass().getSimpleName();
     }
 }

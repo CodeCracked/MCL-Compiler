@@ -6,6 +6,6 @@ public class UnknownTokenException extends CompilerException
 {
     public UnknownTokenException(Token token)
     {
-        super(token.start(), "Unknown token '" + token.contents() + "'!");
+        super(token.start(), token.end(), "Unknown token '" + token.contents() + "'!");
     }
 }
