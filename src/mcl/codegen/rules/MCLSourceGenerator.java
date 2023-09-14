@@ -22,6 +22,6 @@ public class MCLSourceGenerator implements ICodeGenRule<MCLSourceNode>
             if (result.getFailure() != null) return result;
         }
         
-        return result;
+        return result.success(null);
     }
 }

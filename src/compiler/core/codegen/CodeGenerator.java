@@ -61,6 +61,8 @@ public abstract class CodeGenerator
     }
     public <T extends AbstractNode> Result<Void> generate(T node, CodeGenContext context)
     {
+        if (!node.hasCodeGen()) return Result.of(null);
+        
         try
         {
             for (RuleEntry<?> rule : rules) if (rule.predicate.test(node)) return ((RuleEntry<T>) rule).rule.generate(node, context);

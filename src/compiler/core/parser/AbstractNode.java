@@ -19,15 +19,18 @@ public abstract class AbstractNode
     
     private final SourcePosition start;
     private final SourcePosition end;
+    private final boolean hasCodeGen;
     private final List<Field> nodeFields;
     private final List<Field> nodeCollectionFields;
     
     AbstractNode parent;
     
-    public AbstractNode(SourcePosition start, SourcePosition end)
+    public AbstractNode(SourcePosition start, SourcePosition end) { this(start, end, true); }
+    public AbstractNode(SourcePosition start, SourcePosition end, boolean hasCodeGen)
     {
         this.start = start;
         this.end = end;
+        this.hasCodeGen = hasCodeGen;
         this.nodeFields = new ArrayList<>();
         this.nodeCollectionFields = new ArrayList<>();
         populateFieldLists();
@@ -200,6 +203,7 @@ public abstract class AbstractNode
     public AbstractNode parent() { return parent; }
     public SourcePosition start() { return start; }
     public SourcePosition end() { return end; }
+    public boolean hasCodeGen() { return hasCodeGen; }
     //endregion
     
     @Override

@@ -12,7 +12,7 @@ public class EventDeclarationNode extends AbstractNode
     
     public EventDeclarationNode(Token keyword, IdentifierNode identifier, ParameterListNode parameterList, Token semicolon)
     {
-        super(keyword.start(), semicolon.end());
+        super(keyword.start(), semicolon.end(), false);
         this.identifier = identifier;
         this.parameterList = parameterList;
     }
