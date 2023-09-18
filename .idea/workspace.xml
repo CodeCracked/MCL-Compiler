@@ -5,28 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/AbstractSymbol.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/SymbolTable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/util/Ref.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/DuplicateSymbolException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/parser/symbols/EventSymbol.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/MultipleSymbolsFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/UndefinedSymbolException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/mcl/src/lib.mcl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/Compiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/Compiler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/RootNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/RootNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/BlockNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/BlockNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/IdentifierNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/IdentifierNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/Result.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/exceptions/CompilerException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/CompilerException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/exceptions/UnexpectedTokenException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/UnexpectedTokenException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/exceptions/UnknownTokenException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/UnknownTokenException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/MCL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/MCL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/NamespaceNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/NamespaceNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/symbols/AbstractSymbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/AbstractSymbol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/symbols/SymbolTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/SymbolTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/exceptions/DuplicateSymbolException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/DuplicateSymbolException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/components/QualifiedIdentifierNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/components/QualifiedIdentifierNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/EventDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/EventDeclarationNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/ListenerDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/ListenerDeclarationNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/symbols/EventSymbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/symbols/EventSymbol.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -129,10 +121,5 @@
         <breakpoint enabled="true" type="java-exception" />
       </default-breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="symbol.name()" language="JAVA" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

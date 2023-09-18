@@ -19,8 +19,10 @@ public class QualifiedIdentifierNode extends AbstractNode
         this.identifier = identifier;
     }
     
+    public final String value() { return namespace.value + ":" + identifier.value; }
+    
     @Override
-    protected Result<Void> populate()
+    protected Result<Void> populateMetadata()
     {
         Result<Void> result = new Result<>();
         

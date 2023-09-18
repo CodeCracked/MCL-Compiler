@@ -1,0 +1,5 @@
+namespace minecraft
+{
+    event load();
+    event tick();
+}

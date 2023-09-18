@@ -14,8 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class AbstractNode
 {
@@ -45,9 +43,10 @@ public abstract class AbstractNode
     protected void setSymbolTable(SymbolTable table) { this.symbolTable = table; }
     
     final Result<Void> linkHierarchy() { return forEachChild((parent, child) -> child.parent = parent, true); }
-    protected Result<Void> populate() { return Result.of(null); }
+    protected Result<Void> populateMetadata() { return Result.of(null); }
     final Result<Void> assignSymbolTables() { return forEachChild((parent, child) -> child.setSymbolTable(parent.getChildSymbolTable(child)), true); }
     protected Result<Void> createSymbols() { return Result.of(null); }
+    protected Result <Void> retrieveSymbols() { return Result.of(null); }
     
     public <T extends AbstractNode> Result<T> findParentNode(Class<T> clazz)
     {

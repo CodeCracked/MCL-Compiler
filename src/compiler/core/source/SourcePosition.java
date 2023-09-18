@@ -92,6 +92,20 @@ public class SourcePosition
         else moveTo(revertStack.pop());
     }
     //endregion
+    //region Comparison
+    public boolean isBefore(SourcePosition other)
+    {
+        if (!source.equals(other.source)) return true;
+        else if (line < other.line) return true;
+        else return line == other.line && character < other.character;
+    }
+    public boolean isAfter(SourcePosition other)
+    {
+        if (!source.equals(other.source)) return true;
+        else if (line > other.line) return true;
+        else return line == other.line && character > other.character;
+    }
+    //endregion
     //region Object Overrides
     @Override
     public boolean equals(Object o)

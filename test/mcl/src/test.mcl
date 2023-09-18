@@ -1,11 +1,11 @@
 namespace mcl
 {
     event test();
-}
 
-namespace mcl
-{
-    event test();
+    listener mcl:test()
+    {
+
+    }
 }
 
 /*

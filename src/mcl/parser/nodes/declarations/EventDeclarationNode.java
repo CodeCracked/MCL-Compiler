@@ -26,8 +26,8 @@ public class EventDeclarationNode extends AbstractNode
         Result<Void> result = new Result<>();
         
         // Symbol Creation
-        EventSymbol symbol = new EventSymbol(identifier.value);
-        if (!symbolTable().addSymbolWithUniqueName(symbol, true)) return result.failure(new DuplicateSymbolException(identifier, symbol));
+        EventSymbol symbol = new EventSymbol(this, identifier.value);
+        if (!symbolTable().addSymbolWithUniqueName(identifier, symbol, true)) return result.failure(new DuplicateSymbolException(identifier, symbol));
         
         return result.success(null);
     }

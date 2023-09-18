@@ -7,6 +7,6 @@ public class DuplicateSymbolException extends CompilerException
 {
     public DuplicateSymbolException(AbstractNode symbolDefinition, AbstractSymbol failedSymbol)
     {
-        super(symbolDefinition.start(), symbolDefinition.end(), failedSymbol.getClass().getSimpleName().replace("Symbol", "") + " '" + failedSymbol.name() + "' already exists!");
+        super(symbolDefinition.start(), symbolDefinition.end(), "Duplicate " + failedSymbol.getClass().getSimpleName().replace("Symbol", "").toLowerCase().trim() + " '" + failedSymbol.name() + "'!");
     }
 }

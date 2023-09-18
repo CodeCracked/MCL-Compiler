@@ -94,7 +94,7 @@ public class Parser
         if (result.getFailure() != null) return result;
         
         // Populate Nodes
-        result.register(ast.forEachChildWithResult((parent, child) -> child.populate(), true));
+        result.register(ast.forEachChildWithResult((parent, child) -> child.populateMetadata(), true));
         if (result.getFailure() != null) return result;
         
         // Assign Symbol Tables
@@ -103,6 +103,10 @@ public class Parser
         
         // Create Symbols
         result.register(ast.forEachChildWithResult((parent, child) -> child.createSymbols(), true));
+        if (result.getFailure() != null) return result;
+        
+        // Retrieve Symbols
+        result.register(ast.forEachChildWithResult((parent, child) -> child.retrieveSymbols(), true));
         if (result.getFailure() != null) return result;
         
         return result.success(null);
