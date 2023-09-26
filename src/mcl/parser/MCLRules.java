@@ -8,7 +8,6 @@ import compiler.core.parser.GrammarRuleChooser;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.grammar.components.ArgumentListRule;
 import compiler.core.parser.grammar.components.BlockBracesRule;
-import compiler.core.parser.grammar.components.IdentifierRule;
 import compiler.core.parser.grammar.expression.ExpressionRule;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import mcl.lexer.MCLKeyword;

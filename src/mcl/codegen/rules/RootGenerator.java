@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 public class RootGenerator implements ICodeGenRule<RootNode>
 {
     @Override
-    public Result<Void> generate(RootNode node, CodeGenContext context) throws IOException
+    public Result<Void> generate(RootNode component, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
         
@@ -23,7 +23,7 @@ public class RootGenerator implements ICodeGenRule<RootNode>
         context.openSubdirectory("data");
         
         // Generate namespaces
-        for (AbstractNode source : node.sources)
+        for (AbstractNode source : component.sources)
         {
             result.register(context.getCodeGenerator().generate(source, context));
             if (result.getFailure() != null) return result;

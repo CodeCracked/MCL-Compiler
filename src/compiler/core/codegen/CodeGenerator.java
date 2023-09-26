@@ -2,6 +2,8 @@ package compiler.core.codegen;
 
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.RootNode;
+import compiler.core.parser.symbols.AbstractCompilableSymbol;
+import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.util.Result;
 
 import java.io.File;
@@ -14,9 +16,11 @@ import java.util.function.Predicate;
 
 public abstract class CodeGenerator
 {
-    private record RuleEntry<T extends AbstractNode>(Predicate<AbstractNode> predicate, ICodeGenRule<T> rule) {}
+    private record NodeRuleEntry<T extends AbstractNode>(Predicate<AbstractNode> predicate, ICodeGenRule<T> rule) {}
+    private record SymbolRuleEntry<T extends AbstractCompilableSymbol>(Predicate<AbstractCompilableSymbol> predicate, ICodeGenRule<T> rule) {}
     
-    private final List<RuleEntry<?>> rules = new ArrayList<>();
+    private final List<NodeRuleEntry<?>> nodeRules = new ArrayList<>();
+    private final List<SymbolRuleEntry<?>> symbolRules = new ArrayList<>();
     
     //region Creation
     protected CodeGenerator() { addDefaultRules(); }
@@ -26,15 +30,26 @@ public abstract class CodeGenerator
     public static CodeGenerator empty() { return new CodeGenerator() { @Override protected void addDefaultRules() {} }; }
     //endregion
     //region Configuration
-    public <T extends AbstractNode> CodeGenerator addRule(Predicate<AbstractNode> predicate, ICodeGenRule<T> rule)
+    public <T extends AbstractNode> CodeGenerator addNodeRule(Predicate<AbstractNode> predicate, ICodeGenRule<T> rule)
     {
-        RuleEntry<T> entry = new RuleEntry<>(predicate, rule);
-        this.rules.add(entry);
+        NodeRuleEntry<T> entry = new NodeRuleEntry<>(predicate, rule);
+        this.nodeRules.add(entry);
         return this;
     }
-    public <T extends AbstractNode> CodeGenerator addRule(Class<T> clazz, ICodeGenRule<T> rule)
+    public <T extends AbstractNode> CodeGenerator addNodeRule(Class<T> clazz, ICodeGenRule<T> rule)
     {
-        return addRule(node -> node.getClass().equals(clazz), rule);
+        return addNodeRule(node -> node.getClass().equals(clazz), rule);
+    }
+    
+    public <T extends AbstractCompilableSymbol> CodeGenerator addSymbolRule(Predicate<AbstractCompilableSymbol> predicate, ICodeGenRule<T> rule)
+    {
+        SymbolRuleEntry<T> entry = new SymbolRuleEntry<>(predicate, rule);
+        this.symbolRules.add(entry);
+        return this;
+    }
+    public <T extends AbstractCompilableSymbol> CodeGenerator addSymbolRule(Class<T> clazz, ICodeGenRule<T> rule)
+    {
+        return addSymbolRule(symbol -> symbol.getClass().equals(clazz), rule);
     }
     //endregion
     //region Utilities
@@ -51,13 +66,26 @@ public abstract class CodeGenerator
     
     public Result<Void> generate(RootNode ast, Path destination)
     {
+        Result<Void> result = new Result<>();
+        
         // Clear Existing Contents
         if (destination.toFile().exists()) recursiveDelete(destination.toFile());
         destination.toFile().mkdirs();
         
-        // Generate Code
+        // Generate AST Code
         CodeGenContext context = new CodeGenContext(this, destination);
-        return generate(ast, context);
+        result.register(generate(ast, context));
+        if (result.getFailure() != null) return result;
+        
+        // Generate Symbol Table Code
+        List<SymbolTable.SymbolEntry<AbstractCompilableSymbol>> symbols = result.register(ast.symbolTable().collectByType(ast, AbstractCompilableSymbol.class).any(true));
+        for (SymbolTable.SymbolEntry<AbstractCompilableSymbol> symbol : symbols)
+        {
+            result.register(generate(symbol.symbol(), context));
+            if (result.getFailure() != null) return result;
+        }
+        
+        return result;
     }
     public <T extends AbstractNode> Result<Void> generate(T node, CodeGenContext context)
     {
@@ -65,8 +93,17 @@ public abstract class CodeGenerator
         
         try
         {
-            for (RuleEntry<?> rule : rules) if (rule.predicate.test(node)) return ((RuleEntry<T>) rule).rule.generate(node, context);
+            for (NodeRuleEntry<?> rule : nodeRules) if (rule.predicate.test(node)) return ((NodeRuleEntry<T>) rule).rule.generate(node, context);
             return Result.fail(new UnsupportedOperationException("Code generator does not contain a predicate matching node: " + node));
+        }
+        catch (IOException e) { return Result.fail(e); }
+    }
+    public <T extends AbstractCompilableSymbol> Result<Void> generate(T symbol, CodeGenContext context)
+    {
+        try
+        {
+            for (SymbolRuleEntry<?> rule : symbolRules) if (rule.predicate.test(symbol)) return ((SymbolRuleEntry<T>) rule).rule.generate(symbol, context);
+            return Result.fail(new UnsupportedOperationException("Code generator does not contain a predicate matching symbol: " + symbol));
         }
         catch (IOException e) { return Result.fail(e); }
     }

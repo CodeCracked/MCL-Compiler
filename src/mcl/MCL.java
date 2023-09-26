@@ -35,7 +35,7 @@ public final class MCL
     );
     private static final Parser PARSER = Parser.bracedScope(DATA_TYPES, MCLRules.SOURCE_FILE);
     private static final CodeGenerator CODE_GENERATOR = new MCLCodeGenerator();
-    private static final Compiler COMPILER = new Compiler(LEXER, PARSER, null, true);
+    private static final Compiler COMPILER = new Compiler(LEXER, PARSER, CODE_GENERATOR, true);
     
     public static Lexer lexer() { return LEXER; }
     public static Parser parser() { return PARSER; }

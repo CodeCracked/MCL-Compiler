@@ -10,12 +10,12 @@ import java.io.IOException;
 public class ListenerDeclarationGenerator implements ICodeGenRule<ListenerDeclarationNode>
 {
     @Override
-    public Result<Void> generate(ListenerDeclarationNode node, CodeGenContext context) throws IOException
+    public Result<Void> generate(ListenerDeclarationNode component, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
         
         // Generate Body
-        result.register(context.generate(node.body));
+        result.register(context.generate(component.body));
         if (result.getFailure() != null) return result;
         
         return result.success(null);

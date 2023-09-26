@@ -67,7 +67,7 @@ public class CodeGenContext
     }
     //endregion
     //region Directories
-    public void openSubdirectory(String name)
+    public void openSubdirectory(String... relativePath)
     {
         if (this.writer.isPresent())
         {
@@ -75,9 +75,20 @@ public class CodeGenContext
             closeFile();
         }
         
-        this.currentDirectory = this.currentDirectory.resolve(name);
-        this.currentDirectory.toFile().mkdirs();
-        this.pathDepth++;
+        for (String pathElement : relativePath)
+        {
+            if (pathElement == "..") closeSubdirectory();
+            else
+            {
+                this.currentDirectory = this.currentDirectory.resolve(pathElement);
+                this.currentDirectory.toFile().mkdirs();
+                this.pathDepth++;
+            }
+        }
+    }
+    public void closeSubdirectory(int levels)
+    {
+        for (int i = 0; i < levels; i++) closeSubdirectory();
     }
     public void closeSubdirectory()
     {
@@ -88,7 +99,7 @@ public class CodeGenContext
                 IO.Debug.println("Codegen Warning: Trying to close a close a subdirectory when a file is opened!");
                 closeFile();
             }
-            
+        
             this.currentDirectory = this.currentDirectory.getParent();
             this.pathDepth--;
         }

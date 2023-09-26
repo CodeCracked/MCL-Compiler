@@ -10,15 +10,15 @@ import java.io.IOException;
 public class NamespaceGenerator implements ICodeGenRule<NamespaceNode>
 {
     @Override
-    public Result<Void> generate(NamespaceNode node, CodeGenContext context) throws IOException
+    public Result<Void> generate(NamespaceNode component, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
         
         // Open Namespace Directory
-        context.openSubdirectory(node.identifier.value);
+        context.openSubdirectory(component.identifier.value);
         
         // Generate Body
-        result.register(context.generate(node.body));
+        result.register(context.generate(component.body));
         if (result.getFailure() != null) return result;
         
         // Close Namespace Directory

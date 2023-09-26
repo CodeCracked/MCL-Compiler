@@ -5,17 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/MultipleSymbolsFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/UndefinedSymbolException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/mcl/src/lib.mcl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/AbstractCompilableSymbol.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/symbols/EventGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/util/Salt.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/symbols/AbstractSymbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/AbstractSymbol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/ICodeGenRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/ICodeGenRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/BlockNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/BlockNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/symbols/SymbolTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/SymbolTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/exceptions/DuplicateSymbolException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/exceptions/DuplicateSymbolException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/components/QualifiedIdentifierNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/components/QualifiedIdentifierNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/MCL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/MCL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/MCLCodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/MCLCodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/BlockGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/BlockGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/ListenerDeclarationGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/ListenerDeclarationGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/MCLSourceGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/MCLSourceGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/NamespaceGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/NamespaceGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/RootGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/RootGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/EventDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/EventDeclarationNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/ListenerDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/ListenerDeclarationNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/parser/symbols/EventSymbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/symbols/EventSymbol.java" afterDir="false" />
@@ -121,5 +128,10 @@
         <breakpoint enabled="true" type="java-exception" />
       </default-breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="result.getFailure()" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

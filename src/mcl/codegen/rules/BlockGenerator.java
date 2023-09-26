@@ -11,12 +11,12 @@ import java.io.IOException;
 public class BlockGenerator implements ICodeGenRule<BlockNode>
 {
     @Override
-    public Result<Void> generate(BlockNode node, CodeGenContext context) throws IOException
+    public Result<Void> generate(BlockNode component, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
         
         // Generate children
-        for (AbstractNode child : node.children)
+        for (AbstractNode child : component.children)
         {
             result.register(context.generate(child));
             if (result.getFailure() != null) return result;

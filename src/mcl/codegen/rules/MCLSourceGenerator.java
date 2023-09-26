@@ -11,12 +11,12 @@ import java.io.IOException;
 public class MCLSourceGenerator implements ICodeGenRule<MCLSourceNode>
 {
     @Override
-    public Result<Void> generate(MCLSourceNode node, CodeGenContext context) throws IOException
+    public Result<Void> generate(MCLSourceNode component, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
         
         // Generate Namespaces
-        for (NamespaceNode namespace : node.namespaces)
+        for (NamespaceNode namespace : component.namespaces)
         {
             result.register(context.getCodeGenerator().generate(namespace, context));
             if (result.getFailure() != null) return result;

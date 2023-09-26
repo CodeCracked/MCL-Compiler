@@ -7,8 +7,10 @@ import compiler.core.parser.nodes.components.ParameterListNode;
 import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.UndefinedSymbolException;
+import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.nodes.components.QualifiedIdentifierNode;
 import mcl.parser.symbols.EventSymbol;
+import mcl.util.Salt;
 
 import java.util.Optional;
 
@@ -20,6 +22,7 @@ public class ListenerDeclarationNode extends AbstractNode
     
     private SymbolTable childTable;
     private SymbolTable.SymbolEntry<EventSymbol> eventSymbol;
+    private String functionName;
     
     public ListenerDeclarationNode(Token keyword, QualifiedIdentifierNode event, ParameterListNode parameters, BlockNode body)
     {
@@ -50,6 +53,12 @@ public class ListenerDeclarationNode extends AbstractNode
         // Get Event Symbol
         this.eventSymbol = result.register(namespaceTable.get().lookupByName(event.identifier, EventSymbol.class, event.identifier.value).single());
         if (result.getFailure() != null) return result;
+        
+        // Register Listener
+        NamespaceNode namespace = result.register(findParentNode(NamespaceNode.class));
+        if (result.getFailure() != null) return result;
+        this.functionName = event.namespace.value + "_" + event.identifier.value + "_" + Salt.newSalt(4);
+        this.eventSymbol.symbol().listenerFunctions.add(namespace.identifier.value + ":" + functionName);
         
         return result.success(null);
     }

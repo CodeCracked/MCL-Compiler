@@ -4,11 +4,9 @@ import compiler.core.parser.AbstractNode;
 import compiler.core.util.IO;
 import compiler.core.util.Ref;
 import compiler.core.util.Result;
-import compiler.core.util.exceptions.DuplicateSymbolException;
 import compiler.core.util.exceptions.MultipleSymbolsFoundException;
 import compiler.core.util.exceptions.UndefinedSymbolException;
 
-import javax.swing.plaf.synth.SynthUI;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -54,29 +52,34 @@ public class SymbolTable
         }
         //endregion
         //region Resolutions
-        public Result<SymbolEntry<T>> single()
+        public Result<SymbolEntry<T>> single() { return single(false); }
+        public Result<Optional<SymbolEntry<T>>> optional() { return optional(false); }
+        public Result<List<SymbolEntry<T>>> oneOrMore() { return oneOrMore(false); }
+        public Result<List<SymbolEntry<T>>> any () { return any(false); }
+        
+        public Result<SymbolEntry<T>> single(boolean ignoreReferenceRestrictions)
         {
-            Lookup<T> filtered = filter(symbol -> symbol.symbol.canBeReferencedBy(source));
+            Lookup<T> filtered = ignoreReferenceRestrictions ? this : filter(symbol -> symbol.symbol.canBeReferencedBy(source));
             if (filtered.symbols.size() == 0) return Result.fail(new UndefinedSymbolException(source, symbolType, errorDescription));
             else if (filtered.symbols.size() > 1) return Result.fail(new MultipleSymbolsFoundException(source, symbolType));
             else return Result.of(filtered.symbols.get(0));
         }
-        public Result<Optional<SymbolEntry<T>>> optional()
+        public Result<Optional<SymbolEntry<T>>> optional(boolean ignoreReferenceRestrictions)
         {
-            Lookup<T> filtered = filter(symbol -> symbol.symbol.canBeReferencedBy(source));
+            Lookup<T> filtered = ignoreReferenceRestrictions ? this : filter(symbol -> symbol.symbol.canBeReferencedBy(source));
             if (filtered.symbols.size() > 1) return Result.fail(new MultipleSymbolsFoundException(source, symbolType));
             else if (filtered.symbols.size() == 0) return Result.of(Optional.empty());
             else return Result.of(Optional.of(filtered.symbols.get(0)));
         }
-        public Result<List<SymbolEntry<T>>> oneOrMore()
+        public Result<List<SymbolEntry<T>>> oneOrMore(boolean ignoreReferenceRestrictions)
         {
-            Lookup<T> filtered = filter(symbol -> symbol.symbol.canBeReferencedBy(source));
+            Lookup<T> filtered = ignoreReferenceRestrictions ? this : filter(symbol -> symbol.symbol.canBeReferencedBy(source));
             if (filtered.symbols.size() == 0) return Result.fail(new UndefinedSymbolException(source, symbolType, errorDescription));
             else return Result.of(Collections.unmodifiableList(filtered.symbols));
         }
-        public Result<List<SymbolEntry<T>>> any()
+        public Result<List<SymbolEntry<T>>> any(boolean ignoreReferenceRestrictions)
         {
-            Lookup<T> filtered = filter(symbol -> symbol.symbol.canBeReferencedBy(source));
+            Lookup<T> filtered = ignoreReferenceRestrictions ? this : filter(symbol -> symbol.symbol.canBeReferencedBy(source));
             return Result.of(Collections.unmodifiableList(filtered.symbols));
         }
         //endregion
@@ -84,20 +87,20 @@ public class SymbolTable
     public static final class SymbolEntry<T extends AbstractSymbol>
     {
         private final T symbol;
-        private final int parentLevel;
+        private final int depth;
         private final SymbolTable lookupTable;
         private final SymbolTable ownerTable;
         
-        private SymbolEntry(T symbol, int parentLevel, SymbolTable lookupTable, SymbolTable ownerTable)
+        private SymbolEntry(T symbol, int depth, SymbolTable lookupTable, SymbolTable ownerTable)
         {
             this.symbol = symbol;
-            this.parentLevel = parentLevel;
+            this.depth = depth;
             this.lookupTable = lookupTable;
             this.ownerTable = ownerTable;
         }
         
         public T symbol() { return symbol; }
-        public int parentLevel() { return parentLevel; }
+        public int depth() { return depth; }
         public SymbolTable lookupTable() { return lookupTable; }
         public SymbolTable ownerTable() { return ownerTable; }
     }
@@ -149,7 +152,7 @@ public class SymbolTable
     {
         // Check for existing symbols
         Lookup<T> existingSymbols = (Lookup<T>) lookupByName(source, symbol.getClass(), symbol.name());
-        if (allowShadowing) existingSymbols.filterSelf(entry -> entry.parentLevel == 0);
+        if (allowShadowing) existingSymbols.filterSelf(entry -> entry.depth == 0);
         if (existingSymbols.count() > 0) return false;
         
         // Add symbol
@@ -173,15 +176,39 @@ public class SymbolTable
     public <T extends AbstractSymbol> Lookup<T> lookup(AbstractNode source, Class<T> clazz, Predicate<AbstractSymbol> predicate, String errorDescription)
     {
         Lookup<T> lookup = new Lookup<>(source, clazz, errorDescription);
-        lookupHelper(lookup, clazz, predicate, 0, this);
+        lookupHelper(lookup, clazz, predicate, 0, this, true);
         return lookup;
     }
     
-    private <T extends AbstractSymbol> void lookupHelper(Lookup<T> lookup, Class<T> clazz, Predicate<AbstractSymbol> predicate, int parentLevel, SymbolTable sourceTable)
+    private <T extends AbstractSymbol> void lookupHelper(Lookup<T> lookup, Class<T> clazz, Predicate<AbstractSymbol> predicate, int depth, SymbolTable sourceTable, boolean searchAncestors)
     {
-        List<T> symbols = (List<T>)localSymbols.get(clazz);
-        if (symbols != null) for (T symbol : symbols) if (predicate.test(symbol)) lookup.symbols.add(new SymbolEntry<>(symbol, parentLevel, sourceTable, this));
-        if (parent != null) parent.lookupHelper(lookup, clazz, predicate, parentLevel + 1, sourceTable);
+        for (Map.Entry<Class<? extends AbstractSymbol>, List<? extends AbstractSymbol>> localSymbolSet : localSymbols.entrySet())
+        {
+            if (clazz.isAssignableFrom(localSymbolSet.getKey()))
+            {
+                List<T> symbols = (List<T>) localSymbolSet.getValue();
+                for (T symbol : symbols) if (predicate.test(symbol)) lookup.symbols.add(new SymbolEntry<>(symbol, depth, sourceTable, this));
+            }
+        }
+        if (searchAncestors && parent != null) parent.lookupHelper(lookup, clazz, predicate, depth + 1, sourceTable, true);
+    }
+    //endregion
+    //region Collecting
+    public <T extends AbstractSymbol> Lookup<T> collectByType(AbstractNode source, Class<T> clazz)
+    {
+        return collect(source, clazz, symbol -> true, null);
+    }
+    public <T extends AbstractSymbol> Lookup<T> collect(AbstractNode source, Class<T> clazz, Predicate<AbstractSymbol> predicate, String errorDescription)
+    {
+        Lookup<T> lookup = new Lookup<>(source, clazz, errorDescription);
+        collectHelper(lookup, clazz, predicate, 0, this);
+        return lookup;
+    }
+    
+    private <T extends AbstractSymbol> void collectHelper(Lookup<T> lookup, Class<T> clazz, Predicate<AbstractSymbol> predicate, int depth, SymbolTable sourceTable)
+    {
+        lookupHelper(lookup, clazz, predicate, depth, this, false);
+        for (SymbolTable childTable : childTables.values()) childTable.collectHelper(lookup, clazz, predicate, depth + 1, sourceTable);
     }
     //endregion
     //region Getters

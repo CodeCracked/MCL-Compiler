@@ -1,7 +1,6 @@
 package compiler.core.parser;
 
 import compiler.core.lexer.types.LiteralTokenType;
-import compiler.core.parser.grammar.components.ArgumentListRule;
 import compiler.core.parser.grammar.components.DataTypeRule;
 import compiler.core.parser.grammar.components.IdentifierRule;
 import compiler.core.parser.grammar.components.ParameterListRule;

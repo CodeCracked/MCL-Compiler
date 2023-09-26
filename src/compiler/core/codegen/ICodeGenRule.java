@@ -1,11 +1,10 @@
 package compiler.core.codegen;
 
-import compiler.core.parser.AbstractNode;
 import compiler.core.util.Result;
 
 import java.io.IOException;
 
-public interface ICodeGenRule<T extends AbstractNode>
+public interface ICodeGenRule<T>
 {
-    Result<Void> generate(T node, CodeGenContext context) throws IOException;
+    Result<Void> generate(T component, CodeGenContext context) throws IOException;
 }
