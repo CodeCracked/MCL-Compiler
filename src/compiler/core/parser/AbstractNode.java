@@ -39,15 +39,18 @@ public abstract class AbstractNode
         populateFieldLists();
     }
     
+    //region Symbol Tables
     protected SymbolTable getChildSymbolTable(AbstractNode child) { return symbolTable; }
     protected void setSymbolTable(SymbolTable table) { this.symbolTable = table; }
-    
+    //endregion
+    //region Decoration
     final Result<Void> linkHierarchy() { return forEachChild((parent, child) -> child.parent = parent, true); }
     protected Result<Void> populateMetadata() { return Result.of(null); }
     final Result<Void> assignSymbolTables() { return forEachChild((parent, child) -> child.setSymbolTable(parent.getChildSymbolTable(child)), true); }
     protected Result<Void> createSymbols() { return Result.of(null); }
     protected Result <Void> retrieveSymbols() { return Result.of(null); }
-    
+    //endregion
+    //region Public Helpers
     public <T extends AbstractNode> Result<T> findParentNode(Class<T> clazz)
     {
         AbstractNode node = parent;
@@ -60,7 +63,24 @@ public abstract class AbstractNode
         if (node == null) return Result.fail(new IllegalStateException("Node does not contain an ancestor of type " + clazz.getSimpleName() + "!"));
         else return Result.of((T)node);
     }
-    
+    public final String getMCLDescription()
+    {
+        return start.toString() + ": " + getMCLCode().split("\n")[0].trim();
+    }
+    public final String getMCLCode()
+    {
+        if (!start.isInSameSource(end)) return "<Node spans multiple sources>";
+        
+        SourcePosition current = start.copy();
+        StringBuilder builder = new StringBuilder();
+        while (current.isBefore(end) || current.equals(end))
+        {
+            builder.append(current.getCharacter());
+            if (!current.advance()) break;
+        }
+        return builder.toString();
+    }
+    //endregion
     //region Reflection
     private void populateFieldLists()
     {

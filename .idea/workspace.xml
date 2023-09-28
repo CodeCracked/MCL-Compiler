@@ -7,11 +7,10 @@
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/ListenerDeclarationGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/ListenerDeclarationGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/NamespaceGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/NamespaceGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/RootGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/RootGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/ListenerDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/declarations/ListenerDeclarationNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/symbols/EventGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/symbols/EventGenerator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

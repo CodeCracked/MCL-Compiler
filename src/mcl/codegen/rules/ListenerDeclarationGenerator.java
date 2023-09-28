@@ -16,7 +16,11 @@ public class ListenerDeclarationGenerator implements ICodeGenRule<ListenerDeclar
         
         // Open Listener File
         context.openSubdirectory("functions", "listeners");
-        context.openFile(component.functionName() + ".mcfunction");
+        context.openFile(component.functionName() + ".mcfunction", file ->
+        {
+            file.println("# " + component.getMCLDescription());
+            file.println();
+        });
         
         // Generate Body
         result.register(context.generate(component.body));

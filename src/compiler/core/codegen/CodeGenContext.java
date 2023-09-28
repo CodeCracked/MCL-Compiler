@@ -93,20 +93,22 @@ public class CodeGenContext
     //endregion
     //region Files
     public void writeFile(String name, Consumer<PrintWriter> writeConsumer) throws IOException { writeFile(name, writeConsumer, true); }
-    public void writeFile(String name, Consumer<PrintWriter> writerConsumer, boolean append) throws IOException
+    public void writeFile(String name, Consumer<PrintWriter> writeConsumer, boolean append) throws IOException
     {
-        openFile(name, append);
-        writerConsumer.accept(fileWriterStack.peek());
+        openFile(name, writeConsumer, append);
         closeFile();
     }
     
-    public void openFile(String name) throws IOException { openFile(name, true); }
-    public void openFile(String name, boolean append) throws IOException
+    public void openFile(String name) throws IOException { openFile(name, null, true); }
+    public void openFile(String name, Consumer<PrintWriter> initialWrite) throws IOException { openFile(name, initialWrite, true); }
+    public void openFile(String name, Consumer<PrintWriter> initialWrite, boolean append) throws IOException
     {
         Path path = currentDirectory.resolve(name);
         File file = path.toFile();
         
         PrintWriter fileWriter = new PrintWriter(new BufferedWriter(new FileWriter(file, append)));
+        if (initialWrite != null) initialWrite.accept(fileWriter);
+        
         this.filePathStack.push(path);
         this.fileWriterStack.push(fileWriter);
     }

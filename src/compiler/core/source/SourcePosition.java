@@ -93,17 +93,21 @@ public class SourcePosition
     }
     //endregion
     //region Comparison
+    public boolean isInSameSource(SourcePosition other)
+    {
+        return source.equals(other.source);
+    }
     public boolean isBefore(SourcePosition other)
     {
         if (!source.equals(other.source)) return true;
         else if (line < other.line) return true;
-        else return line == other.line && character < other.character;
+        else return line == other.line && column < other.column;
     }
     public boolean isAfter(SourcePosition other)
     {
         if (!source.equals(other.source)) return true;
         else if (line > other.line) return true;
-        else return line == other.line && character > other.character;
+        else return line == other.line && column > other.column;
     }
     //endregion
     //region Object Overrides
