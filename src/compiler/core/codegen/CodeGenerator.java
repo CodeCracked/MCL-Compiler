@@ -93,7 +93,16 @@ public abstract class CodeGenerator
         
         try
         {
-            for (NodeRuleEntry<?> rule : nodeRules) if (rule.predicate.test(node)) return ((NodeRuleEntry<T>) rule).rule.generate(node, context);
+            for (NodeRuleEntry<?> rule : nodeRules)
+            {
+                if (rule.predicate.test(node))
+                {
+                    context.openSnapshot();
+                    Result<Void> result = ((NodeRuleEntry<T>) rule).rule.generate(node, context);
+                    context.closeSnapshot();
+                    return result;
+                }
+            }
             return Result.fail(new UnsupportedOperationException("Code generator does not contain a predicate matching node: " + node));
         }
         catch (IOException e) { return Result.fail(e); }
@@ -102,7 +111,16 @@ public abstract class CodeGenerator
     {
         try
         {
-            for (SymbolRuleEntry<?> rule : symbolRules) if (rule.predicate.test(symbol)) return ((SymbolRuleEntry<T>) rule).rule.generate(symbol, context);
+            for (SymbolRuleEntry<?> rule : symbolRules)
+            {
+                if (rule.predicate.test(symbol))
+                {
+                    context.openSnapshot();
+                    Result<Void> result = ((SymbolRuleEntry<T>) rule).rule.generate(symbol, context);
+                    context.closeSnapshot();
+                    return result;
+                }
+            }
             return Result.fail(new UnsupportedOperationException("Code generator does not contain a predicate matching symbol: " + symbol));
         }
         catch (IOException e) { return Result.fail(e); }

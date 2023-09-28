@@ -33,6 +33,7 @@ public class ListenerDeclarationNode extends AbstractNode
     }
     
     public EventSymbol eventSymbol() { return eventSymbol.symbol(); }
+    public String functionName() { return functionName; }
     
     @Override
     protected SymbolTable getChildSymbolTable(AbstractNode child)

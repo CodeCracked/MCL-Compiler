@@ -22,15 +22,12 @@ public class RootGenerator implements ICodeGenRule<RootNode>
         // 'data' directory
         context.openSubdirectory("data");
         
-        // Generate namespaces
+        // Generate sources
         for (AbstractNode source : component.sources)
         {
             result.register(context.getCodeGenerator().generate(source, context));
             if (result.getFailure() != null) return result;
         }
-        
-        // Close 'data' directory
-        context.closeSubdirectory();
         
         return result.success(null);
     }

@@ -14,6 +14,10 @@ public class ListenerDeclarationGenerator implements ICodeGenRule<ListenerDeclar
     {
         Result<Void> result = new Result<>();
         
+        // Open Listener File
+        context.openSubdirectory("functions", "listeners");
+        context.openFile(component.functionName() + ".mcfunction");
+        
         // Generate Body
         result.register(context.generate(component.body));
         if (result.getFailure() != null) return result;

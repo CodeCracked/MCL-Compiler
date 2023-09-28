@@ -31,7 +31,6 @@ public class EventGenerator implements ICodeGenRule<EventSymbol>
             file.println("}");
         });
         
-        context.closeSubdirectory(4);
         return Result.of(null);
     }
 }

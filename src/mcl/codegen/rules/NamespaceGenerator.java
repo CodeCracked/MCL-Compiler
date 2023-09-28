@@ -21,8 +21,6 @@ public class NamespaceGenerator implements ICodeGenRule<NamespaceNode>
         result.register(context.generate(component.body));
         if (result.getFailure() != null) return result;
         
-        // Close Namespace Directory
-        context.closeSubdirectory();
         return result.success(null);
     }
 }
