@@ -1,26 +1,38 @@
 namespace mcl
 {
+    listener minecraft:load()
+    {
+        native
+        ''
+            tellraw @s {"text":"MCL Compilation Unit Loaded!","color":"gold"}
+        '';
+    }
+}
+
+/*namespace mcl
+{
 	event init();
 	event tick();
 
 	listener minecraft:load()
 	{
-		//print("Minecraft Load...");
-        //trigger init();
+		print("Minecraft Load...");
+        trigger init();
 	}
 
 	listener minecraft:tick()
 	{
-		//print("Minecraft Tick...");
-		//trigger tick();
+		print("Minecraft Tick...");
+		trigger tick();
 	}
 
 	listener init()
 	{
-	    //print("MCL Init...");
+	    print("MCL Init...");
 	}
 	listener tick()
 	{
-	    //print("MCL Tick...");
+	    print("MCL Tick...");
 	}
 }
+*/

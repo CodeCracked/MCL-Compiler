@@ -8,6 +8,7 @@ import mcl.codegen.rules.symbols.EventGenerator;
 import mcl.parser.nodes.MCLSourceNode;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.nodes.declarations.ListenerDeclarationNode;
+import mcl.parser.nodes.statements.NativeStatementNode;
 import mcl.parser.symbols.EventSymbol;
 
 public class MCLCodeGenerator extends CodeGenerator
@@ -20,6 +21,7 @@ public class MCLCodeGenerator extends CodeGenerator
         addNodeRule(NamespaceNode.class, new NamespaceGenerator());
         addNodeRule(ListenerDeclarationNode.class, new ListenerDeclarationGenerator());
         addNodeRule(BlockNode.class, new BlockGenerator());
+        addNodeRule(NativeStatementNode.class, new NativeStatementGenerator());
         
         addSymbolRule(EventSymbol.class, new EventGenerator());
     }

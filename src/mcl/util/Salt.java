@@ -4,7 +4,7 @@ import java.util.Random;
 
 public final class Salt
 {
-    private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new Random(0);
     private static final String SALT_CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
     
     public static String newSalt(int length)

@@ -18,6 +18,7 @@ import mcl.parser.grammar.components.QualifiedIdentifierRule;
 import mcl.parser.grammar.declarations.EventDeclarationRule;
 import mcl.parser.grammar.declarations.ListenerDeclarationRule;
 import mcl.parser.grammar.statements.FunctionCallStatementRule;
+import mcl.parser.grammar.statements.NativeStatementRule;
 import mcl.parser.grammar.statements.TriggerEventStatementRule;
 
 public final class MCLRules
@@ -29,11 +30,13 @@ public final class MCLRules
     
     public static TriggerEventStatementRule TRIGGER_STATEMENT = new TriggerEventStatementRule();
     public static FunctionCallStatementRule FUNCTION_CALL_STATEMENT = new FunctionCallStatementRule();
+    public static NativeStatementRule NATIVE_STATEMENT = new NativeStatementRule();
     
     public static IGrammarRule<?> FUNCTION_STATEMENT = new GrammarRuleChooser<>("Not a statement!")
             .addRule(TRIGGER_STATEMENT, MCLKeyword.TRIGGER)
             .addRule(FUNCTION_CALL_STATEMENT, TokenType.IDENTIFIER, GrammarTokenType.COLON, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
-            .addRule(FUNCTION_CALL_STATEMENT, TokenType.IDENTIFIER, GrammarTokenType.LPAREN);
+            .addRule(FUNCTION_CALL_STATEMENT, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
+            .addRule(NATIVE_STATEMENT, MCLKeyword.NATIVE);
     public static BlockBracesRule FUNCTION_BODY = new BlockBracesRule(FUNCTION_STATEMENT);
     
     public static final EventDeclarationRule EVENT_DECLARATION = new EventDeclarationRule();

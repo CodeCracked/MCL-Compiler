@@ -5,12 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/NativeStatementGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/statements/NativeStatementRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/parser/nodes/statements/NativeStatementNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/source/SourcePosition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/ListenerDeclarationGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/ListenerDeclarationGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/symbols/EventGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/symbols/EventGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/MCLCodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/MCLCodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLKeyword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLKeyword.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/util/Salt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/util/Salt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
