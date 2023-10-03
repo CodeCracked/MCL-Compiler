@@ -57,7 +57,7 @@ public class CodeGenContext
     public CodeGenerator getCodeGenerator() { return generator; }
     public Path getRootPath() { return rootPath; }
     public Path getCurrentDirectory() { return currentDirectory; }
-    public Optional<PrintWriter> getOpenFile() { return fileWriterStack.isEmpty() ? Optional.empty() : Optional.ofNullable(fileWriterStack.peek()); }
+    public Result<PrintWriter> getOpenFile() { return fileWriterStack.isEmpty() || fileWriterStack.peek() == null ? Result.fail(new IllegalStateException("CodeGenContext has no open file!")) : Result.of(this.fileWriterStack.peek()); }
     
     //region Snapshots
     void openSnapshot()

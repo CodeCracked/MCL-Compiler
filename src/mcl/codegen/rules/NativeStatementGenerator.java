@@ -13,14 +13,17 @@ public class NativeStatementGenerator implements ICodeGenRule<NativeStatementNod
     @Override
     public Result<Void> generate(NativeStatementNode component, CodeGenContext context) throws IOException
     {
-        if (context.getOpenFile().isPresent())
-        {
-            PrintWriter file = context.getOpenFile().get();
-            file.println("# Native Commands: " + component.start().toString());
-            for (String command : component.nativeCommands) file.println(command);
-            file.println();
-            return Result.of(null);
-        }
-        else return Result.fail(new IllegalStateException("NativeStatementGenerator requires an open file in the CodeGenContext!"));
+        Result<Void> result = new Result<>();
+    
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+    
+        // Write Native Commands
+        file.println("# Native Commands: " + component.start().toString());
+        for (String command : component.nativeCommands) file.println(command);
+        file.println();
+    
+        return result.success(null);
     }
 }

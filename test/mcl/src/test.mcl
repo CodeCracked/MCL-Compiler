@@ -2,10 +2,8 @@ namespace mcl
 {
     listener minecraft:load()
     {
-        native
-        ''
-            tellraw @s {"text":"MCL Compilation Unit Loaded!","color":"gold"}
-        '';
+        2 * 3 + 4
+        //native ''tellraw @s {"text":"MCL Compilation Unit Loaded!","color":"gold"}'';
     }
 }
 

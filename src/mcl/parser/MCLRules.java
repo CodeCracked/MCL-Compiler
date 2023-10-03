@@ -1,6 +1,7 @@
 package mcl.parser;
 
 import compiler.core.lexer.types.GrammarTokenType;
+import compiler.core.lexer.types.LiteralTokenType;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.DefaultRules;
@@ -33,6 +34,7 @@ public final class MCLRules
     public static NativeStatementRule NATIVE_STATEMENT = new NativeStatementRule();
     
     public static IGrammarRule<?> FUNCTION_STATEMENT = new GrammarRuleChooser<>("Not a statement!")
+            .addRule(EXPRESSION, LiteralTokenType.class)
             .addRule(TRIGGER_STATEMENT, MCLKeyword.TRIGGER)
             .addRule(FUNCTION_CALL_STATEMENT, TokenType.IDENTIFIER, GrammarTokenType.COLON, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
             .addRule(FUNCTION_CALL_STATEMENT, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)

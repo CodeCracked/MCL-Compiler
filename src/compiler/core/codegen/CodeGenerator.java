@@ -1,17 +1,18 @@
 package compiler.core.codegen;
 
+import compiler.core.codegen.expression.ExpressionGenerator;
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.RootNode;
+import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.parser.symbols.AbstractCompilableSymbol;
 import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.util.Result;
+import compiler.core.util.types.DataType;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class CodeGenerator
@@ -21,9 +22,14 @@ public abstract class CodeGenerator
     
     private final List<NodeRuleEntry<?>> nodeRules = new ArrayList<>();
     private final List<SymbolRuleEntry<?>> symbolRules = new ArrayList<>();
+    private final Map<DataType, DataTypeCodeAdapter> dataTypeAdapters = new HashMap<>();
     
     //region Creation
-    protected CodeGenerator() { addDefaultRules(); }
+    protected CodeGenerator()
+    {
+        addNodeRule(node -> AbstractValueNode.class.isAssignableFrom(node.getClass()), ExpressionGenerator::generate);
+        addDefaultRules();
+    }
     
     protected abstract void addDefaultRules();
     
@@ -50,6 +56,12 @@ public abstract class CodeGenerator
     public <T extends AbstractCompilableSymbol> CodeGenerator addSymbolRule(Class<T> clazz, ICodeGenRule<T> rule)
     {
         return addSymbolRule(symbol -> symbol.getClass().equals(clazz), rule);
+    }
+    
+    public CodeGenerator addDataTypeAdapter(DataType type, DataTypeCodeAdapter adapter)
+    {
+        this.dataTypeAdapters.put(type, adapter);
+        return this;
     }
     //endregion
     //region Utilities
@@ -87,6 +99,7 @@ public abstract class CodeGenerator
         
         return result;
     }
+    
     public <T extends AbstractNode> Result<Void> generate(T node, CodeGenContext context)
     {
         if (!node.hasCodeGen()) return Result.of(null);
@@ -124,5 +137,10 @@ public abstract class CodeGenerator
             return Result.fail(new UnsupportedOperationException("Code generator does not contain a predicate matching symbol: " + symbol));
         }
         catch (IOException e) { return Result.fail(e); }
+    }
+    public Result<DataTypeCodeAdapter> getTypeAdapter(DataType dataType)
+    {
+        if (this.dataTypeAdapters.containsKey(dataType)) return Result.of(this.dataTypeAdapters.get(dataType));
+        else return Result.fail(new UnsupportedOperationException("Code generator does not contain an adapter for DataType " + dataType.name() + "!"));
     }
 }

@@ -3,8 +3,10 @@ package mcl.codegen;
 import compiler.core.codegen.CodeGenerator;
 import compiler.core.parser.nodes.RootNode;
 import compiler.core.parser.nodes.components.BlockNode;
+import mcl.codegen.adapters.MCLNumberDataTypeAdapter;
 import mcl.codegen.rules.*;
 import mcl.codegen.rules.symbols.EventGenerator;
+import mcl.lexer.MCLDataTypes;
 import mcl.parser.nodes.MCLSourceNode;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.nodes.declarations.ListenerDeclarationNode;
@@ -24,5 +26,8 @@ public class MCLCodeGenerator extends CodeGenerator
         addNodeRule(NativeStatementNode.class, new NativeStatementGenerator());
         
         addSymbolRule(EventSymbol.class, new EventGenerator());
+        
+        addDataTypeAdapter(MCLDataTypes.INTEGER, MCLNumberDataTypeAdapter.integer());
+        addDataTypeAdapter(MCLDataTypes.FLOAT, MCLNumberDataTypeAdapter.decimal(3));
     }
 }
