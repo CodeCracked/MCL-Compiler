@@ -173,6 +173,10 @@ public class SymbolTable
     {
         return lookup(source, clazz, symbol -> true, null);
     }
+    public <T extends AbstractSymbol> Lookup<T> lookupByInterface(AbstractNode source, Class<T> type, Class<?> interfaceClass)
+    {
+        return lookup(source, type, symbol -> interfaceClass.isAssignableFrom(symbol.getClass()), null);
+    }
     public <T extends AbstractSymbol> Lookup<T> lookup(AbstractNode source, Class<T> clazz, Predicate<AbstractSymbol> predicate, String errorDescription)
     {
         Lookup<T> lookup = new Lookup<>(source, clazz, errorDescription);
@@ -197,6 +201,10 @@ public class SymbolTable
     public <T extends AbstractSymbol> Lookup<T> collectByType(AbstractNode source, Class<T> clazz)
     {
         return collect(source, clazz, symbol -> true, null);
+    }
+    public <T extends AbstractSymbol, I> Lookup<T> collectByInterface(AbstractNode source, Class<T> type, Class<?> interfaceClass)
+    {
+        return collect(source, type, symbol -> interfaceClass.isAssignableFrom(symbol.getClass()), null);
     }
     public <T extends AbstractSymbol> Lookup<T> collect(AbstractNode source, Class<T> clazz, Predicate<AbstractSymbol> predicate, String errorDescription)
     {

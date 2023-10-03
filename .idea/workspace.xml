@@ -5,19 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/codegen/DataTypeCodeAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/codegen/expression/BinaryOperationGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/codegen/expression/ExpressionGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/codegen/expression/IExpressionGenRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/codegen/expression/LiteralGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/codegen/adapters/AbstractMCLDataTypeAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/mcl/codegen/adapters/MCLNumberDataTypeAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/codegen/ICompilable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/VariableDeclarationNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/types/AbstractTypedSymbol.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/types/VariableSymbol.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/VariableDeclarationGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/statements/VariableDeclarationStatementRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/CodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/DataTypeCodeAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/DataTypeCodeAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/codegen/expression/ExpressionGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/codegen/expression/ExpressionGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/AbstractNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleChooser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleChooser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/symbols/AbstractCompilableSymbol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/symbols/SymbolTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/symbols/SymbolTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/annotations/OptionalChild.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/annotations/OptionalChild.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/types/DataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/types/DataType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/codegen/MCLCodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/MCLCodeGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/rules/NativeStatementGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/rules/NativeStatementGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/adapters/AbstractMCLDataTypeAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/adapters/AbstractMCLDataTypeAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/codegen/adapters/MCLNumberDataTypeAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/codegen/adapters/MCLNumberDataTypeAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/parser/symbols/EventSymbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/symbols/EventSymbol.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

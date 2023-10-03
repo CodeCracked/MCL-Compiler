@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface OptionalChild
 {
-    boolean warn = false;
-    boolean alwaysShow = true;
+    boolean warn() default false;
+    boolean alwaysShow() default true;
 }

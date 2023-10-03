@@ -32,10 +32,9 @@ public final class ExpressionGenerator
         Result<Void> result = new Result<>();
         lastWrittenRegister = 0;
         
-        // Print Header
+        // Get Open File
         PrintWriter file = result.register(context.getOpenFile());
         if (result.getFailure() != null) return result;
-        file.println("# " + expression.getMCLDescription());
         
         // Run Code Gen
         Ref<Integer> startingRegister = Ref.of(0);

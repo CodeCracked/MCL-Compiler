@@ -4,7 +4,7 @@ import compiler.core.codegen.expression.ExpressionGenerator;
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.RootNode;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
-import compiler.core.parser.symbols.AbstractCompilableSymbol;
+import compiler.core.parser.symbols.AbstractSymbol;
 import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.util.Result;
 import compiler.core.util.types.DataType;
@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 public abstract class CodeGenerator
 {
     private record NodeRuleEntry<T extends AbstractNode>(Predicate<AbstractNode> predicate, ICodeGenRule<T> rule) {}
-    private record SymbolRuleEntry<T extends AbstractCompilableSymbol>(Predicate<AbstractCompilableSymbol> predicate, ICodeGenRule<T> rule) {}
+    private record SymbolRuleEntry<T extends AbstractSymbol>(Predicate<AbstractSymbol> predicate, ICodeGenRule<T> rule) {}
     
     private final List<NodeRuleEntry<?>> nodeRules = new ArrayList<>();
     private final List<SymbolRuleEntry<?>> symbolRules = new ArrayList<>();
@@ -47,13 +47,13 @@ public abstract class CodeGenerator
         return addNodeRule(node -> node.getClass().equals(clazz), rule);
     }
     
-    public <T extends AbstractCompilableSymbol> CodeGenerator addSymbolRule(Predicate<AbstractCompilableSymbol> predicate, ICodeGenRule<T> rule)
+    public <T extends AbstractSymbol> CodeGenerator addSymbolRule(Predicate<AbstractSymbol> predicate, ICodeGenRule<T> rule)
     {
         SymbolRuleEntry<T> entry = new SymbolRuleEntry<>(predicate, rule);
         this.symbolRules.add(entry);
         return this;
     }
-    public <T extends AbstractCompilableSymbol> CodeGenerator addSymbolRule(Class<T> clazz, ICodeGenRule<T> rule)
+    public <T extends AbstractSymbol> CodeGenerator addSymbolRule(Class<T> clazz, ICodeGenRule<T> rule)
     {
         return addSymbolRule(symbol -> symbol.getClass().equals(clazz), rule);
     }
@@ -90,8 +90,11 @@ public abstract class CodeGenerator
         if (result.getFailure() != null) return result;
         
         // Generate Symbol Table Code
-        List<SymbolTable.SymbolEntry<AbstractCompilableSymbol>> symbols = result.register(ast.symbolTable().collectByType(ast, AbstractCompilableSymbol.class).any(true));
-        for (SymbolTable.SymbolEntry<AbstractCompilableSymbol> symbol : symbols)
+        List<SymbolTable.SymbolEntry<AbstractSymbol>> symbols = result.register(ast.symbolTable()
+                .collectByInterface(ast, AbstractSymbol.class, ICompilable.class)
+                .filterSelf(entry -> ((ICompilable)entry.symbol()).compileEnabled())
+                .any(true));
+        for (SymbolTable.SymbolEntry<AbstractSymbol> symbol : symbols)
         {
             result.register(generate(symbol.symbol(), context));
             if (result.getFailure() != null) return result;
@@ -120,7 +123,7 @@ public abstract class CodeGenerator
         }
         catch (IOException e) { return Result.fail(e); }
     }
-    public <T extends AbstractCompilableSymbol> Result<Void> generate(T symbol, CodeGenContext context)
+    public <T extends AbstractSymbol> Result<Void> generate(T symbol, CodeGenContext context)
     {
         try
         {

@@ -1,5 +1,6 @@
 package compiler.core.parser;
 
+import compiler.core.lexer.Token;
 import compiler.core.util.Pair;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.UnexpectedTokenException;
@@ -39,6 +40,18 @@ public class GrammarRuleChooser<T extends AbstractNode> implements IGrammarRule<
             for (Enum<?> tokenType : tokenTypes)
             {
                 if (parser.getCurrentToken().type() != tokenType) return false;
+                else parser.advance();
+            }
+            return true;
+        });
+    }
+    public GrammarRuleChooser<T> addRule(IGrammarRule<? extends T> rule, Predicate<Token>... tokenPredicates)
+    {
+        return addRule(rule, parser ->
+        {
+            for (Predicate<Token> tokenPredicate : tokenPredicates)
+            {
+                if (!tokenPredicate.test(parser.getCurrentToken())) return false;
                 else parser.advance();
             }
             return true;

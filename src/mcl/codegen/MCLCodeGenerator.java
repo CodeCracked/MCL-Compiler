@@ -3,6 +3,7 @@ package mcl.codegen;
 import compiler.core.codegen.CodeGenerator;
 import compiler.core.parser.nodes.RootNode;
 import compiler.core.parser.nodes.components.BlockNode;
+import compiler.core.parser.nodes.components.VariableDeclarationNode;
 import mcl.codegen.adapters.MCLNumberDataTypeAdapter;
 import mcl.codegen.rules.*;
 import mcl.codegen.rules.symbols.EventGenerator;
@@ -24,6 +25,7 @@ public class MCLCodeGenerator extends CodeGenerator
         addNodeRule(ListenerDeclarationNode.class, new ListenerDeclarationGenerator());
         addNodeRule(BlockNode.class, new BlockGenerator());
         addNodeRule(NativeStatementNode.class, new NativeStatementGenerator());
+        addNodeRule(VariableDeclarationNode.class, new VariableDeclarationGenerator());
         
         addSymbolRule(EventSymbol.class, new EventGenerator());
         

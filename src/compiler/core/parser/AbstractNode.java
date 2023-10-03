@@ -140,7 +140,7 @@ public abstract class AbstractNode
                 else if (value == null)
                 {
                     OptionalChild annotation = field.getAnnotation(OptionalChild.class);
-                    if (annotation != null && annotation.alwaysShow) IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ": null");
+                    if (annotation != null && annotation.alwaysShow()) IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ": null");
                 }
             }
             
@@ -152,7 +152,7 @@ public abstract class AbstractNode
                 if (nodes == null)
                 {
                     OptionalChild annotation = field.getAnnotation(OptionalChild.class);
-                    if (annotation != null && annotation.alwaysShow) IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ": null");
+                    if (annotation != null && annotation.alwaysShow()) IO.Debug.println(DEBUG_INDENT.repeat(depth) + field.getName() + ": null");
                 }
                 else if (nodes.size() > 0)
                 {
@@ -205,7 +205,7 @@ public abstract class AbstractNode
                 {
                     OptionalChild annotation = field.getAnnotation(OptionalChild.class);
                     if (annotation == null) result.addError(new IllegalStateException(getClass().getSimpleName() + "'s non-optional child '" + field.getName() + "' is null!"));
-                    else if (annotation.warn) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
+                    else if (annotation.warn()) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
                 }
             }
             for (Field field : nodeCollectionFields)
@@ -224,7 +224,7 @@ public abstract class AbstractNode
                     
                     OptionalChild annotation = field.getAnnotation(OptionalChild.class);
                     if (annotation == null) result.addError(new IllegalStateException(getClass().getSimpleName() + "'s non-optional child '" + field.getName() + "' is null!"));
-                    else if (annotation.warn) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
+                    else if (annotation.warn()) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
                 }
             }
             

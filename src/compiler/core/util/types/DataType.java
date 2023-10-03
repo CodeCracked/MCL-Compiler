@@ -24,6 +24,11 @@ public class DataType
     public String keyword() { return keyword; }
     public Enum<?> literalType() { return literalType; }
     
+    public boolean isAssignableFrom(DataType other)
+    {
+        if (this.equals(other)) return true;
+        else return false;
+    }
     public DataType resultWith(DataType other)
     {
         if (this.equals(other)) return this;

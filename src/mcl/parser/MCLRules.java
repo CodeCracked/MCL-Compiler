@@ -1,7 +1,7 @@
 package mcl.parser;
 
 import compiler.core.lexer.types.GrammarTokenType;
-import compiler.core.lexer.types.LiteralTokenType;
+import compiler.core.lexer.types.MathTokenType;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.DefaultRules;
@@ -21,6 +21,7 @@ import mcl.parser.grammar.declarations.ListenerDeclarationRule;
 import mcl.parser.grammar.statements.FunctionCallStatementRule;
 import mcl.parser.grammar.statements.NativeStatementRule;
 import mcl.parser.grammar.statements.TriggerEventStatementRule;
+import mcl.parser.grammar.statements.VariableDeclarationStatementRule;
 
 public final class MCLRules
 {
@@ -30,15 +31,17 @@ public final class MCLRules
     public static final FunctionCallRule FUNCTION_CALL = new FunctionCallRule();
     
     public static TriggerEventStatementRule TRIGGER_STATEMENT = new TriggerEventStatementRule();
-    public static FunctionCallStatementRule FUNCTION_CALL_STATEMENT = new FunctionCallStatementRule();
     public static NativeStatementRule NATIVE_STATEMENT = new NativeStatementRule();
+    public static FunctionCallStatementRule FUNCTION_CALL_STATEMENT = new FunctionCallStatementRule();
+    public static VariableDeclarationStatementRule VARIABLE_DECLARATION_STATEMENT = new VariableDeclarationStatementRule();
     
     public static IGrammarRule<?> FUNCTION_STATEMENT = new GrammarRuleChooser<>("Not a statement!")
-            .addRule(EXPRESSION, LiteralTokenType.class)
             .addRule(TRIGGER_STATEMENT, MCLKeyword.TRIGGER)
+            .addRule(NATIVE_STATEMENT, MCLKeyword.NATIVE)
             .addRule(FUNCTION_CALL_STATEMENT, TokenType.IDENTIFIER, GrammarTokenType.COLON, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
             .addRule(FUNCTION_CALL_STATEMENT, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
-            .addRule(NATIVE_STATEMENT, MCLKeyword.NATIVE);
+            .addRule(VARIABLE_DECLARATION_STATEMENT, TokenType.DATA_TYPE, TokenType.IDENTIFIER, GrammarTokenType.SEMICOLON)
+            .addRule(VARIABLE_DECLARATION_STATEMENT, TokenType.DATA_TYPE, TokenType.IDENTIFIER, MathTokenType.ASSIGN);
     public static BlockBracesRule FUNCTION_BODY = new BlockBracesRule(FUNCTION_STATEMENT);
     
     public static final EventDeclarationRule EVENT_DECLARATION = new EventDeclarationRule();
