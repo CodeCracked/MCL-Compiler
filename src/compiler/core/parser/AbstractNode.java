@@ -48,7 +48,8 @@ public abstract class AbstractNode
     protected Result<Void> populateMetadata() { return Result.of(null); }
     final Result<Void> assignSymbolTables() { return forEachChild((parent, child) -> child.setSymbolTable(parent.getChildSymbolTable(child)), true); }
     protected Result<Void> createSymbols() { return Result.of(null); }
-    protected Result <Void> retrieveSymbols() { return Result.of(null); }
+    protected Result<Void> retrieveSymbols() { return Result.of(null); }
+    protected Result<Void> validate() { return Result.of(null); }
     //endregion
     //region Public Helpers
     public <T extends AbstractNode> Result<T> findParentNode(Class<T> clazz)
@@ -182,68 +183,94 @@ public abstract class AbstractNode
     }
     //endregion
     //region Iteration
-    public Result<Void> forEachChild(BiConsumer<AbstractNode, AbstractNode> consumer, boolean recursive)
+    public Result<Void> forEachChild(BiConsumer<AbstractNode, AbstractNode> consumer, boolean recursive) { return forEachChild(consumer, recursive, false); }
+    public Result<Void> forEachChildWithResult(BiFunction<AbstractNode, AbstractNode, Result<?>> consumer, boolean recursive) { return forEachChildWithResult(consumer, recursive, false); }
+    public Result<Void> forEachChild(BiConsumer<AbstractNode, AbstractNode> consumer, boolean recursive, boolean bottomUp)
     {
-        return forEachChildWithResult((parent, child) -> { consumer.accept(parent, child); return Result.of((Void)null); }, recursive);
+        return forEachChildWithResult((parent, child) -> { consumer.accept(parent, child); return Result.of((Void)null); }, recursive, bottomUp);
     }
-    public Result<Void> forEachChildWithResult(BiFunction<AbstractNode, AbstractNode, Result<?>> consumer, boolean recursive)
+    public Result<Void> forEachChildWithResult(BiFunction<AbstractNode, AbstractNode, Result<?>> consumer, boolean recursive, boolean bottomUp)
     {
         Result<Void> result = new Result<>();
         
         try
         {
-            // Accept Nodes
-            for (Field field : nodeFields)
+            if (recursive && bottomUp)
             {
-                AbstractNode node = (AbstractNode) field.get(this);
-                if (node != null)
+                result.register(forEachRecursion(consumer, true));
+                if (result.getFailure() != null) return result;
+            }
+            
+            result.register(forEach(consumer));
+            if (result.getFailure() != null) return result;
+            
+            if (recursive && !bottomUp)
+            {
+                result.register(forEachRecursion(consumer, false));
+                if (result.getFailure() != null) return result;
+            }
+        }
+        catch (Exception e) { return result.failure(e); }
+        
+        return result.success(null);
+    }
+    
+    private Result<Void> forEach(BiFunction<AbstractNode, AbstractNode, Result<?>> consumer) throws IllegalAccessException
+    {
+        Result<Void> result = new Result<>();
+        
+        // Accept Nodes
+        for (Field field : nodeFields)
+        {
+            AbstractNode node = (AbstractNode) field.get(this);
+            if (node != null)
+            {
+                result.register(consumer.apply(this, node));
+                if (result.getFailure() != null) return result;
+            }
+            else
+            {
+                OptionalChild annotation = field.getAnnotation(OptionalChild.class);
+                if (annotation == null) result.addError(new IllegalStateException(getClass().getSimpleName() + "'s non-optional child '" + field.getName() + "' is null!"));
+                else if (annotation.warn()) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
+            }
+        }
+        for (Field field : nodeCollectionFields)
+        {
+            Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
+            if (nodeCollection != null)
+            {
+                for (AbstractNode node : nodeCollection)
                 {
                     result.register(consumer.apply(this, node));
                     if (result.getFailure() != null) return result;
                 }
-                else
-                {
-                    OptionalChild annotation = field.getAnnotation(OptionalChild.class);
-                    if (annotation == null) result.addError(new IllegalStateException(getClass().getSimpleName() + "'s non-optional child '" + field.getName() + "' is null!"));
-                    else if (annotation.warn()) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
-                }
             }
-            for (Field field : nodeCollectionFields)
+            else
             {
-                Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
-                if (nodeCollection != null)
-                {
-                    for (AbstractNode node : nodeCollection)
-                    {
-                        result.register(consumer.apply(this, node));
-                        if (result.getFailure() != null) return result;
-                    }
-                }
-                else
-                {
-                    
-                    OptionalChild annotation = field.getAnnotation(OptionalChild.class);
-                    if (annotation == null) result.addError(new IllegalStateException(getClass().getSimpleName() + "'s non-optional child '" + field.getName() + "' is null!"));
-                    else if (annotation.warn()) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
-                }
-            }
             
-            // Recursion
-            if (recursive)
-            {
-                for (Field field : nodeFields)
-                {
-                    AbstractNode node = (AbstractNode) field.get(this);
-                    if (node != null) result.register(node.forEachChildWithResult(consumer, true));
-                }
-                for (Field field : nodeCollectionFields)
-                {
-                    Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
-                    if (nodeCollection != null) for (AbstractNode node : nodeCollection) result.register(node.forEachChildWithResult(consumer, true));
-                }
+                OptionalChild annotation = field.getAnnotation(OptionalChild.class);
+                if (annotation == null) result.addError(new IllegalStateException(getClass().getSimpleName() + "'s non-optional child '" + field.getName() + "' is null!"));
+                else if (annotation.warn()) result.addWarning(new IllegalStateException(getClass().getSimpleName() + "'s optional child '" + field.getName() + "' is null."));
             }
         }
-        catch (Exception e) { return result.failure(e); }
+        
+        return result.success(null);
+    }
+    private Result<Void> forEachRecursion(BiFunction<AbstractNode, AbstractNode, Result<?>> consumer, boolean bottomUp) throws IllegalAccessException
+    {
+        Result<Void> result = new Result<>();
+        
+        for (Field field : nodeFields)
+        {
+            AbstractNode node = (AbstractNode) field.get(this);
+            if (node != null) result.register(node.forEachChildWithResult(consumer, true, bottomUp));
+        }
+        for (Field field : nodeCollectionFields)
+        {
+            Collection<AbstractNode> nodeCollection = (Collection<AbstractNode>) field.get(this);
+            if (nodeCollection != null) for (AbstractNode node : nodeCollection) result.register(node.forEachChildWithResult(consumer, true, bottomUp));
+        }
         
         return result.success(null);
     }

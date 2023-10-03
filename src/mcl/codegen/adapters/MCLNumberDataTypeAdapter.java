@@ -75,7 +75,22 @@ public class MCLNumberDataTypeAdapter extends AbstractMCLDataTypeAdapter
     @Override
     public Result<Void> copyToRegister(int register, VariableSymbol variable, CodeGenContext context)
     {
-        return writeCommand(context, "# MCLNumberDataTypeAdapter.copyToRegister(int, VariableSymbol, CodeGenContext) is not implemented!");
+        Result<Void> result = new Result<>();
+    
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+    
+        // Get Namespace
+        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
+        if (result.getFailure() != null) return result;
+    
+        // Write Command
+        String nbtKey = namespace.identifier.value + "_" + variable.name();
+        file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:runtime CallStack[0].%2$s %3$f", register, nbtKey, toScale);
+        file.println();
+        
+        return result.success(null);
     }
     
     @Override

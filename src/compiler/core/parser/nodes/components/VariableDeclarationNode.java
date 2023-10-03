@@ -6,6 +6,7 @@ import compiler.core.parser.symbols.types.VariableSymbol;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.Result;
 import compiler.core.util.annotations.OptionalChild;
+import compiler.core.util.exceptions.CompilerException;
 import compiler.core.util.exceptions.DuplicateSymbolException;
 
 public class VariableDeclarationNode extends AbstractNode
@@ -32,12 +33,15 @@ public class VariableDeclarationNode extends AbstractNode
         Result<Void> result = new Result<>();
         
         // Create Symbol
-        if (initialValue != null) symbol = result.register(VariableSymbol.initialized(this, identifier.value, type.value, initialValue));
-        else symbol = VariableSymbol.uninitialized(this, identifier.value, type.value);
-        if (result.getFailure() != null) return result;
-        
-        // Register Symbol
+        symbol = new VariableSymbol(this, identifier.value, type.value, initialValue);
         if (!symbolTable().addSymbolWithUniqueName(this, symbol, true)) return result.failure(new DuplicateSymbolException(this, symbol));
         return result.success(null);
+    }
+    
+    @Override
+    protected Result<Void> validate()
+    {
+        if (initialValue != null && !type.value.isAssignableFrom(initialValue.getValueType())) return Result.fail(new CompilerException(start(), end(), "Cannot assign variable of type '" + type.value.name() + "' to a value of type '" + initialValue.getValueType().name() + "'!"));
+        else return Result.of(null);
     }
 }

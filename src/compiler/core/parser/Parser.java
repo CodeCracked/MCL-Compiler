@@ -109,6 +109,10 @@ public class Parser
         result.register(ast.forEachChildWithResult((parent, child) -> child.retrieveSymbols(), true));
         if (result.getFailure() != null) return result;
         
+        // Validate
+        result.register(ast.forEachChildWithResult((parent, child) -> child.validate(), true, true));
+        if (result.getFailure() != null) return result;
+        
         return result.success(null);
     }
     //endregion

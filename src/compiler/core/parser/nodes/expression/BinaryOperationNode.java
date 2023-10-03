@@ -1,6 +1,8 @@
 package compiler.core.parser.nodes.expression;
 
 import compiler.core.lexer.Token;
+import compiler.core.util.Result;
+import compiler.core.util.exceptions.CompilerException;
 import compiler.core.util.types.DataType;
 
 import java.util.Optional;
@@ -38,5 +40,16 @@ public class BinaryOperationNode extends AbstractValueNode
         DataType leftType = left.getValueType();
         DataType rightType = right.getValueType();
         return leftType.resultWith(rightType);
+    }
+    
+    @Override
+    protected Result<Void> validate()
+    {
+        DataType leftType = left.getValueType();
+        DataType rightType = right.getValueType();
+        DataType resultType = getValueType();
+        
+        if (leftType != DataType.UNKNOWN && rightType != DataType.UNKNOWN && resultType == DataType.UNKNOWN) return Result.fail(new CompilerException(start(), end(), "No implicit casts between '" + leftType.name() + "' and '" + rightType.name() + "'!"));
+        else return Result.of(null);
     }
 }
