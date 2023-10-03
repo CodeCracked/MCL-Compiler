@@ -4,6 +4,7 @@ import compiler.core.lexer.Token;
 import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
+import compiler.core.parser.grammar.expression.ExpressionRule;
 import compiler.core.parser.nodes.components.ArgumentListNode;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.util.Result;
@@ -14,13 +15,6 @@ import java.util.List;
 
 public class ArgumentListRule implements IGrammarRule<ArgumentListNode>
 {
-    private final IGrammarRule<AbstractValueNode> expressionRule;
-    
-    public ArgumentListRule(IGrammarRule<AbstractValueNode> expressionRule)
-    {
-        this.expressionRule = expressionRule;
-    }
-    
     @Override
     public Result<ArgumentListNode> build(Parser parser)
     {
@@ -56,7 +50,7 @@ public class ArgumentListRule implements IGrammarRule<ArgumentListNode>
         List<AbstractValueNode> arguments = new ArrayList<>();
         do
         {
-            arguments.add(result.register(expressionRule.build(parser)));
+            arguments.add(result.register(ExpressionRule.CURRENT_CONFIGURATION.build(parser)));
             if (result.getFailure() != null) return result;
         }
         while (parser.getCurrentToken().type() == GrammarTokenType.COMMA);

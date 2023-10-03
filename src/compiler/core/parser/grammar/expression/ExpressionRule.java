@@ -17,6 +17,8 @@ import java.util.Set;
 
 public final class ExpressionRule
 {
+    public static IGrammarRule<AbstractValueNode> CURRENT_CONFIGURATION;
+    
     //region Defaults
     public static IGrammarRule<AbstractValueNode> defaultRule()
     {
@@ -64,7 +66,6 @@ public final class ExpressionRule
         for (int i = 0; i < orderOfOperations.length - 1; i++) orderOfOperations[i].setComponentPrecedence(orderOfOperations[i + 1]);
         return orderOfOperations[0];
     }
-    
     public static Precedence arithmetic(boolean includeModulus)
     {
         return compose(
@@ -83,7 +84,7 @@ public final class ExpressionRule
     //endregion
     
     //region Builder Types
-    private enum OperationType { UNARY, BINARY }
+    private enum OperationType { BINARY }
     private static class Precedence
     {
         private final OperationType operationType;

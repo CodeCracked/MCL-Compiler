@@ -1,7 +1,7 @@
 package mcl.codegen.rules;
 
 import compiler.core.codegen.CodeGenContext;
-import compiler.core.codegen.DataTypeCodeAdapter;
+import compiler.core.codegen.DataTypeAdapter;
 import compiler.core.codegen.ICodeGenRule;
 import compiler.core.parser.nodes.components.VariableDeclarationNode;
 import compiler.core.parser.symbols.types.VariableSymbol;
@@ -23,7 +23,7 @@ public class VariableDeclarationGenerator implements ICodeGenRule<VariableDeclar
         
         // Get Adapter
         VariableSymbol variable = component.getSymbol();
-        DataTypeCodeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(variable.getType()));
+        DataTypeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(variable.getType()));
         if (result.getFailure() != null) return result;
         
         // Write Header

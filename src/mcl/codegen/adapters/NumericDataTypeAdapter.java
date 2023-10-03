@@ -3,6 +3,7 @@ package mcl.codegen.adapters;
 import compiler.core.codegen.CodeGenContext;
 import compiler.core.parser.symbols.types.VariableSymbol;
 import compiler.core.util.Result;
+import compiler.core.util.types.DataType;
 import mcl.lexer.MCLDataTypes;
 import mcl.parser.nodes.NamespaceNode;
 
@@ -10,19 +11,18 @@ import java.io.PrintWriter;
 
 import static java.lang.String.format;
 
-public class MCLNumberDataTypeAdapter extends AbstractMCLDataTypeAdapter
+public abstract class NumericDataTypeAdapter extends AbstractMCLDataTypeAdapter
 {
     private final float toScale;
     private final float fromScale;
     
     //region Creation
-    private MCLNumberDataTypeAdapter(float toScale, float fromScale)
+    protected NumericDataTypeAdapter(DataType type, int decimalPlaces)
     {
-        this.toScale = toScale;
-        this.fromScale = fromScale;
+        super(type);
+        this.toScale = (float)Math.pow(10, decimalPlaces);
+        this.fromScale = (float)Math.pow(10, -decimalPlaces);
     }
-    public static MCLNumberDataTypeAdapter integer() { return new MCLNumberDataTypeAdapter(1, 1); }
-    public static MCLNumberDataTypeAdapter decimal(int precision) { return new MCLNumberDataTypeAdapter((float)Math.pow(10, precision), (float)Math.pow(10, -precision)); }
     //endregion
     //region Implementation
     @Override

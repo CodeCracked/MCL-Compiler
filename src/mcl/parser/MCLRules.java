@@ -10,7 +10,6 @@ import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.grammar.components.ArgumentListRule;
 import compiler.core.parser.grammar.components.BlockBracesRule;
 import compiler.core.parser.grammar.expression.ExpressionRule;
-import compiler.core.parser.nodes.expression.AbstractValueNode;
 import mcl.lexer.MCLKeyword;
 import mcl.parser.grammar.MCLFileRule;
 import mcl.parser.grammar.NamespaceRule;
@@ -26,8 +25,7 @@ import mcl.parser.grammar.statements.VariableDeclarationStatementRule;
 public final class MCLRules
 {
     public static final QualifiedIdentifierRule QUALIFIED_IDENTIFIER = new QualifiedIdentifierRule();
-    public static final IGrammarRule<AbstractValueNode> EXPRESSION = ExpressionRule.defaultRule();
-    public static final ArgumentListRule ARGUMENT_LIST = new ArgumentListRule(EXPRESSION);
+    public static final ArgumentListRule ARGUMENT_LIST = new ArgumentListRule();
     public static final FunctionCallRule FUNCTION_CALL = new FunctionCallRule();
     
     public static TriggerEventStatementRule TRIGGER_STATEMENT = new TriggerEventStatementRule();
@@ -57,6 +55,8 @@ public final class MCLRules
     
     static
     {
+        ExpressionRule.CURRENT_CONFIGURATION = ExpressionRule.defaultRule();
+    
         DefaultRules.ATOM
                 .addRule(FUNCTION_CALL, TokenType.IDENTIFIER, GrammarTokenType.COLON, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
                 .addRule(FUNCTION_CALL, TokenType.IDENTIFIER, GrammarTokenType.LPAREN);

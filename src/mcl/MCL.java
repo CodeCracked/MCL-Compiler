@@ -13,6 +13,8 @@ import mcl.parser.MCLRules;
 
 public final class MCL
 {
+    public static final int FLOAT_DECIMAL_PLACES = 3;
+    
     private static final DataTypeList DATA_TYPES = DataTypeList.create(MCLDataTypes.class);
     private static final Lexer LEXER = new Lexer
     (

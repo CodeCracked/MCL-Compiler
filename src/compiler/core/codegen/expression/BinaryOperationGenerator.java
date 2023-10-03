@@ -1,7 +1,7 @@
 package compiler.core.codegen.expression;
 
 import compiler.core.codegen.CodeGenContext;
-import compiler.core.codegen.DataTypeCodeAdapter;
+import compiler.core.codegen.DataTypeAdapter;
 import compiler.core.lexer.types.MathTokenType;
 import compiler.core.parser.nodes.expression.BinaryOperationNode;
 import compiler.core.util.Ref;
@@ -21,7 +21,7 @@ public class BinaryOperationGenerator implements IExpressionGenRule<BinaryOperat
         Integer rightRegister = result.register(ExpressionGenerator.generate(startingRegister, component.right, context));
     
         // Get Type Adapter
-        DataTypeCodeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(component.getValueType()));
+        DataTypeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(component.getValueType()));
         if (result.getFailure() != null) return result;
     
         // Operation

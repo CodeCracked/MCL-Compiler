@@ -1,7 +1,7 @@
 package compiler.core.codegen.expression;
 
 import compiler.core.codegen.CodeGenContext;
-import compiler.core.codegen.DataTypeCodeAdapter;
+import compiler.core.codegen.DataTypeAdapter;
 import compiler.core.parser.nodes.expression.LiteralNode;
 import compiler.core.util.Ref;
 import compiler.core.util.Result;
@@ -20,7 +20,7 @@ public class LiteralGenerator implements IExpressionGenRule<LiteralNode>
         startingRegister.set(register + 1);
     
         // Get Type Adapter
-        DataTypeCodeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(component.getValueType()));
+        DataTypeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(component.getValueType()));
         if (result.getFailure() != null) return result;
         
         // Register Load

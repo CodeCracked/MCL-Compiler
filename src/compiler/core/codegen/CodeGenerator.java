@@ -22,7 +22,7 @@ public abstract class CodeGenerator
     
     private final List<NodeRuleEntry<?>> nodeRules = new ArrayList<>();
     private final List<SymbolRuleEntry<?>> symbolRules = new ArrayList<>();
-    private final Map<DataType, DataTypeCodeAdapter> dataTypeAdapters = new HashMap<>();
+    private final Map<DataType, DataTypeAdapter> dataTypeAdapters = new HashMap<>();
     
     //region Creation
     protected CodeGenerator()
@@ -58,7 +58,7 @@ public abstract class CodeGenerator
         return addSymbolRule(symbol -> symbol.getClass().equals(clazz), rule);
     }
     
-    public CodeGenerator addDataTypeAdapter(DataType type, DataTypeCodeAdapter adapter)
+    public CodeGenerator addDataTypeAdapter(DataType type, DataTypeAdapter adapter)
     {
         this.dataTypeAdapters.put(type, adapter);
         return this;
@@ -141,7 +141,7 @@ public abstract class CodeGenerator
         }
         catch (IOException e) { return Result.fail(e); }
     }
-    public Result<DataTypeCodeAdapter> getTypeAdapter(DataType dataType)
+    public Result<DataTypeAdapter> getTypeAdapter(DataType dataType)
     {
         if (this.dataTypeAdapters.containsKey(dataType)) return Result.of(this.dataTypeAdapters.get(dataType));
         else return Result.fail(new UnsupportedOperationException("Code generator does not contain an adapter for DataType " + dataType.name() + "!"));

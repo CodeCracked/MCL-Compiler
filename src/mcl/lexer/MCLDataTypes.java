@@ -8,4 +8,10 @@ public final class MCLDataTypes
     public static final DataType INTEGER = new DataType("int", LiteralTokenType.INTEGER);
     public static final DataType FLOAT = new DataType("float", LiteralTokenType.DECIMAL);
     public static final DataType STRING = new DataType("string", LiteralTokenType.STRING);
+    
+    static
+    {
+        INTEGER.addImplicitCast(FLOAT);
+        FLOAT.addExplicitCast(INTEGER);
+    }
 }
