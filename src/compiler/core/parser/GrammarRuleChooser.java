@@ -20,6 +20,13 @@ public class GrammarRuleChooser<T extends AbstractNode> implements IGrammarRule<
         this.fallbackError = fallbackError;
     }
     
+    public GrammarRuleChooser<T> deepCopy()
+    {
+        GrammarRuleChooser<T> copy = new GrammarRuleChooser<>(fallbackError);
+        for (Pair<Predicate<Parser>, IGrammarRule<? extends T>> rule : rules) copy.rules.add(new Pair<>(rule.first(), rule.second()));
+        return copy;
+    }
+    
     public GrammarRuleChooser<T> addRule(IGrammarRule<? extends T> rule) { return addRule(rule, parser -> true); }
     public GrammarRuleChooser<T> addRule(IGrammarRule<? extends T> rule, Class<?>... tokenLists)
     {

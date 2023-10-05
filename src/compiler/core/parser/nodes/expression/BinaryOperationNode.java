@@ -49,7 +49,10 @@ public class BinaryOperationNode extends AbstractValueNode
         DataType rightType = right.getValueType();
         DataType resultType = getValueType();
         
-        if (leftType != DataType.UNKNOWN && rightType != DataType.UNKNOWN && resultType == DataType.UNKNOWN) return Result.fail(new CompilerException(start(), end(), "No implicit casts between '" + leftType.name() + "' and '" + rightType.name() + "'!"));
+        if (leftType != DataType.UNKNOWN && rightType != DataType.UNKNOWN && resultType == DataType.UNKNOWN)
+        {
+            return Result.fail(new CompilerException(start(), end(), "No implicit casts between '" + leftType.name() + "' and '" + rightType.name() + "'!"));
+        }
         else return Result.of(null);
     }
 }

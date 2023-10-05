@@ -28,6 +28,6 @@ public class FunctionCallNode extends AbstractValueNode
     public DataType getValueType()
     {
         // TODO: Add Symbol Lookup
-        return null;
+        return DataType.UNKNOWN;
     }
 }

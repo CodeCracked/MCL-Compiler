@@ -6,12 +6,12 @@ import compiler.core.lexer.types.MathTokenType;
 import compiler.core.parser.DefaultRules;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
-import compiler.core.parser.grammar.expression.ExpressionRule;
 import compiler.core.parser.nodes.components.DataTypeNode;
 import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.parser.nodes.components.VariableDeclarationNode;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.util.Result;
+import mcl.parser.MCLRules;
 
 public class VariableDeclarationStatementRule implements IGrammarRule<VariableDeclarationNode>
 {
@@ -37,7 +37,7 @@ public class VariableDeclarationStatementRule implements IGrammarRule<VariableDe
             parser.advance();
     
             // Initial Value
-            initialValue = result.register(ExpressionRule.CURRENT_CONFIGURATION.build(parser));
+            initialValue = result.register(MCLRules.EXPRESSION.build(parser));
             if (result.getFailure() != null) return result;
         }
         

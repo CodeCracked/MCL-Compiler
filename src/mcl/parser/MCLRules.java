@@ -4,12 +4,11 @@ import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.lexer.types.MathTokenType;
 import compiler.core.lexer.types.TokenType;
 import compiler.core.parser.AbstractNode;
-import compiler.core.parser.DefaultRules;
 import compiler.core.parser.GrammarRuleChooser;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.grammar.components.ArgumentListRule;
 import compiler.core.parser.grammar.components.BlockBracesRule;
-import compiler.core.parser.grammar.expression.ExpressionRule;
+import compiler.core.parser.grammar.expressions.ExpressionRule;
 import mcl.lexer.MCLKeyword;
 import mcl.parser.grammar.MCLFileRule;
 import mcl.parser.grammar.NamespaceRule;
@@ -25,8 +24,9 @@ import mcl.parser.grammar.statements.VariableDeclarationStatementRule;
 public final class MCLRules
 {
     public static final QualifiedIdentifierRule QUALIFIED_IDENTIFIER = new QualifiedIdentifierRule();
-    public static final ArgumentListRule ARGUMENT_LIST = new ArgumentListRule();
     public static final FunctionCallRule FUNCTION_CALL = new FunctionCallRule();
+    public static final ExpressionRule EXPRESSION = ExpressionRule.defaultExpression().addOperation(FUNCTION_CALL);
+    public static final ArgumentListRule ARGUMENT_LIST = new ArgumentListRule(EXPRESSION);
     
     public static TriggerEventStatementRule TRIGGER_STATEMENT = new TriggerEventStatementRule();
     public static NativeStatementRule NATIVE_STATEMENT = new NativeStatementRule();
@@ -52,13 +52,4 @@ public final class MCLRules
     public static final NamespaceRule NAMESPACE = new NamespaceRule();
     
     public static final MCLFileRule SOURCE_FILE = new MCLFileRule();
-    
-    static
-    {
-        ExpressionRule.CURRENT_CONFIGURATION = ExpressionRule.defaultRule();
-    
-        DefaultRules.ATOM
-                .addRule(FUNCTION_CALL, TokenType.IDENTIFIER, GrammarTokenType.COLON, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
-                .addRule(FUNCTION_CALL, TokenType.IDENTIFIER, GrammarTokenType.LPAREN);
-    }
 }
