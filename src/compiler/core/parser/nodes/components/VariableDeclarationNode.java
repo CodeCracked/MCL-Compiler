@@ -41,7 +41,7 @@ public class VariableDeclarationNode extends AbstractNode
     @Override
     protected Result<Void> validate()
     {
-        if (initialValue != null && !type.value.isAssignableFrom(initialValue.getValueType())) return Result.fail(new CompilerException(start(), end(), "Cannot assign variable of type '" + type.value.name() + "' to a value of type '" + initialValue.getValueType().name() + "'!"));
+        if (initialValue != null && !type.value.canImplicitCast(initialValue.getValueType())) return Result.fail(new CompilerException(start(), end(), "Cannot assign variable of type '" + type.value.name() + "' to a value of type '" + initialValue.getValueType().name() + "'!"));
         else return Result.of(null);
     }
 }

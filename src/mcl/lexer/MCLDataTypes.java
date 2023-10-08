@@ -11,7 +11,7 @@ public final class MCLDataTypes
     
     static
     {
-        INTEGER.addImplicitCast(FLOAT);
-        FLOAT.addExplicitCast(INTEGER);
+        INTEGER.addImplicitCast(FLOAT, from -> (float)((int)from));
+        FLOAT.addExplicitCast(INTEGER, from -> (int)((float)from));
     }
 }

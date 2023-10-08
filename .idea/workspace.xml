@@ -5,26 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/IParserRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/ExpressionRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/IExpressionGrammarRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/rules/BinaryOperationRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/rules/CastOperationRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/rules/LiteralRule.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/rules/ParenthesisOperationRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/DefaultRules.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleChooser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/GrammarRuleChooser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/IGrammarRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/IGrammarRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/components/ArgumentListRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/components/ArgumentListRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expression/CastOperationRule.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expression/ExpressionRule.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expression/LiteralRule.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/BinaryOperationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/BinaryOperationNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/MCLRules.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/parser/grammar/components/FunctionCallRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/components/FunctionCallRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/parser/grammar/statements/VariableDeclarationStatementRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/parser/grammar/statements/VariableDeclarationStatementRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/rules/CastOperationRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/rules/CastOperationRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/AbstractValueNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/AbstractValueNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/LiteralNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/LiteralNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/types/DataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/types/DataType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

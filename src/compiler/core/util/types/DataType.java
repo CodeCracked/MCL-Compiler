@@ -1,15 +1,17 @@
 package compiler.core.util.types;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class DataType
 {
+    public interface CastFunction { Object cast(Object value); }
+    
     private final String name;
     private final String keyword;
     private final Enum<?> literalType;
     private final Set<DataType> explicitCasts;
     private final Set<DataType> implicitCasts;
+    private final Map<DataType, CastFunction> castFunctions;
     
     public static final DataType UNKNOWN = new DataType("UNKNOWN", null, null);
     
@@ -21,6 +23,9 @@ public class DataType
         this.literalType = literalType;
         this.explicitCasts = new HashSet<>();
         this.implicitCasts = new HashSet<>();
+        this.castFunctions = new HashMap<>();
+        
+        addImplicitCast(this, from -> from);
     }
     
     //region Getters
@@ -29,28 +34,24 @@ public class DataType
     public Enum<?> literalType() { return literalType; }
     //endregion
     //region Configuration
-    public DataType addExplicitCast(DataType castTo)
+    public DataType addExplicitCast(DataType castTo, CastFunction castFunction)
     {
         this.explicitCasts.add(castTo);
+        this.castFunctions.put(castTo, castFunction);
         return this;
     }
-    public DataType addImplicitCast(DataType castTo)
+    public DataType addImplicitCast(DataType castTo, CastFunction castFunction)
     {
         this.explicitCasts.add(castTo);
         this.implicitCasts.add(castTo);
+        this.castFunctions.put(castTo, castFunction);
         return this;
     }
     //endregion
     //region Properties
-    public boolean canImplicitCast(DataType castTo) { return castTo == this || implicitCasts.contains(castTo); }
-    public boolean canExplicitCast(DataType castTo) { return castTo == this || explicitCasts.contains(castTo); }
-    public boolean isAssignableFrom(DataType other) { return canImplicitCast(other); }
-    
-    public DataType resultWith(DataType other)
-    {
-        if (this.equals(other)) return this;
-        else return UNKNOWN;
-    }
+    public boolean canImplicitCast(DataType castTo) { return implicitCasts.contains(castTo); }
+    public boolean canExplicitCast(DataType castTo) { return explicitCasts.contains(castTo); }
+    public CastFunction getCastFunction(DataType castTo) { return castFunctions.get(castTo); }
     //endregion
     
     @Override

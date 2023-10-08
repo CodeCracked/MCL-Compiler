@@ -41,6 +41,10 @@ public class CastOperationRule implements IExpressionGrammarRule
         AbstractValueNode expression = result.register(expressionRule.buildArgument(parser, this));
         if (result.getFailure() != null) return result;
         
-        return result.success(new CastOperationNode(openingParenthesis.start(), expression.end(), castType, expression));
+        // Cast
+        AbstractValueNode casted = result.register(expression.cast(castType));
+        if (result.getFailure() != null) return result;
+        
+        return result.success(casted);
     }
 }

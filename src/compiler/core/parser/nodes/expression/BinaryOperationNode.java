@@ -39,7 +39,8 @@ public class BinaryOperationNode extends AbstractValueNode
     {
         DataType leftType = left.getValueType();
         DataType rightType = right.getValueType();
-        return leftType.resultWith(rightType);
+        if (leftType == rightType) return leftType;
+        else return DataType.UNKNOWN;
     }
     
     @Override
