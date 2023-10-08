@@ -6,11 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8932cba6-4653-409a-bc4c-62b49602c221" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/rules/CastOperationRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/grammar/expressions/rules/CastOperationRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/AbstractValueNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/AbstractValueNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/LiteralNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/LiteralNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/compiler/core/util/types/DataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/util/types/DataType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mcl/lexer/MCLDataTypes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/VariableDeclarationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/components/VariableDeclarationNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/BinaryOperationNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/BinaryOperationNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mcl/src/test.mcl" beforeDir="false" afterPath="$PROJECT_DIR$/test/mcl/src/test.mcl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,21 +106,9 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/compiler/core/parser/nodes/expression/BinaryOperationNode.java</url>
-          <line>53</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" type="java-exception" />
       </default-breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="maxPrecedence" language="JAVA" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

@@ -3,7 +3,7 @@ namespace mcl
     listener minecraft:load()
     {
         //float number = 2.0 + (float)(4 + 2) * 3.0;
-        float number = (float)4;
+        float number = 4;
         native ''tellraw @s {"nbt":"CallStack[0].mcl_number","storage":"mcl:runtime"}'';
     }
 }

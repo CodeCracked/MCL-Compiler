@@ -13,7 +13,7 @@ public class VariableDeclarationNode extends AbstractNode
 {
     public final DataTypeNode type;
     public final IdentifierNode identifier;
-    @OptionalChild(alwaysShow = false) public final AbstractValueNode initialValue;
+    @OptionalChild(alwaysShow = false) public AbstractValueNode initialValue;
     
     private VariableSymbol symbol;
     
@@ -41,7 +41,20 @@ public class VariableDeclarationNode extends AbstractNode
     @Override
     protected Result<Void> validate()
     {
-        if (initialValue != null && !type.value.canImplicitCast(initialValue.getValueType())) return Result.fail(new CompilerException(start(), end(), "Cannot assign variable of type '" + type.value.name() + "' to a value of type '" + initialValue.getValueType().name() + "'!"));
+        if (initialValue != null && initialValue.getValueType() != type.value)
+        {
+            Result<Void> result = new Result<>();
+            
+            if (initialValue.getValueType().canImplicitCast(type.value))
+            {
+                AbstractValueNode casted = result.register(initialValue.cast(type));
+                if (result.getFailure() != null) return result;
+    
+                initialValue = casted;
+                return result.success(null);
+            }
+            else return result.failure(new CompilerException(start(), end(), "Cannot assign variable of type '" + type.value.name() + "' to a value of type '" + initialValue.getValueType().name() + "'!"));
+        }
         else return Result.of(null);
     }
 }

@@ -9,7 +9,6 @@ import compiler.core.parser.grammar.expressions.ExpressionRule;
 import compiler.core.parser.grammar.expressions.IExpressionGrammarRule;
 import compiler.core.parser.nodes.components.DataTypeNode;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
-import compiler.core.parser.nodes.expression.CastOperationNode;
 import compiler.core.util.Result;
 
 public class CastOperationRule implements IExpressionGrammarRule

@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public class BinaryOperationNode extends AbstractValueNode
 {
-    public final AbstractValueNode left;
+    public AbstractValueNode left;
     public final Token operation;
-    public final AbstractValueNode right;
+    public AbstractValueNode right;
     
     public BinaryOperationNode(AbstractValueNode left, Token operation, AbstractValueNode right)
     {
@@ -46,14 +46,33 @@ public class BinaryOperationNode extends AbstractValueNode
     @Override
     protected Result<Void> validate()
     {
+        Result<Void> result = new Result<>();
         DataType leftType = left.getValueType();
         DataType rightType = right.getValueType();
-        DataType resultType = getValueType();
         
-        if (leftType != DataType.UNKNOWN && rightType != DataType.UNKNOWN && resultType == DataType.UNKNOWN)
+        if (leftType == DataType.UNKNOWN) return result.failure(new CompilerException(left.start(), left.end(), "Left argument has an unknown data type!"));
+        if (rightType == DataType.UNKNOWN) return result.failure(new CompilerException(right.start(), right.end(), "Right argument has an unknown data type!"));
+        
+        if (leftType != rightType)
         {
-            return Result.fail(new CompilerException(start(), end(), "No implicit casts between '" + leftType.name() + "' and '" + rightType.name() + "'!"));
+            if (rightType.canImplicitCast(leftType))
+            {
+                AbstractValueNode casted = result.register(right.cast(right.start(), right.start(), right.start(), right.end(), leftType));
+                if (result.getFailure() != null) return result;
+                
+                right = casted;
+                return result.success(null);
+            }
+            else if (leftType.canImplicitCast(rightType))
+            {
+                AbstractValueNode casted = result.register(left.cast(left.start(), left.start(), left.start(), left.end(), rightType));
+                if (result.getFailure() != null) return result;
+                
+                left = casted;
+                return result.success(null);
+            }
+            else return result.failure(new CompilerException(start(), end(), "No implicit casts between '" + leftType.name() + "' and '" + rightType.name() + "'!"));
         }
-        else return Result.of(null);
+        else return result.success(null);
     }
 }
