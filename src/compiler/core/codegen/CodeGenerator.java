@@ -23,14 +23,14 @@ public abstract class CodeGenerator
     private final List<NodeRuleEntry<?>> nodeRules = new ArrayList<>();
     private final List<SymbolRuleEntry<?>> symbolRules = new ArrayList<>();
     private final Map<DataType, DataTypeAdapter> dataTypeAdapters = new HashMap<>();
+    private final ExpressionGenerator expressionGenerator = new ExpressionGenerator();
     
     //region Creation
     protected CodeGenerator()
     {
-        addNodeRule(node -> AbstractValueNode.class.isAssignableFrom(node.getClass()), ExpressionGenerator::generate);
+        addNodeRule(node -> AbstractValueNode.class.isAssignableFrom(node.getClass()), expressionGenerator::generate);
         addDefaultRules();
     }
-    
     protected abstract void addDefaultRules();
     
     public static CodeGenerator empty() { return new CodeGenerator() { @Override protected void addDefaultRules() {} }; }
@@ -75,7 +75,7 @@ public abstract class CodeGenerator
         }
     }
     //endregion
-    
+    //region Generation Functions
     public Result<Void> generate(RootNode ast, Path destination)
     {
         Result<Void> result = new Result<>();
@@ -141,9 +141,13 @@ public abstract class CodeGenerator
         }
         catch (IOException e) { return Result.fail(e); }
     }
+    //endregion
+    //region Getters
+    public ExpressionGenerator getExpressionGenerator() { return expressionGenerator; }
     public Result<DataTypeAdapter> getTypeAdapter(DataType dataType)
     {
         if (this.dataTypeAdapters.containsKey(dataType)) return Result.of(this.dataTypeAdapters.get(dataType));
         else return Result.fail(new UnsupportedOperationException("Code generator does not contain an adapter for DataType " + dataType.name() + "!"));
     }
+    //endregion
 }

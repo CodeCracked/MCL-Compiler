@@ -142,6 +142,11 @@ public class SymbolTable
     {
         return childTables.computeIfAbsent(name, key -> new SymbolTable(this.name + "/" + name, this, root));
     }
+    public Result<SymbolTable> getChildTable(String name)
+    {
+        if (childTables.containsKey(name)) return Result.of(childTables.get(name));
+        else return Result.fail(new IllegalArgumentException("Symbol table '" + this.name + "' does not contain child table '" + name + "'!"));
+    }
     public Optional<SymbolTable> tryGetChildTable(String name)
     {
         return Optional.ofNullable(childTables.get(name));

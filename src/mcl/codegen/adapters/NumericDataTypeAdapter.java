@@ -4,6 +4,7 @@ import compiler.core.codegen.CodeGenContext;
 import compiler.core.parser.symbols.types.VariableSymbol;
 import compiler.core.util.Result;
 import compiler.core.util.types.DataType;
+import mcl.MCL;
 import mcl.lexer.MCLDataTypes;
 import mcl.parser.nodes.NamespaceNode;
 
@@ -15,6 +16,7 @@ public abstract class NumericDataTypeAdapter extends AbstractMCLDataTypeAdapter
 {
     private final float toScale;
     private final float fromScale;
+    private final int decimalPlaces;
     
     //region Creation
     protected NumericDataTypeAdapter(DataType type, int decimalPlaces)
@@ -22,6 +24,7 @@ public abstract class NumericDataTypeAdapter extends AbstractMCLDataTypeAdapter
         super(type);
         this.toScale = (float)Math.pow(10, decimalPlaces);
         this.fromScale = (float)Math.pow(10, -decimalPlaces);
+        this.decimalPlaces = decimalPlaces;
     }
     //endregion
     //region Implementation
@@ -67,7 +70,8 @@ public abstract class NumericDataTypeAdapter extends AbstractMCLDataTypeAdapter
         if (variable.getType() == MCLDataTypes.INTEGER) file.print("int");
         else if (variable.getType() == MCLDataTypes.FLOAT) file.print("float");
         else return Result.fail(new IllegalStateException("MCLNumberDataTypeAdapter only supports INTEGER or FLOAT DataTypes, found " + variable.getType().name() + "!"));
-        file.println(" " + fromScale + " run scoreboard players get r" + register + " mcl.registers");
+        file.printf(" %." + decimalPlaces + "f run scoreboard players get r" + register + " mcl.registers", fromScale);
+        file.println();
         
         return result.success(null);
     }
@@ -87,7 +91,8 @@ public abstract class NumericDataTypeAdapter extends AbstractMCLDataTypeAdapter
     
         // Write Command
         String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:runtime CallStack[0].%2$s %3$f", register, nbtKey, toScale);
+        file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:runtime CallStack[0].%2$s ", register, nbtKey);
+        file.printf("%." + decimalPlaces + "f", toScale);
         file.println();
         
         return result.success(null);
@@ -119,7 +124,26 @@ public abstract class NumericDataTypeAdapter extends AbstractMCLDataTypeAdapter
     @Override
     public Result<Void> multiply(int accumulatorRegister, int argumentRegister, CodeGenContext context)
     {
-        return writeOperation(context, "*=", accumulatorRegister, argumentRegister);
+        Result<Void> result = new Result<>();
+        
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+        
+        // Write Operation
+        result.register(writeOperation(context, "*=", accumulatorRegister, argumentRegister));
+        if (result.getFailure() != null) return result;
+    
+        // Write Conversion Factor
+        file.printf("scoreboard players set rTemp mcl.registers 1");
+        for (int i = 0; i < MCL.FLOAT_DECIMAL_PLACES; i++) file.print('0');
+        file.println();
+        
+        // Divide by conversion factor to prevent scale increase
+        file.printf("scoreboard players operation r%1$d mcl.registers /= rTemp mcl.registers", accumulatorRegister);
+        file.println();
+        
+        return result.success(null);
     }
     
     @Override

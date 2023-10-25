@@ -25,7 +25,7 @@ public class RootGenerator implements ICodeGenRule<RootNode>
         // Generate sources
         for (AbstractNode source : component.sources)
         {
-            result.register(context.getCodeGenerator().generate(source, context));
+            result.register(context.getGenerator().generate(source, context));
             if (result.getFailure() != null) return result;
         }
         

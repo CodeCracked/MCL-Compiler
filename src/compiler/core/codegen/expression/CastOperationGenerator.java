@@ -16,11 +16,11 @@ public class CastOperationGenerator implements IExpressionGenRule<CastOperationN
         Result<Integer> result = new Result<>();
         
         // Generate Argument
-        Integer argumentRegister = result.register(ExpressionGenerator.generate(startingRegister, component.expression, context));
+        Integer argumentRegister = result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, component.expression, context));
         if (result.getFailure() != null) return result;
         
         // Get Type Adapter
-        DataTypeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(component.expression.getValueType()));
+        DataTypeAdapter adapter = result.register(context.getGenerator().getTypeAdapter(component.expression.getValueType()));
         if (result.getFailure() != null) return result;
         
         // Write Cast

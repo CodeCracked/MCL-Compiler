@@ -10,6 +10,7 @@ public class QualifiedIdentifierNode extends AbstractNode
 {
     @OptionalChild public IdentifierNode namespace;
     public final IdentifierNode identifier;
+    public final boolean qualified;
     
     public QualifiedIdentifierNode(IdentifierNode identifier) { this(null, identifier); }
     public QualifiedIdentifierNode(IdentifierNode namespace, IdentifierNode identifier)
@@ -17,6 +18,7 @@ public class QualifiedIdentifierNode extends AbstractNode
         super(namespace != null ? namespace.start() : identifier.start(), identifier.end());
         this.namespace = namespace;
         this.identifier = identifier;
+        this.qualified = namespace != null;
     }
     
     public final String value() { return namespace.value + ":" + identifier.value; }

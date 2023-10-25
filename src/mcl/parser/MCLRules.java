@@ -14,6 +14,7 @@ import mcl.parser.grammar.MCLFileRule;
 import mcl.parser.grammar.NamespaceRule;
 import mcl.parser.grammar.components.FunctionCallRule;
 import mcl.parser.grammar.components.QualifiedIdentifierRule;
+import mcl.parser.grammar.components.VariableAccessRule;
 import mcl.parser.grammar.declarations.EventDeclarationRule;
 import mcl.parser.grammar.declarations.ListenerDeclarationRule;
 import mcl.parser.grammar.statements.FunctionCallStatementRule;
@@ -24,8 +25,9 @@ import mcl.parser.grammar.statements.VariableDeclarationStatementRule;
 public final class MCLRules
 {
     public static final QualifiedIdentifierRule QUALIFIED_IDENTIFIER = new QualifiedIdentifierRule();
-    public static final FunctionCallRule FUNCTION_CALL = new FunctionCallRule();
-    public static final ExpressionRule EXPRESSION = ExpressionRule.defaultExpression().addOperation(FUNCTION_CALL);
+    public static final ExpressionRule EXPRESSION = ExpressionRule.defaultExpression()
+            .addOperation(new FunctionCallRule())
+            .addOperation(new VariableAccessRule());
     public static final ArgumentListRule ARGUMENT_LIST = new ArgumentListRule(EXPRESSION);
     
     public static TriggerEventStatementRule TRIGGER_STATEMENT = new TriggerEventStatementRule();

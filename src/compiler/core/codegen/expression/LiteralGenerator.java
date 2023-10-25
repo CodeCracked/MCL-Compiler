@@ -20,7 +20,7 @@ public class LiteralGenerator implements IExpressionGenRule<LiteralNode>
         startingRegister.set(register + 1);
     
         // Get Type Adapter
-        DataTypeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(component.getValueType()));
+        DataTypeAdapter adapter = result.register(context.getGenerator().getTypeAdapter(component.getValueType()));
         if (result.getFailure() != null) return result;
         
         // Register Load

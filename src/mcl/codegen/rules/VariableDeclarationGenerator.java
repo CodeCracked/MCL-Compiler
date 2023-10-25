@@ -23,7 +23,7 @@ public class VariableDeclarationGenerator implements ICodeGenRule<VariableDeclar
         
         // Get Adapter
         VariableSymbol variable = component.getSymbol();
-        DataTypeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(variable.getType()));
+        DataTypeAdapter adapter = result.register(context.getGenerator().getTypeAdapter(variable.getType()));
         if (result.getFailure() != null) return result;
         
         // Write Header

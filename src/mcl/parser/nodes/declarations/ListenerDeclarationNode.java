@@ -59,7 +59,7 @@ public class ListenerDeclarationNode extends AbstractNode
         NamespaceNode namespace = result.register(findParentNode(NamespaceNode.class));
         if (result.getFailure() != null) return result;
         this.functionName = event.namespace.value + "_" + event.identifier.value + "_" + Salt.newSalt(4);
-        this.eventSymbol.symbol().listenerFunctions.add(namespace.identifier.value + ":" + functionName);
+        this.eventSymbol.symbol().listenerFunctions.add(namespace.identifier.value + ":listeners/" + functionName);
         
         return result.success(null);
     }

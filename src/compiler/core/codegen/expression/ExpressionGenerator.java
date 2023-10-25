@@ -16,23 +16,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public final class ExpressionGenerator
+public class ExpressionGenerator
 {
-    private static int lastWrittenRegister = 0;
-    private static final List<Pair<Predicate<AbstractValueNode>, IExpressionGenRule<AbstractValueNode>>> rules = new ArrayList<>();
+    private final List<Pair<Predicate<AbstractValueNode>, IExpressionGenRule<AbstractValueNode>>> rules = new ArrayList<>();
     
-    static
+    public ExpressionGenerator()
     {
         addRule(LiteralNode.class, new LiteralGenerator());
         addRule(BinaryOperationNode.class, new BinaryOperationGenerator());
         addRule(CastOperationNode.class, new CastOperationGenerator());
     }
     
-    public static Result<Void> generate(AbstractNode expression, CodeGenContext context) throws IOException
+    public Result<Void> generate(AbstractNode expression, CodeGenContext context) throws IOException
     {
         // Prepare Generator
         Result<Void> result = new Result<>();
-        lastWrittenRegister = 0;
         
         // Get Open File
         PrintWriter file = result.register(context.getOpenFile());
@@ -46,7 +44,7 @@ public final class ExpressionGenerator
         if (result.getFailure() != null) return result;
         return result.success(null);
     }
-    public static Result<Integer> generate(Ref<Integer> startingRegister, AbstractValueNode component, CodeGenContext context) throws IOException
+    public Result<Integer> generate(Ref<Integer> startingRegister, AbstractValueNode component, CodeGenContext context) throws IOException
     {
         for (Pair<Predicate<AbstractValueNode>, IExpressionGenRule<AbstractValueNode>> entry : rules)
         {
@@ -58,7 +56,6 @@ public final class ExpressionGenerator
         return Result.fail(new UnsupportedOperationException("Expression generator does not contain a predicate matching node: " + component));
     }
     
-    public static <T extends AbstractValueNode> void addRule(Class<T> clazz, IExpressionGenRule<T> rule) { addRule(test -> clazz.isAssignableFrom(test.getClass()), rule); }
-    public static <T extends AbstractValueNode> void addRule(Predicate<AbstractValueNode> predicate, IExpressionGenRule<T> rule) { rules.add(new Pair<>(predicate, (startingRegister, component, context) -> rule.generate(startingRegister, (T)component, context))); }
-    public static int getLastWrittenRegister() { return lastWrittenRegister; }
+    public <T extends AbstractValueNode> void addRule(Class<T> clazz, IExpressionGenRule<T> rule) { addRule(test -> clazz.isAssignableFrom(test.getClass()), rule); }
+    public <T extends AbstractValueNode> void addRule(Predicate<AbstractValueNode> predicate, IExpressionGenRule<T> rule) { rules.add(new Pair<>(predicate, (startingRegister, component, context) -> rule.generate(startingRegister, (T)component, context))); }
 }

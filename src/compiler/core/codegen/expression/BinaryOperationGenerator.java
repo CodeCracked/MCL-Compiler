@@ -17,11 +17,11 @@ public class BinaryOperationGenerator implements IExpressionGenRule<BinaryOperat
         Result<Integer> result = new Result<>();
     
         // Arguments
-        Integer leftRegister = result.register(ExpressionGenerator.generate(startingRegister, component.left, context));
-        Integer rightRegister = result.register(ExpressionGenerator.generate(startingRegister, component.right, context));
+        Integer leftRegister = result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, component.left, context));
+        Integer rightRegister = result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, component.right, context));
     
         // Get Type Adapter
-        DataTypeAdapter adapter = result.register(context.getCodeGenerator().getTypeAdapter(component.getValueType()));
+        DataTypeAdapter adapter = result.register(context.getGenerator().getTypeAdapter(component.getValueType()));
         if (result.getFailure() != null) return result;
     
         // Operation

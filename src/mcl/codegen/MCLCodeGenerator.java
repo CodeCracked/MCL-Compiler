@@ -11,6 +11,7 @@ import mcl.codegen.rules.symbols.EventGenerator;
 import mcl.lexer.MCLDataTypes;
 import mcl.parser.nodes.MCLSourceNode;
 import mcl.parser.nodes.NamespaceNode;
+import mcl.parser.nodes.components.VariableAccessNode;
 import mcl.parser.nodes.declarations.ListenerDeclarationNode;
 import mcl.parser.nodes.statements.NativeStatementNode;
 import mcl.parser.symbols.EventSymbol;
@@ -34,5 +35,7 @@ public class MCLCodeGenerator extends CodeGenerator
         
         addDataTypeAdapter(MCLDataTypes.INTEGER, new IntegerDataTypeAdapter());
         addDataTypeAdapter(MCLDataTypes.FLOAT, new FloatDataTypeAdapter(FLOAT_DECIMAL_PLACES));
+        
+        getExpressionGenerator().addRule(VariableAccessNode.class, new VariableAccessGenerator());
     }
 }

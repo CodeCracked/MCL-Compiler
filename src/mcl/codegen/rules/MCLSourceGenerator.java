@@ -18,7 +18,7 @@ public class MCLSourceGenerator implements ICodeGenRule<MCLSourceNode>
         // Generate Namespaces
         for (NamespaceNode namespace : component.namespaces)
         {
-            result.register(context.getCodeGenerator().generate(namespace, context));
+            result.register(context.getGenerator().generate(namespace, context));
             if (result.getFailure() != null) return result;
         }
         

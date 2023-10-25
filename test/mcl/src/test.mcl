@@ -2,9 +2,9 @@ namespace mcl
 {
     listener minecraft:load()
     {
-        //float number = 2.0 + (float)(4 + 2) * 3.0;
-        float number = 4;
-        native ''tellraw @s {"nbt":"CallStack[0].mcl_number","storage":"mcl:runtime"}'';
+        float a = 4.5;
+        float b = 2 * a;
+        native ''tellraw @a {"nbt":"CallStack[0].mcl_b","storage":"mcl:runtime"}'';
     }
 }
 
