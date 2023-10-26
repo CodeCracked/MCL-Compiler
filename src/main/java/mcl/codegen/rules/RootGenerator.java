@@ -5,6 +5,7 @@ import compiler.core.codegen.ICodeGenRule;
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.RootNode;
 import compiler.core.util.Result;
+import mcl.codegen.MCLStandardLibrary;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +16,10 @@ public class RootGenerator implements ICodeGenRule<RootNode>
     public Result<Void> generate(RootNode component, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
+        
+        // Copy standard library
+        result.register(MCLStandardLibrary.installNatives(context.getCurrentDirectory()));
+        if (result.getFailure() != null) return result;
         
         // 'pack.mcmeta' file
         context.writeFile("pack.mcmeta", writer -> writeMeta(writer, 15), false);

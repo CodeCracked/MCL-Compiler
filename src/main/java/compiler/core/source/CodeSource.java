@@ -1,9 +1,14 @@
 package compiler.core.source;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public abstract class CodeSource
 {
@@ -140,7 +145,7 @@ public abstract class CodeSource
         @Override
         public java.lang.String toString()
         {
-            return "CodeSource.String[" + id + "]";
+            return "CodeSource.Literal[" + id + "]";
         }
     }
     
@@ -159,6 +164,30 @@ public abstract class CodeSource
         public String toString()
         {
             return "File '" + path + "'";
+        }
+    }
+    
+    public static class Resource extends Literal
+    {
+        private final String resourceName;
+        
+        public Resource(Class<?> resourceLoader, String resourcePath) throws IOException
+        {
+            super(collectResource(resourceLoader, resourcePath));
+            this.resourceName = resourcePath.substring(1);
+        }
+        private static String collectResource(Class<?> resourceLoader, String resourcePath) throws IOException
+        {
+            try (BufferedReader resource = new BufferedReader(new InputStreamReader(Objects.requireNonNull(resourceLoader.getResourceAsStream(resourcePath)))))
+            {
+                return resource.lines().collect(Collectors.joining(System.lineSeparator()));
+            }
+        }
+    
+        @Override
+        public String toString()
+        {
+            return "Resource '" + resourceName + "'";
         }
     }
     //endregion

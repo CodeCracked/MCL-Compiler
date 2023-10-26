@@ -28,10 +28,16 @@ public class Compiler
         this.debug = debug;
     }
     
+    public Result<SourceCollection> finalizeSourceCollection(SourceCollection source) { return Result.of(source); }
+    
     public Result<Void> compile(Path source, Path destination) throws IOException { return compile(SourceCollection.fromDirectory(source), destination); }
     public Result<Void> compile(SourceCollection source, Path destination)
     {
         Result<Void> result = new Result<>();
+        
+        // Finalize Source Collection
+        source = result.register(finalizeSourceCollection(source));
+        if (result.getFailure() != null) return result;
         
         // Lexical Analysis
         Result<List<Token>[]> tokens = result.registerIssues(lexer.tokenize(source));
