@@ -1,42 +1,192 @@
 package mcl.codegen.adapters;
 
 import compiler.core.codegen.CodeGenContext;
+import compiler.core.parser.symbols.types.VariableSymbol;
 import compiler.core.util.Result;
 import compiler.core.util.types.DataType;
-import mcl.MCL;
 import mcl.lexer.MCLDataTypes;
+import mcl.parser.nodes.NamespaceNode;
 
 import java.io.PrintWriter;
 
-public class FloatDataTypeAdapter extends NumericDataTypeAdapter
+public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
 {
-    public FloatDataTypeAdapter(int decimalPlaces)
+    public FloatDataTypeAdapter()
     {
-        super(MCLDataTypes.FLOAT, decimalPlaces);
+        super(MCLDataTypes.FLOAT);
     }
     
     @Override
-    public Result<Void> cast(int register, DataType castTo, CodeGenContext context)
+    public Result<Integer> cast(int register, DataType castTo, CodeGenContext context)
+    {
+        Result<Integer> result = new Result<>();
+        
+        //TODO: Implement float -> int casting
+        return result.failure(new UnsupportedOperationException("Cannot cast " + getType().name() + " to " + castTo.name() + "!"));
+    }
+    
+    @Override
+    public Result<Void> resetVariable(VariableSymbol variable, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
     
-        if (castTo == MCLDataTypes.INTEGER)
-        {
-            // Get Open File
-            PrintWriter file = result.register(context.getOpenFile());
-            if (result.getFailure() != null) return result;
-        
-            // Write Conversion Factor
-            file.printf("scoreboard players set rTemp mcl.registers 1");
-            for (int i = 0; i < MCL.FLOAT_DECIMAL_PLACES; i++) file.print('0');
-            file.println();
-        
-            // Write Cast
-            file.printf("scoreboard players operation r%1$d mcl.registers /= rTemp mcl.registers", register);
-            file.println();
-        
-            return result.success(null);
-        }
-        else return result.failure(new UnsupportedOperationException("Cannot cast " + getType().name() + " to " + castTo.name() + "!"));
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+    
+        // Get Namespace
+        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
+        if (result.getFailure() != null) return result;
+    
+        // Write Command
+        String nbtKey = namespace.identifier.value + "_" + variable.name();
+        file.println("data modify storage mcl:runtime CallStack[0]." + nbtKey + " set value " + Float.floatToRawIntBits(0.0f));
+        return result.success(null);
     }
+    
+    @Override
+    public Result<Void> copyFromRegister(int register, VariableSymbol variable, CodeGenContext context)
+    {
+        Result<Void> result = new Result<>();
+        
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+        
+        // Get Namespace
+        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
+        if (result.getFailure() != null) return result;
+    
+        // Copy Float Registers to Math IO
+        file.printf("scoreboard players operation P0 mcl_core.math.io = r%1$d.s mcl.registers\n", register);
+        file.printf("scoreboard players operation P1 mcl_core.math.io = r%1$d.e mcl.registers\n", register);
+        file.printf("scoreboard players operation P2 mcl_core.math.io = r%1$d.m mcl.registers\n", register);
+        
+        // Recompose
+        file.println("function mcl_core:math/float/32/recompose/main");
+        
+        // Store 32-Bit Float
+        String nbtKey = namespace.identifier.value + "_" + variable.name();
+        file.println("execute store result storage mcl:runtime CallStack[0]." + nbtKey + " int 1 run scoreboard players get R0 mcl_core.math.io");
+        
+        return result.success(null);
+    }
+    
+    @Override
+    public Result<Void> copyToRegister(int register, VariableSymbol variable, CodeGenContext context)
+    {
+        Result<Void> result = new Result<>();
+    
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+    
+        // Get Namespace
+        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
+        if (result.getFailure() != null) return result;
+    
+        // Copy Variable to Math IO
+        String nbtKey = namespace.identifier.value + "_" + variable.name();
+        file.printf("execute store result score P0 mcl_core.math.io run data get storage mcl:runtime CallStack[0].%1$s 1\n", nbtKey);
+        
+        // Decompose
+        file.println("function mcl_core:math/float/32/decompose/main");
+        
+        // Copy Float Components to Registers
+        file.printf("scoreboard players operation r%1$d.s mcl.registers = R0 mcl_core.math.io\n", register);
+        file.printf("scoreboard players operation r%1$d.e mcl.registers = R1 mcl_core.math.io\n", register);
+        file.printf("scoreboard players operation r%1$d.m mcl.registers = R2 mcl_core.math.io\n", register);
+    
+        return result.success(null);
+    }
+    
+    @Override
+    public Result<Void> copyToRegister(int register, Object literal, CodeGenContext context)
+    {
+        Result<Void> result = new Result<>();
+    
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+        
+        // Calculate Float Components
+        int floatBits = Float.floatToRawIntBits((Float)literal);
+        int mantissa = floatBits & 0x007fffff;
+        int exponent = (floatBits & 0x7f800000) >> 23;
+        int sign = (floatBits & 0x80000000) >> 31;
+        
+        // Set Float Registers
+        file.printf("scoreboard players set r%1$d.s mcl.registers %2$d\n", register, sign);
+        file.printf("scoreboard players set r%1$d.e mcl.registers %2$d\n", register, exponent);
+        file.printf("scoreboard players set r%1$d.m mcl.registers %2$d\n", register, mantissa);
+        
+        return result.success(null);
+    }
+    
+    @Override
+    public Result<Void> add(int accumulatorRegister, int argumentRegister, CodeGenContext context)
+    {
+        return writeOperation(accumulatorRegister, argumentRegister, "add", context);
+    }
+    
+    @Override
+    public Result<Void> subtract(int accumulatorRegister, int argumentRegister, CodeGenContext context)
+    {
+        return writeOperation(accumulatorRegister, argumentRegister, "subtract", context);
+    }
+    
+    @Override
+    public Result<Void> multiply(int accumulatorRegister, int argumentRegister, CodeGenContext context)
+    {
+        return writeOperation(accumulatorRegister, argumentRegister, "multiply", context);
+    }
+    
+    @Override
+    public Result<Void> divide(int accumulatorRegister, int argumentRegister, CodeGenContext context)
+    {
+        return writeOperation(accumulatorRegister, argumentRegister, "divide", context);
+    }
+    
+    @Override
+    public Result<Void> modulo(int accumulatorRegister, int argumentRegister, CodeGenContext context)
+    {
+        return Result.fail(new UnsupportedOperationException("FloatDataTypeAdapter.modulo not supported!"));
+    }
+    
+    @Override
+    public Result<Void> compare(int argument1Register, int argument2Register, int destinationRegister, CodeGenContext context)
+    {
+        return Result.fail(new UnsupportedOperationException("FloatDataTypeAdapter.compare not supported!"));
+    }
+    
+    //region Private Helpers
+    private Result<Void> writeOperation(int accumulatorRegister, int argumentRegister, String operationFunction, CodeGenContext context)
+    {
+        Result<Void> result = new Result<>();
+        
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+        
+        // Copy Accumulator to Math IO
+        file.printf("scoreboard players operation P0 mcl_core.math.io = r%1$d.s mcl.registers\n", accumulatorRegister);
+        file.printf("scoreboard players operation P1 mcl_core.math.io = r%1$d.e mcl.registers\n", accumulatorRegister);
+        file.printf("scoreboard players operation P2 mcl_core.math.io = r%1$d.m mcl.registers\n", accumulatorRegister);
+        
+        // Copy Argument to Math IO
+        file.printf("scoreboard players operation P3 mcl_core.math.io = r%1$d.s mcl.registers\n", argumentRegister);
+        file.printf("scoreboard players operation P4 mcl_core.math.io = r%1$d.e mcl.registers\n", argumentRegister);
+        file.printf("scoreboard players operation P5 mcl_core.math.io = r%1$d.m mcl.registers\n", argumentRegister);
+        
+        // Operation
+        file.println("function mcl_core:math/float/32/" + operationFunction + "/main");
+        
+        // Copy Math IO to Accumulator
+        file.printf("scoreboard players operation r%1$d.s mcl.registers = R0 mcl_core.math.io\n", accumulatorRegister);
+        file.printf("scoreboard players operation r%1$d.e mcl.registers = R1 mcl_core.math.io\n", accumulatorRegister);
+        file.printf("scoreboard players operation r%1$d.m mcl.registers = R2 mcl_core.math.io\n", accumulatorRegister);
+        
+        return result.success(null);
+    }
+    //endregion
 }

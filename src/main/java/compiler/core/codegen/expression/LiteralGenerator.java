@@ -15,8 +15,8 @@ public class LiteralGenerator implements IExpressionGenRule<LiteralNode>
     {
         Result<Integer> result = new Result<>();
         
-        // Get and Increment Register
-        Integer register = startingRegister.get();
+        // Get Register
+        int register = startingRegister.get();
         startingRegister.set(register + 1);
     
         // Get Type Adapter

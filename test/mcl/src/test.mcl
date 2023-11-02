@@ -4,7 +4,8 @@ namespace mcl
     {
         float a = 4.5;
         float b = 2 * a;
-        native ''tellraw @a {"nbt":"CallStack[0].mcl_b","storage":"mcl:runtime"}'';
+        //int i = (int)b;
+        native ''tellraw @a {"nbt":"CallStack[0].mcl_i","storage":"mcl:runtime"}'';
     }
 }
 
