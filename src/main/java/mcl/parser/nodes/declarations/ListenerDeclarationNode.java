@@ -5,8 +5,12 @@ import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.components.BlockNode;
 import compiler.core.parser.nodes.components.ParameterListNode;
 import compiler.core.parser.symbols.SymbolTable;
+import compiler.core.source.CodeSource;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.CompilerWarning;
 import compiler.core.util.exceptions.UndefinedSymbolException;
+import mcl.MCL;
+import mcl.codegen.MCLStandardLibrary;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.nodes.components.QualifiedIdentifierNode;
 import mcl.parser.symbols.EventSymbol;
@@ -54,6 +58,15 @@ public class ListenerDeclarationNode extends AbstractNode
         // Get Event Symbol
         this.eventSymbol = result.register(namespaceTable.get().lookupByName(event.identifier, EventSymbol.class, event.identifier.value).single());
         if (result.getFailure() != null) return result;
+        
+        // Warn about minecraft:load
+        if (event.namespace.value.equals("minecraft") && event.identifier.value.equals("load"))
+        {
+            if (!(start().getSource() instanceof CodeSource.Resource resource && resource.resourceName().startsWith("stdlib")))
+            {
+                result.addWarning(new CompilerWarning(event.start(), parameters.end(), "MCL code inside a 'minecraft:load' event listener may run before MCL has finished installation. Consider using 'mcl:reload' instead."));
+            }
+        }
         
         // Register Listener
         NamespaceNode namespace = result.register(findParentNode(NamespaceNode.class));

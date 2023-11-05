@@ -142,6 +142,8 @@ public abstract class CodeSource
             this.id = UUID.randomUUID();
         }
     
+        public final UUID id() { return id; }
+        
         @Override
         public java.lang.String toString()
         {
@@ -159,6 +161,8 @@ public abstract class CodeSource
             super(Files.readAllLines(path).toArray(String[]::new));
             this.path = root != null ? root.relativize(path) : path;
         }
+        
+        public final Path path() { return path; }
     
         @Override
         public String toString()
@@ -183,6 +187,8 @@ public abstract class CodeSource
                 return resource.lines().collect(Collectors.joining(System.lineSeparator()));
             }
         }
+        
+        public final String resourceName() { return resourceName; }
     
         @Override
         public String toString()

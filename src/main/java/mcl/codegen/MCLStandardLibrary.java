@@ -3,6 +3,7 @@ package mcl.codegen;
 import compiler.core.source.CodeSource;
 import compiler.core.source.SourceCollection;
 import compiler.core.util.Result;
+import mcl.MCL;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,11 +14,13 @@ import java.util.zip.ZipInputStream;
 
 public final class MCLStandardLibrary
 {
+    public static final String NAME = "stdlib";
+    
     public static Result<SourceCollection> installHeaders(SourceCollection source)
     {
         try
         {
-            source.addSource(new CodeSource.Resource(MCLStandardLibrary.class, "/mcl_core.mcl"));
+            source.addSource(new CodeSource.Resource(MCLStandardLibrary.class, "/" + NAME + ".mcl"));
             return Result.of(source);
         }
         catch (Exception e) { return Result.fail(e); }
@@ -35,7 +38,7 @@ public final class MCLStandardLibrary
     private static Result<Void> extract(Path directory)
     {
         // Open Standard Library Resource
-        try (ZipInputStream zipStream = new ZipInputStream(Objects.requireNonNull(MCLStandardLibrary.class.getResourceAsStream("/stdlib.zip"))))
+        try (ZipInputStream zipStream = new ZipInputStream(Objects.requireNonNull(MCLStandardLibrary.class.getResourceAsStream("/" + NAME + ".zip"))))
         {
             ZipEntry entry;
             byte[] buffer = new byte[1024];

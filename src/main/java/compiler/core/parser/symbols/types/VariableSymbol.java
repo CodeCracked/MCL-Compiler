@@ -17,6 +17,7 @@ public class VariableSymbol extends AbstractTypedSymbol
     }
     
     public Optional<AbstractValueNode> getDefaultValue() { return Optional.ofNullable(defaultValue); }
+    public String getCallStackKey() { return "TransientCallStack[0]"; }
     
     @Override
     protected boolean canBeReferencedBy(AbstractNode caller)

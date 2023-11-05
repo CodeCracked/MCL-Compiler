@@ -1,15 +1,15 @@
-namespace mcl
+namespace test
 {
-    listener minecraft:load()
+    listener mcl:reload()
     {
         float a = 4.5;
         float b = 2 * a;
-        //int i = (int)b;
-        native ''tellraw @a {"nbt":"CallStack[0].mcl_i","storage":"mcl:runtime"}'';
+        int i = (int)b;
+        native ''tellraw @a {"nbt":"TransientCallStack[0].test_i","storage":"mcl:runtime"}'';
     }
 }
 
-/*namespace mcl
+/*namespace test
 {
 	event init();
 	event tick();

@@ -89,7 +89,7 @@ public class Result<T>
         }
         if (failure != null)
         {
-            IO.Errors.println(failure.getMessage());
+            IO.Errors.println(failure.getMessage() != null ? failure.getMessage() : failure.getClass().getName());
             if (includeStackTrace) failure.printStackTrace();
         }
     }

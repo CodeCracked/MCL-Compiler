@@ -17,11 +17,25 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
     }
     
     @Override
-    public Result<Integer> cast(int register, DataType castTo, CodeGenContext context)
+    public Result<Void> cast(int register, DataType castTo, CodeGenContext context)
     {
-        Result<Integer> result = new Result<>();
+        Result<Void> result = new Result<>();
         
-        //TODO: Implement float -> int casting
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+        
+        // float -> int casting
+        if (castTo == MCLDataTypes.INTEGER)
+        {
+            file.printf("scoreboard players operation P0 mcl.math.io = r%1$d.s mcl.registers\n", register);
+            file.printf("scoreboard players operation P1 mcl.math.io = r%1$d.e mcl.registers\n", register);
+            file.printf("scoreboard players operation P2 mcl.math.io = r%1$d.m mcl.registers\n", register);
+            file.printf("function mcl:math/float/32/convert/to_storage/main\n");
+            file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:math R0 1\n", register);
+            return result.success(null);
+        }
+        
         return result.failure(new UnsupportedOperationException("Cannot cast " + getType().name() + " to " + castTo.name() + "!"));
     }
     
@@ -40,7 +54,7 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
     
         // Write Command
         String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.println("data modify storage mcl:runtime CallStack[0]." + nbtKey + " set value " + Float.floatToRawIntBits(0.0f));
+        file.println("data modify storage mcl:runtime " + variable.getCallStackKey() + "." + nbtKey + " set value " + Float.floatToRawIntBits(0.0f));
         return result.success(null);
     }
     
@@ -58,16 +72,16 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
         if (result.getFailure() != null) return result;
     
         // Copy Float Registers to Math IO
-        file.printf("scoreboard players operation P0 mcl_core.math.io = r%1$d.s mcl.registers\n", register);
-        file.printf("scoreboard players operation P1 mcl_core.math.io = r%1$d.e mcl.registers\n", register);
-        file.printf("scoreboard players operation P2 mcl_core.math.io = r%1$d.m mcl.registers\n", register);
+        file.printf("scoreboard players operation P0 mcl.math.io = r%1$d.s mcl.registers\n", register);
+        file.printf("scoreboard players operation P1 mcl.math.io = r%1$d.e mcl.registers\n", register);
+        file.printf("scoreboard players operation P2 mcl.math.io = r%1$d.m mcl.registers\n", register);
         
         // Recompose
-        file.println("function mcl_core:math/float/32/recompose/main");
+        file.println("function mcl:math/float/32/recompose/main");
         
         // Store 32-Bit Float
         String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.println("execute store result storage mcl:runtime CallStack[0]." + nbtKey + " int 1 run scoreboard players get R0 mcl_core.math.io");
+        file.println("execute store result storage mcl:runtime " + variable.getCallStackKey() + "." + nbtKey + " int 1 run scoreboard players get R0 mcl.math.io");
         
         return result.success(null);
     }
@@ -87,15 +101,15 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
     
         // Copy Variable to Math IO
         String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.printf("execute store result score P0 mcl_core.math.io run data get storage mcl:runtime CallStack[0].%1$s 1\n", nbtKey);
+        file.printf("execute store result score P0 mcl.math.io run data get storage mcl:runtime " + variable.getCallStackKey() + ".%1$s 1\n", nbtKey);
         
         // Decompose
-        file.println("function mcl_core:math/float/32/decompose/main");
+        file.println("function mcl:math/float/32/decompose/main");
         
         // Copy Float Components to Registers
-        file.printf("scoreboard players operation r%1$d.s mcl.registers = R0 mcl_core.math.io\n", register);
-        file.printf("scoreboard players operation r%1$d.e mcl.registers = R1 mcl_core.math.io\n", register);
-        file.printf("scoreboard players operation r%1$d.m mcl.registers = R2 mcl_core.math.io\n", register);
+        file.printf("scoreboard players operation r%1$d.s mcl.registers = R0 mcl.math.io\n", register);
+        file.printf("scoreboard players operation r%1$d.e mcl.registers = R1 mcl.math.io\n", register);
+        file.printf("scoreboard players operation r%1$d.m mcl.registers = R2 mcl.math.io\n", register);
     
         return result.success(null);
     }
@@ -117,7 +131,7 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
         
         // Set Float Registers
         file.printf("scoreboard players set r%1$d.s mcl.registers %2$d\n", register, sign);
-        file.printf("scoreboard players set r%1$d.e mcl.registers %2$d\n", register, exponent);
+        file.printf("scoreboard players set r%1$d.e mcl.registers %2$d\n", register, exponent - 127);
         file.printf("scoreboard players set r%1$d.m mcl.registers %2$d\n", register, mantissa);
         
         return result.success(null);
@@ -169,22 +183,22 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
         if (result.getFailure() != null) return result;
         
         // Copy Accumulator to Math IO
-        file.printf("scoreboard players operation P0 mcl_core.math.io = r%1$d.s mcl.registers\n", accumulatorRegister);
-        file.printf("scoreboard players operation P1 mcl_core.math.io = r%1$d.e mcl.registers\n", accumulatorRegister);
-        file.printf("scoreboard players operation P2 mcl_core.math.io = r%1$d.m mcl.registers\n", accumulatorRegister);
+        file.printf("scoreboard players operation P0 mcl.math.io = r%1$d.s mcl.registers\n", accumulatorRegister);
+        file.printf("scoreboard players operation P1 mcl.math.io = r%1$d.e mcl.registers\n", accumulatorRegister);
+        file.printf("scoreboard players operation P2 mcl.math.io = r%1$d.m mcl.registers\n", accumulatorRegister);
         
         // Copy Argument to Math IO
-        file.printf("scoreboard players operation P3 mcl_core.math.io = r%1$d.s mcl.registers\n", argumentRegister);
-        file.printf("scoreboard players operation P4 mcl_core.math.io = r%1$d.e mcl.registers\n", argumentRegister);
-        file.printf("scoreboard players operation P5 mcl_core.math.io = r%1$d.m mcl.registers\n", argumentRegister);
+        file.printf("scoreboard players operation P3 mcl.math.io = r%1$d.s mcl.registers\n", argumentRegister);
+        file.printf("scoreboard players operation P4 mcl.math.io = r%1$d.e mcl.registers\n", argumentRegister);
+        file.printf("scoreboard players operation P5 mcl.math.io = r%1$d.m mcl.registers\n", argumentRegister);
         
         // Operation
-        file.println("function mcl_core:math/float/32/" + operationFunction + "/main");
+        file.println("function mcl:math/float/32/" + operationFunction + "/main");
         
         // Copy Math IO to Accumulator
-        file.printf("scoreboard players operation r%1$d.s mcl.registers = R0 mcl_core.math.io\n", accumulatorRegister);
-        file.printf("scoreboard players operation r%1$d.e mcl.registers = R1 mcl_core.math.io\n", accumulatorRegister);
-        file.printf("scoreboard players operation r%1$d.m mcl.registers = R2 mcl_core.math.io\n", accumulatorRegister);
+        file.printf("scoreboard players operation r%1$d.s mcl.registers = R0 mcl.math.io\n", accumulatorRegister);
+        file.printf("scoreboard players operation r%1$d.e mcl.registers = R1 mcl.math.io\n", accumulatorRegister);
+        file.printf("scoreboard players operation r%1$d.m mcl.registers = R2 mcl.math.io\n", accumulatorRegister);
         
         return result.success(null);
     }

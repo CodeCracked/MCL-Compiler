@@ -12,7 +12,7 @@ public abstract class DataTypeAdapter
     
     public DataType getType() { return type; }
     
-    public abstract Result<Integer> cast(int register, DataType castTo, CodeGenContext context);
+    public abstract Result<Void> cast(int register, DataType castTo, CodeGenContext context);
     public abstract Result<Void> resetVariable(VariableSymbol variable, CodeGenContext context);
     public abstract Result<Void> copyFromRegister(int register, VariableSymbol variable, CodeGenContext context);
     public abstract Result<Void> copyToRegister(int register, VariableSymbol variable, CodeGenContext context);

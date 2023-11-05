@@ -50,6 +50,7 @@ public class SourcePosition
     public int getLine() { return line; }
     public int getColumn() { return column; }
     public char getCharacter() { return character; }
+    public CodeSource getSource() { return source; }
     //endregion
     //region Position Changing
     public boolean advance()

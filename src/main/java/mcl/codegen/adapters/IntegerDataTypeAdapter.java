@@ -20,11 +20,25 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
     
     //region Casting
     @Override
-    public Result<Integer> cast(int register, DataType castTo, CodeGenContext context)
+    public Result<Void> cast(int register, DataType castTo, CodeGenContext context)
     {
-        Result<Integer> result = new Result<>();
+        Result<Void> result = new Result<>();
     
-        //TODO: Implement int -> float casting
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+        
+        // int -> float casting
+        if (castTo == MCLDataTypes.FLOAT)
+        {
+            file.printf("scoreboard players operation P0 mcl.math.io = r%1$d mcl.registers\n", register);
+            file.printf("function mcl:math/float/32/convert/from_int/main\n");
+            file.printf("scoreboard players operation r%1$d.s = R0 mcl.math.io\n", register);
+            file.printf("scoreboard players operation r%1$d.e = R1 mcl.math.io\n", register);
+            file.printf("scoreboard players operation r%1$d.m = R2 mcl.math.io\n", register);
+            return result.success(null);
+        }
+        
         return result.failure(new UnsupportedOperationException("Cannot cast " + getType().name() + " to " + castTo.name() + "!"));
     }
     //endregion
@@ -44,7 +58,7 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         
         // Write Command
         String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.println("data modify storage mcl:runtime CallStack[0]." + nbtKey + " set value 0");
+        file.println("data modify storage mcl:runtime " + variable.getCallStackKey() + "." + nbtKey + " set value 0");
         return result.success(null);
     }
     
@@ -63,7 +77,7 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         
         // Write Command
         String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.println("execute store result storage mcl:runtime CallStack[0]." + nbtKey + " int 1 run scoreboard players get r" + register + " mcl.registers");
+        file.println("execute store result storage mcl:runtime " + variable.getCallStackKey() + "." + nbtKey + " int 1 run scoreboard players get r" + register + " mcl.registers");
         
         return result.success(null);
     }
@@ -83,7 +97,7 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         
         // Write Command
         String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:runtime CallStack[0].%2$s 1", register, nbtKey);
+        file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:runtime " + variable.getCallStackKey() + ".%2$s 1", register, nbtKey);
         file.println();
 
         return result.success(null);
