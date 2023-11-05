@@ -5,7 +5,7 @@ import compiler.core.parser.symbols.types.VariableSymbol;
 import compiler.core.util.Result;
 import compiler.core.util.types.DataType;
 import mcl.lexer.MCLDataTypes;
-import mcl.parser.nodes.NamespaceNode;
+import mcl.parser.symbols.MCLVariableSymbol;
 
 import java.io.PrintWriter;
 
@@ -52,13 +52,9 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         PrintWriter file = result.register(context.getOpenFile());
         if (result.getFailure() != null) return result;
         
-        // Get Namespace
-        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
-        if (result.getFailure() != null) return result;
-        
         // Write Command
-        String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.println("data modify storage mcl:runtime " + variable.getCallStackKey() + "." + nbtKey + " set value 0");
+        file.println("data modify storage mcl:runtime " + ((MCLVariableSymbol) variable).getNBTKey() + " set value 0");
+    
         return result.success(null);
     }
     
@@ -71,13 +67,8 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         PrintWriter file = result.register(context.getOpenFile());
         if (result.getFailure() != null) return result;
         
-        // Get Namespace
-        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
-        if (result.getFailure() != null) return result;
-        
         // Write Command
-        String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.println("execute store result storage mcl:runtime " + variable.getCallStackKey() + "." + nbtKey + " int 1 run scoreboard players get r" + register + " mcl.registers");
+        file.println("execute store result storage mcl:runtime " + ((MCLVariableSymbol) variable).getNBTKey() + " int 1 run scoreboard players get r" + register + " mcl.registers");
         
         return result.success(null);
     }
@@ -91,13 +82,8 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         PrintWriter file = result.register(context.getOpenFile());
         if (result.getFailure() != null) return result;
         
-        // Get Namespace
-        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
-        if (result.getFailure() != null) return result;
-        
         // Write Command
-        String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:runtime " + variable.getCallStackKey() + ".%2$s 1", register, nbtKey);
+        file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:runtime " + ((MCLVariableSymbol) variable).getNBTKey() + " 1", register);
         file.println();
 
         return result.success(null);

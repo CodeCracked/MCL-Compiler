@@ -5,7 +5,6 @@ import compiler.core.lexer.types.GrammarTokenType;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
 import compiler.core.util.Result;
-import mcl.parser.MCLRules;
 import mcl.parser.grammar.components.FunctionCallRule;
 import mcl.parser.nodes.components.FunctionCallNode;
 import mcl.parser.nodes.statements.FunctionCallStatementNode;

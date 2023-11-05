@@ -5,7 +5,7 @@ namespace test
         float a = 4.5;
         float b = 2 * a;
         int i = (int)b;
-        native ''tellraw @a {"nbt":"TransientCallStack[0].test_i","storage":"mcl:runtime"}'';
+        native ''tellraw @a %{i.text_component}'';
     }
 }
 

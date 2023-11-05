@@ -9,7 +9,7 @@ import compiler.core.util.annotations.OptionalChild;
 import compiler.core.util.exceptions.CompilerException;
 import compiler.core.util.exceptions.DuplicateSymbolException;
 
-public class VariableDeclarationNode extends AbstractNode
+public abstract class VariableDeclarationNode<T extends VariableSymbol> extends AbstractNode
 {
     public final DataTypeNode type;
     public final IdentifierNode identifier;
@@ -25,6 +25,8 @@ public class VariableDeclarationNode extends AbstractNode
         this.initialValue = initialValue;
     }
     
+    protected abstract Result<T> createSymbol();
+    
     public VariableSymbol getSymbol() { return symbol; }
     
     @Override
@@ -33,8 +35,12 @@ public class VariableDeclarationNode extends AbstractNode
         Result<Void> result = new Result<>();
         
         // Create Symbol
-        symbol = new VariableSymbol(this, identifier.value, type.value, initialValue);
+        symbol = result.register(createSymbol());
+        if (result.getFailure() != null) return result;
+        
+        // Register Symbol
         if (!symbolTable().addSymbolWithUniqueName(this, symbol, true)) return result.failure(new DuplicateSymbolException(this, symbol));
+        
         return result.success(null);
     }
     

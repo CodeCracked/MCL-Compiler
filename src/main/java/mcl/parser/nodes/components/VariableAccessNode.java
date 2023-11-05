@@ -5,6 +5,8 @@ import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.parser.symbols.types.VariableSymbol;
 import compiler.core.util.Result;
 import compiler.core.util.types.DataType;
+import mcl.parser.symbols.MCLVariableSymbol;
+import mcl.util.Lookups;
 
 import java.util.Optional;
 
@@ -12,7 +14,7 @@ public class VariableAccessNode extends AbstractValueNode
 {
     public final QualifiedIdentifierNode identifier;
     
-    private VariableSymbol symbol;
+    private MCLVariableSymbol symbol;
     
     public VariableAccessNode(QualifiedIdentifierNode identifier)
     {
@@ -26,21 +28,12 @@ public class VariableAccessNode extends AbstractValueNode
     protected Result<Void> retrieveSymbols()
     {
         Result<Void> result = new Result<>();
-    
-        // Lookup namespace table
-        SymbolTable table = symbolTable();
-        if (identifier.qualified)
-        {
-            result.register(symbolTable().root().getChildTable(identifier.namespace.value));
-            if (result.getFailure() != null) return result;
-        }
-        
-        // Lookup variable symbol
-        SymbolTable.SymbolEntry<VariableSymbol> lookup = result.register(table.lookupByName(this, VariableSymbol.class, identifier.identifier.value).single());
-        if (result.getFailure() != null) return result;
         
         // Assign variable symbol
+        SymbolTable.SymbolEntry<MCLVariableSymbol> lookup = result.register(Lookups.variable(this, identifier));
+        if (result.getFailure() != null) return result;
         symbol = lookup.symbol();
+        
         return result.success(null);
     }
     

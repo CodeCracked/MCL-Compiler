@@ -9,8 +9,6 @@ import compiler.core.source.CodeSource;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.CompilerWarning;
 import compiler.core.util.exceptions.UndefinedSymbolException;
-import mcl.MCL;
-import mcl.codegen.MCLStandardLibrary;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.nodes.components.QualifiedIdentifierNode;
 import mcl.parser.symbols.EventSymbol;

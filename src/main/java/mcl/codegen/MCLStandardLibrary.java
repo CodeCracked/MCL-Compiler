@@ -3,7 +3,6 @@ package mcl.codegen;
 import compiler.core.source.CodeSource;
 import compiler.core.source.SourceCollection;
 import compiler.core.util.Result;
-import mcl.MCL;
 
 import java.io.File;
 import java.io.FileOutputStream;

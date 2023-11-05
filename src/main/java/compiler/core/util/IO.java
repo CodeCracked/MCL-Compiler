@@ -1,5 +1,6 @@
 package compiler.core.util;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -11,20 +12,12 @@ public class IO
 {
     private static final Scanner defaultInput = new Scanner(System.in);
     
-    public static final IPrinter Warnings = System.err::printf;
-    public static final IPrinter Errors = System.err::printf;
-    public static IPrinter Output = System.out::printf;
-    public static final IPrinter Debug = System.out::printf;
+    public static final PrintStream Warnings = System.err;
+    public static final PrintStream Errors = System.err;
+    public static PrintStream Output = System.out;
+    public static final PrintStream Debug = System.out;
     public static IInput Input = callback -> callback.accept(defaultInput.nextLine());
     
-    public interface IPrinter
-    {
-        void printf(String format, Object... args);
-        
-        default void print(Object obj) { printf(obj.toString()); }
-        default void println(Object obj) { printf(obj.toString() + System.lineSeparator()); }
-        default void println() { printf(System.lineSeparator()); }
-    }
     public interface IInput
     {
         void readLine(Consumer<String> callback);

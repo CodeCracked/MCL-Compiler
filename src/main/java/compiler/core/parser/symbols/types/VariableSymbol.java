@@ -6,7 +6,7 @@ import compiler.core.util.types.DataType;
 
 import java.util.Optional;
 
-public class VariableSymbol extends AbstractTypedSymbol
+public abstract class VariableSymbol extends AbstractTypedSymbol
 {
     private final AbstractValueNode defaultValue;
     
@@ -17,7 +17,6 @@ public class VariableSymbol extends AbstractTypedSymbol
     }
     
     public Optional<AbstractValueNode> getDefaultValue() { return Optional.ofNullable(defaultValue); }
-    public String getCallStackKey() { return "TransientCallStack[0]"; }
     
     @Override
     protected boolean canBeReferencedBy(AbstractNode caller)

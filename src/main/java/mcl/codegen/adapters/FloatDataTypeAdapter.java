@@ -5,7 +5,7 @@ import compiler.core.parser.symbols.types.VariableSymbol;
 import compiler.core.util.Result;
 import compiler.core.util.types.DataType;
 import mcl.lexer.MCLDataTypes;
-import mcl.parser.nodes.NamespaceNode;
+import mcl.parser.symbols.MCLVariableSymbol;
 
 import java.io.PrintWriter;
 
@@ -48,13 +48,8 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
         PrintWriter file = result.register(context.getOpenFile());
         if (result.getFailure() != null) return result;
     
-        // Get Namespace
-        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
-        if (result.getFailure() != null) return result;
-    
         // Write Command
-        String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.println("data modify storage mcl:runtime " + variable.getCallStackKey() + "." + nbtKey + " set value " + Float.floatToRawIntBits(0.0f));
+        file.println("data modify storage mcl:runtime " + ((MCLVariableSymbol) variable).getNBTKey() + " set value " + Float.floatToRawIntBits(0.0f));
         return result.success(null);
     }
     
@@ -66,10 +61,6 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
         // Get Open File
         PrintWriter file = result.register(context.getOpenFile());
         if (result.getFailure() != null) return result;
-        
-        // Get Namespace
-        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
-        if (result.getFailure() != null) return result;
     
         // Copy Float Registers to Math IO
         file.printf("scoreboard players operation P0 mcl.math.io = r%1$d.s mcl.registers\n", register);
@@ -80,8 +71,7 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
         file.println("function mcl:math/float/32/recompose/main");
         
         // Store 32-Bit Float
-        String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.println("execute store result storage mcl:runtime " + variable.getCallStackKey() + "." + nbtKey + " int 1 run scoreboard players get R0 mcl.math.io");
+        file.println("execute store result storage mcl:runtime " + ((MCLVariableSymbol) variable).getNBTKey() + " int 1 run scoreboard players get R0 mcl.math.io");
         
         return result.success(null);
     }
@@ -95,13 +85,8 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
         PrintWriter file = result.register(context.getOpenFile());
         if (result.getFailure() != null) return result;
     
-        // Get Namespace
-        NamespaceNode namespace = result.register(variable.definition().findParentNode(NamespaceNode.class));
-        if (result.getFailure() != null) return result;
-    
         // Copy Variable to Math IO
-        String nbtKey = namespace.identifier.value + "_" + variable.name();
-        file.printf("execute store result score P0 mcl.math.io run data get storage mcl:runtime " + variable.getCallStackKey() + ".%1$s 1\n", nbtKey);
+        file.printf("execute store result score P0 mcl.math.io run data get storage mcl:runtime " + ((MCLVariableSymbol) variable).getNBTKey() + " 1\n");
         
         // Decompose
         file.println("function mcl:math/float/32/decompose/main");

@@ -3,7 +3,6 @@ package mcl.codegen;
 import compiler.core.codegen.CodeGenerator;
 import compiler.core.parser.nodes.RootNode;
 import compiler.core.parser.nodes.components.BlockNode;
-import compiler.core.parser.nodes.components.VariableDeclarationNode;
 import mcl.codegen.adapters.FloatDataTypeAdapter;
 import mcl.codegen.adapters.IntegerDataTypeAdapter;
 import mcl.codegen.rules.*;
@@ -13,6 +12,7 @@ import mcl.parser.nodes.MCLSourceNode;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.nodes.components.VariableAccessNode;
 import mcl.parser.nodes.declarations.ListenerDeclarationNode;
+import mcl.parser.nodes.declarations.MCLVariableDeclarationNode;
 import mcl.parser.nodes.statements.NativeStatementNode;
 import mcl.parser.symbols.EventSymbol;
 
@@ -27,7 +27,7 @@ public class MCLCodeGenerator extends CodeGenerator
         addNodeRule(ListenerDeclarationNode.class, new ListenerDeclarationGenerator());
         addNodeRule(BlockNode.class, new BlockGenerator());
         addNodeRule(NativeStatementNode.class, new NativeStatementGenerator());
-        addNodeRule(VariableDeclarationNode.class, new VariableDeclarationGenerator());
+        addNodeRule(MCLVariableDeclarationNode.class, new MCLVariableDeclarationGenerator());
         
         addSymbolRule(EventSymbol.class, new EventGenerator());
         
