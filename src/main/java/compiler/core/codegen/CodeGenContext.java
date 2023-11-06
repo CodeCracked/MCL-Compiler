@@ -98,9 +98,9 @@ public class CodeGenContext
         closeFile();
     }
     
-    public void openFile(String name) throws IOException { openFile(name, null, true); }
-    public void openFile(String name, Consumer<PrintWriter> initialWrite) throws IOException { openFile(name, initialWrite, true); }
-    public void openFile(String name, Consumer<PrintWriter> initialWrite, boolean append) throws IOException
+    public PrintWriter openFile(String name) throws IOException { return openFile(name, null, true); }
+    public PrintWriter openFile(String name, Consumer<PrintWriter> initialWrite) throws IOException { return openFile(name, initialWrite, true); }
+    public PrintWriter openFile(String name, Consumer<PrintWriter> initialWrite, boolean append) throws IOException
     {
         Path path = currentDirectory.resolve(name);
         File file = path.toFile();
@@ -110,6 +110,7 @@ public class CodeGenContext
         
         this.filePathStack.push(path);
         this.fileWriterStack.push(fileWriter);
+        return fileWriter;
     }
     public void closeFile()
     {

@@ -7,7 +7,7 @@ import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
 import compiler.core.util.Result;
 import mcl.lexer.MCLKeyword;
-import mcl.parser.nodes.statements.NativeStatementNode;
+import mcl.parser.nodes.natives.NativeStatementNode;
 
 public class NativeStatementRule implements IGrammarRule<NativeStatementNode>
 {

@@ -1,4 +1,4 @@
-package mcl.codegen.rules;
+package mcl.codegen.rules.nodes.natives;
 
 import compiler.core.codegen.CodeGenContext;
 import compiler.core.codegen.ICodeGenRule;
@@ -6,7 +6,7 @@ import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.CompilerWarning;
-import mcl.parser.nodes.statements.NativeStatementNode;
+import mcl.parser.nodes.natives.NativeStatementNode;
 import mcl.parser.symbols.VariableSymbol;
 import mcl.util.Lookups;
 

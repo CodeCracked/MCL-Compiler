@@ -1,18 +1,16 @@
 namespace test
 {
-    event test_event(int var);
-
-    listener test_event(int var)
-    {
-        int double = 2 * var;
-        native "tellraw @a %{double.text_component}";
-    }
-
     listener mcl:reload()
     {
         float a = 4.5;
         float b = 2 * a;
         int i = (int)b;
         native ''tellraw @a %{i.text_component}'';
+    }
+
+    native float sin(float degrees): "mcl:math/extended_float/32/sin/main"
+    {
+        degrees: bind_float("P0", "P1", "P2", "mcl.math.io"),
+        return:  return_float("R0", "R1", "R2", "mcl.math.io")
     }
 }

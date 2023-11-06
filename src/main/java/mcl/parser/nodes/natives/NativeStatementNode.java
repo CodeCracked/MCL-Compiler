@@ -1,4 +1,4 @@
-package mcl.parser.nodes.statements;
+package mcl.parser.nodes.natives;
 
 import compiler.core.lexer.Token;
 import compiler.core.parser.AbstractNode;
