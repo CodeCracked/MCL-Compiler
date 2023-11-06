@@ -7,12 +7,14 @@ import compiler.core.parser.nodes.components.ParameterListNode;
 import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.source.CodeSource;
 import compiler.core.util.Result;
+import compiler.core.util.exceptions.CompilerException;
 import compiler.core.util.exceptions.CompilerWarning;
 import compiler.core.util.exceptions.UndefinedSymbolException;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.nodes.components.QualifiedIdentifierNode;
 import mcl.parser.symbols.EventSymbol;
 import mcl.util.Salt;
+import mcl.util.Validations;
 
 import java.util.Optional;
 
@@ -73,5 +75,22 @@ public class ListenerDeclarationNode extends AbstractNode
         this.eventSymbol.symbol().listenerFunctions.add(namespace.identifier.value + ":listeners/" + functionName);
         
         return result.success(null);
+    }
+    
+    @Override
+    protected Result<Void> createSymbols()
+    {
+        return parameters.createParameterSymbols();
+    }
+    
+    @Override
+    protected Result<Void> validate()
+    {
+        if (Validations.ensureParameterListsMatch(eventSymbol.symbol().definition().parameterList, parameters)) return Result.of(null);
+        else
+        {
+            String errorBuilder = "Cannot find event '" + eventSymbol.symbol().namespace + ':' + eventSymbol.symbol().name() + "' with matching parameter types!";
+            return Result.fail(new CompilerException(parameters.start(), parameters.end(), errorBuilder));
+        }
     }
 }

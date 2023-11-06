@@ -52,7 +52,7 @@ public abstract class AbstractNode
     protected Result<Void> validate() { return Result.of(null); }
     //endregion
     //region Public Helpers
-    public <T extends AbstractNode> Result<T> findParentNode(Class<T> clazz)
+    public <T> Result<T> findParentNode(Class<T> clazz)
     {
         AbstractNode node = parent;
         while (node != null)

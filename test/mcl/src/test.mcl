@@ -1,5 +1,13 @@
 namespace test
 {
+    event test_event(int var);
+
+    listener test_event(int var)
+    {
+        int double = 2 * var;
+        native "tellraw @a %{double.text_component}";
+    }
+
     listener mcl:reload()
     {
         float a = 4.5;
@@ -8,31 +16,3 @@ namespace test
         native ''tellraw @a %{i.text_component}'';
     }
 }
-
-/*namespace test
-{
-	event init();
-	event tick();
-
-	listener minecraft:load()
-	{
-		print("Minecraft Load...");
-        trigger init();
-	}
-
-	listener minecraft:tick()
-	{
-		print("Minecraft Tick...");
-		trigger tick();
-	}
-
-	listener init()
-	{
-	    print("MCL Init...");
-	}
-	listener tick()
-	{
-	    print("MCL Tick...");
-	}
-}
-*/

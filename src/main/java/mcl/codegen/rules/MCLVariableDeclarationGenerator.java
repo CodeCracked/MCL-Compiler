@@ -3,17 +3,17 @@ package mcl.codegen.rules;
 import compiler.core.codegen.CodeGenContext;
 import compiler.core.codegen.DataTypeAdapter;
 import compiler.core.codegen.ICodeGenRule;
-import compiler.core.parser.symbols.types.VariableSymbol;
+import compiler.core.parser.symbols.types.AbstractVariableSymbol;
 import compiler.core.util.Result;
-import mcl.parser.nodes.declarations.MCLVariableDeclarationNode;
+import mcl.parser.nodes.declarations.VariableDeclarationNode;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class MCLVariableDeclarationGenerator implements ICodeGenRule<MCLVariableDeclarationNode>
+public class MCLVariableDeclarationGenerator implements ICodeGenRule<VariableDeclarationNode>
 {
     @Override
-    public Result<Void> generate(MCLVariableDeclarationNode component, CodeGenContext context) throws IOException
+    public Result<Void> generate(VariableDeclarationNode component, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
     
@@ -22,7 +22,7 @@ public class MCLVariableDeclarationGenerator implements ICodeGenRule<MCLVariable
         if (result.getFailure() != null) return result;
         
         // Get Adapter
-        VariableSymbol variable = component.getSymbol();
+        AbstractVariableSymbol variable = component.getSymbol();
         DataTypeAdapter adapter = result.register(context.getGenerator().getTypeAdapter(variable.getType()));
         if (result.getFailure() != null) return result;
         

@@ -4,11 +4,11 @@ import compiler.core.parser.AbstractNode;
 import compiler.core.parser.symbols.AbstractSymbol;
 import compiler.core.util.types.DataType;
 
-public abstract class AbstractTypedSymbol extends AbstractSymbol
+public abstract class AbstractTypedSymbol<T extends AbstractNode> extends AbstractSymbol<T>
 {
     private DataType type;
     
-    public AbstractTypedSymbol(AbstractNode definition, String name, DataType type)
+    public AbstractTypedSymbol(T definition, String name, DataType type)
     {
         super(definition, name);
         this.type = type;

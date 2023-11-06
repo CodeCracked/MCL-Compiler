@@ -1,11 +1,11 @@
 package mcl.codegen.adapters;
 
 import compiler.core.codegen.CodeGenContext;
-import compiler.core.parser.symbols.types.VariableSymbol;
+import compiler.core.parser.symbols.types.AbstractVariableSymbol;
 import compiler.core.util.Result;
 import compiler.core.util.types.DataType;
 import mcl.lexer.MCLDataTypes;
-import mcl.parser.symbols.MCLVariableSymbol;
+import mcl.parser.symbols.VariableSymbol;
 
 import java.io.PrintWriter;
 
@@ -44,7 +44,7 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
     //endregion
     //region Implementation
     @Override
-    public Result<Void> resetVariable(VariableSymbol variable, CodeGenContext context)
+    public Result<Void> resetVariable(AbstractVariableSymbol variable, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
         
@@ -53,13 +53,13 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         if (result.getFailure() != null) return result;
         
         // Write Command
-        file.println("data modify storage mcl:runtime " + ((MCLVariableSymbol) variable).getNBTKey() + " set value 0");
+        file.println("data modify storage mcl:runtime " + ((VariableSymbol) variable).getNBTKey() + " set value 0");
     
         return result.success(null);
     }
     
     @Override
-    public Result<Void> copyFromRegister(int register, VariableSymbol variable, CodeGenContext context)
+    public Result<Void> copyFromRegister(int register, AbstractVariableSymbol variable, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
         
@@ -68,13 +68,13 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         if (result.getFailure() != null) return result;
         
         // Write Command
-        file.println("execute store result storage mcl:runtime " + ((MCLVariableSymbol) variable).getNBTKey() + " int 1 run scoreboard players get r" + register + " mcl.registers");
+        file.println("execute store result storage mcl:runtime " + ((VariableSymbol) variable).getNBTKey() + " int 1 run scoreboard players get r" + register + " mcl.registers");
         
         return result.success(null);
     }
     
     @Override
-    public Result<Void> copyToRegister(int register, VariableSymbol variable, CodeGenContext context)
+    public Result<Void> copyToRegister(int register, AbstractVariableSymbol variable, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
         
@@ -83,7 +83,7 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         if (result.getFailure() != null) return result;
         
         // Write Command
-        file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:runtime " + ((MCLVariableSymbol) variable).getNBTKey() + " 1", register);
+        file.printf("execute store result score r%1$d mcl.registers run data get storage mcl:runtime " + ((VariableSymbol) variable).getNBTKey() + " 1", register);
         file.println();
 
         return result.success(null);

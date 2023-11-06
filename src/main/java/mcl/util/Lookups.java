@@ -4,14 +4,14 @@ import compiler.core.parser.AbstractNode;
 import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.util.Result;
 import mcl.parser.nodes.components.QualifiedIdentifierNode;
-import mcl.parser.symbols.MCLVariableSymbol;
+import mcl.parser.symbols.VariableSymbol;
 
 public final class Lookups
 {
-    public static Result<SymbolTable.SymbolEntry<MCLVariableSymbol>> variable(AbstractNode scope, QualifiedIdentifierNode identifier) { return variable(scope, identifier.qualified ? identifier.namespace.value : null, identifier.identifier.value); }
-    public static Result<SymbolTable.SymbolEntry<MCLVariableSymbol>> variable(AbstractNode scope, String namespace, String identifier)
+    public static Result<SymbolTable.SymbolEntry<VariableSymbol>> variable(AbstractNode scope, QualifiedIdentifierNode identifier) { return variable(scope, identifier.qualified ? identifier.namespace.value : null, identifier.identifier.value); }
+    public static Result<SymbolTable.SymbolEntry<VariableSymbol>> variable(AbstractNode scope, String namespace, String identifier)
     {
-        Result<SymbolTable.SymbolEntry<MCLVariableSymbol>> result = new Result<>();
+        Result<SymbolTable.SymbolEntry<VariableSymbol>> result = new Result<>();
         
         // Lookup namespace table
         if (namespace != null)
@@ -21,7 +21,7 @@ public final class Lookups
         }
     
         // Lookup variable symbol
-        SymbolTable.SymbolEntry<MCLVariableSymbol> lookup = result.register(scope.symbolTable().lookupByName(scope, MCLVariableSymbol.class, identifier).single());
+        SymbolTable.SymbolEntry<VariableSymbol> lookup = result.register(scope.symbolTable().lookupByName(scope, VariableSymbol.class, identifier).single());
         if (result.getFailure() != null) return result;
         
         return result.success(lookup);

@@ -2,10 +2,10 @@ package mcl.parser.nodes.components;
 
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.parser.symbols.SymbolTable;
-import compiler.core.parser.symbols.types.VariableSymbol;
+import compiler.core.parser.symbols.types.AbstractVariableSymbol;
 import compiler.core.util.Result;
 import compiler.core.util.types.DataType;
-import mcl.parser.symbols.MCLVariableSymbol;
+import mcl.parser.symbols.VariableSymbol;
 import mcl.util.Lookups;
 
 import java.util.Optional;
@@ -14,7 +14,7 @@ public class VariableAccessNode extends AbstractValueNode
 {
     public final QualifiedIdentifierNode identifier;
     
-    private MCLVariableSymbol symbol;
+    private VariableSymbol symbol;
     
     public VariableAccessNode(QualifiedIdentifierNode identifier)
     {
@@ -22,7 +22,7 @@ public class VariableAccessNode extends AbstractValueNode
         this.identifier = identifier;
     }
     
-    public VariableSymbol getSymbol() { return symbol; }
+    public AbstractVariableSymbol getSymbol() { return symbol; }
     
     @Override
     protected Result<Void> retrieveSymbols()
@@ -30,7 +30,7 @@ public class VariableAccessNode extends AbstractValueNode
         Result<Void> result = new Result<>();
         
         // Assign variable symbol
-        SymbolTable.SymbolEntry<MCLVariableSymbol> lookup = result.register(Lookups.variable(this, identifier));
+        SymbolTable.SymbolEntry<VariableSymbol> lookup = result.register(Lookups.variable(this, identifier));
         if (result.getFailure() != null) return result;
         symbol = lookup.symbol();
         

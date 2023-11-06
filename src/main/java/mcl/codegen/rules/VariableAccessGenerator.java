@@ -3,7 +3,7 @@ package mcl.codegen.rules;
 import compiler.core.codegen.CodeGenContext;
 import compiler.core.codegen.DataTypeAdapter;
 import compiler.core.codegen.expression.IExpressionGenRule;
-import compiler.core.parser.symbols.types.VariableSymbol;
+import compiler.core.parser.symbols.types.AbstractVariableSymbol;
 import compiler.core.util.Ref;
 import compiler.core.util.Result;
 import mcl.parser.nodes.components.VariableAccessNode;
@@ -22,7 +22,7 @@ public class VariableAccessGenerator implements IExpressionGenRule<VariableAcces
         startingRegister.set(register + 1);
         
         // Get Adapter
-        VariableSymbol variable = component.getSymbol();
+        AbstractVariableSymbol variable = component.getSymbol();
         DataTypeAdapter adapter = result.register(context.getGenerator().getTypeAdapter(variable.getType()));
         if (result.getFailure() != null) return result;
     

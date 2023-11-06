@@ -2,46 +2,55 @@ package compiler.core.parser.nodes.components;
 
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
-import compiler.core.parser.symbols.types.VariableSymbol;
+import compiler.core.parser.symbols.types.AbstractVariableSymbol;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.Result;
 import compiler.core.util.annotations.OptionalChild;
 import compiler.core.util.exceptions.CompilerException;
 import compiler.core.util.exceptions.DuplicateSymbolException;
 
-public abstract class VariableDeclarationNode<T extends VariableSymbol> extends AbstractNode
+public abstract class AbstractVariableDeclarationNode<T extends AbstractVariableSymbol> extends AbstractNode
 {
     public final DataTypeNode type;
     public final IdentifierNode identifier;
     @OptionalChild(alwaysShow = false) public AbstractValueNode initialValue;
     
-    private VariableSymbol symbol;
+    private final boolean autoCreateSymbol;
+    private AbstractVariableSymbol symbol;
     
-    public VariableDeclarationNode(SourcePosition start, SourcePosition end, DataTypeNode type, IdentifierNode identifier, AbstractValueNode initialValue)
+    public AbstractVariableDeclarationNode(SourcePosition start, SourcePosition end, DataTypeNode type, IdentifierNode identifier, AbstractValueNode initialValue) { this(start, end, type, identifier, initialValue, true); }
+    public AbstractVariableDeclarationNode(SourcePosition start, SourcePosition end, DataTypeNode type, IdentifierNode identifier, AbstractValueNode initialValue, boolean autoCreateSymbol)
     {
         super(start, end);
         this.type = type;
         this.identifier = identifier;
         this.initialValue = initialValue;
+        this.autoCreateSymbol = autoCreateSymbol;
     }
     
-    protected abstract Result<T> createSymbol();
+    public final Result<Void> createSymbol()
+    {
+        Result<Void> result = new Result<>();
+        if (symbol == null)
+        {
+            // Create Symbol
+            symbol = result.register(instantiateSymbol());
+            if (result.getFailure() != null) return result;
     
-    public VariableSymbol getSymbol() { return symbol; }
+            // Register Symbol
+            if (!symbolTable().addSymbolWithUniqueName(this, symbol, true)) return result.failure(new DuplicateSymbolException(this, symbol));
+        }
+        return result.success(null);
+    }
+    protected abstract Result<T> instantiateSymbol();
+    
+    public AbstractVariableSymbol getSymbol() { return symbol; }
     
     @Override
     protected Result<Void> createSymbols()
     {
-        Result<Void> result = new Result<>();
-        
-        // Create Symbol
-        symbol = result.register(createSymbol());
-        if (result.getFailure() != null) return result;
-        
-        // Register Symbol
-        if (!symbolTable().addSymbolWithUniqueName(this, symbol, true)) return result.failure(new DuplicateSymbolException(this, symbol));
-        
-        return result.success(null);
+        if (autoCreateSymbol) return createSymbol();
+        else return Result.of(null);
     }
     
     @Override

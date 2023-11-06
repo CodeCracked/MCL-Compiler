@@ -1,6 +1,6 @@
 package compiler.core.codegen;
 
-import compiler.core.parser.symbols.types.VariableSymbol;
+import compiler.core.parser.symbols.types.AbstractVariableSymbol;
 import compiler.core.util.Result;
 import compiler.core.util.types.DataType;
 
@@ -13,9 +13,9 @@ public abstract class DataTypeAdapter
     public DataType getType() { return type; }
     
     public abstract Result<Void> cast(int register, DataType castTo, CodeGenContext context);
-    public abstract Result<Void> resetVariable(VariableSymbol variable, CodeGenContext context);
-    public abstract Result<Void> copyFromRegister(int register, VariableSymbol variable, CodeGenContext context);
-    public abstract Result<Void> copyToRegister(int register, VariableSymbol variable, CodeGenContext context);
+    public abstract Result<Void> resetVariable(AbstractVariableSymbol variable, CodeGenContext context);
+    public abstract Result<Void> copyFromRegister(int register, AbstractVariableSymbol variable, CodeGenContext context);
+    public abstract Result<Void> copyToRegister(int register, AbstractVariableSymbol variable, CodeGenContext context);
     public abstract Result<Void> copyToRegister(int register, Object literal, CodeGenContext context);
     public abstract Result<Void> add(int accumulatorRegister, int argumentRegister, CodeGenContext context);
     public abstract Result<Void> subtract(int accumulatorRegister, int argumentRegister, CodeGenContext context);

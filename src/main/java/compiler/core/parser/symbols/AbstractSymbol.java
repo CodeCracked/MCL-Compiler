@@ -2,12 +2,12 @@ package compiler.core.parser.symbols;
 
 import compiler.core.parser.AbstractNode;
 
-public abstract class AbstractSymbol
+public abstract class AbstractSymbol<T extends AbstractNode>
 {
-    private final AbstractNode definition;
+    private final T definition;
     private final String name;
     
-    public AbstractSymbol(AbstractNode definition, String name)
+    public AbstractSymbol(T definition, String name)
     {
         this.definition = definition;
         this.name = name;
@@ -15,6 +15,6 @@ public abstract class AbstractSymbol
     
     protected boolean canBeReferencedBy(AbstractNode caller) { return true; }
     
-    public final AbstractNode definition() { return definition; }
+    public final T definition() { return definition; }
     public final String name() { return name; }
 }

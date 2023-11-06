@@ -11,14 +11,14 @@ import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.util.Result;
 import mcl.parser.MCLRules;
-import mcl.parser.nodes.declarations.MCLVariableDeclarationNode;
+import mcl.parser.nodes.declarations.VariableDeclarationNode;
 
-public class VariableDeclarationStatementRule implements IGrammarRule<MCLVariableDeclarationNode>
+public class VariableDeclarationStatementRule implements IGrammarRule<VariableDeclarationNode>
 {
     @Override
-    public Result<MCLVariableDeclarationNode> build(Parser parser)
+    public Result<VariableDeclarationNode> build(Parser parser)
     {
-        Result<MCLVariableDeclarationNode> result = new Result<>();
+        Result<VariableDeclarationNode> result = new Result<>();
         
         // Data Type
         DataTypeNode type = result.register(DefaultRules.DATA_TYPE.build(parser));
@@ -45,6 +45,6 @@ public class VariableDeclarationStatementRule implements IGrammarRule<MCLVariabl
         Token semicolon = result.register(tokenType(parser, GrammarTokenType.SEMICOLON, "';'"));
         if (result.getFailure() != null) return result;
         
-        return result.success(new MCLVariableDeclarationNode(type.start(), semicolon.end(), type, identifier, initialValue));
+        return result.success(new VariableDeclarationNode(type.start(), semicolon.end(), type, identifier, initialValue));
     }
 }

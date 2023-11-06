@@ -7,7 +7,7 @@ import compiler.core.source.SourcePosition;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.CompilerWarning;
 import mcl.parser.nodes.statements.NativeStatementNode;
-import mcl.parser.symbols.MCLVariableSymbol;
+import mcl.parser.symbols.VariableSymbol;
 import mcl.util.Lookups;
 
 import java.io.IOException;
@@ -88,9 +88,9 @@ public class NativeStatementGenerator implements ICodeGenRule<NativeStatementNod
         // Get Variable
         String[] variableTokens = tokens[0].split(":");
         if (variableTokens.length < 1 || variableTokens.length > 2) return null;
-        Result<SymbolTable.SymbolEntry<MCLVariableSymbol>> lookup = variableTokens.length == 2 ? Lookups.variable(node, variableTokens[0], variableTokens[1]) : Lookups.variable(node, null, variableTokens[0]);
+        Result<SymbolTable.SymbolEntry<VariableSymbol>> lookup = variableTokens.length == 2 ? Lookups.variable(node, variableTokens[0], variableTokens[1]) : Lookups.variable(node, null, variableTokens[0]);
         if (lookup.getFailure() != null) return null;
-        MCLVariableSymbol variable = lookup.get().symbol();
+        VariableSymbol variable = lookup.get().symbol();
         
         // Get Property
         if (tokens[1].equals("nbt_key")) return variable.getNBTKey();
