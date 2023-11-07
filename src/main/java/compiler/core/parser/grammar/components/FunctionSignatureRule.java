@@ -6,15 +6,15 @@ import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.components.DataTypeNode;
 import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.parser.nodes.components.ParameterListNode;
-import compiler.core.parser.nodes.methods.MethodSignatureNode;
+import compiler.core.parser.nodes.functions.FunctionSignatureNode;
 import compiler.core.util.Result;
 
-public class MethodSignatureRule implements IGrammarRule<MethodSignatureNode>
+public class FunctionSignatureRule implements IGrammarRule<FunctionSignatureNode>
 {
     @Override
-    public Result<MethodSignatureNode> build(Parser parser)
+    public Result<FunctionSignatureNode> build(Parser parser)
     {
-        Result<MethodSignatureNode> result = new Result<>();
+        Result<FunctionSignatureNode> result = new Result<>();
         
         // Return Type
         DataTypeNode returnType = result.register(DefaultRules.DATA_TYPE.build(parser));
@@ -28,6 +28,6 @@ public class MethodSignatureRule implements IGrammarRule<MethodSignatureNode>
         ParameterListNode parameters = result.register(DefaultRules.PARAMETER_LIST.build(parser));
         if (result.getFailure() != null) return result;
         
-        return result.success(new MethodSignatureNode(returnType.start(), parameters.end(), returnType, identifier, parameters));
+        return result.success(new FunctionSignatureNode(returnType.start(), parameters.end(), returnType, identifier, parameters));
     }
 }

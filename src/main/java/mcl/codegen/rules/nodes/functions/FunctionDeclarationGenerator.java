@@ -1,22 +1,22 @@
-package mcl.codegen.rules.nodes.methods;
+package mcl.codegen.rules.nodes.functions;
 
 import compiler.core.codegen.CodeGenContext;
 import compiler.core.codegen.ICodeGenRule;
 import compiler.core.util.Result;
-import mcl.parser.nodes.declarations.MethodDeclarationNode;
+import mcl.parser.nodes.declarations.FunctionDeclarationNode;
 import mcl.util.MCLCodeGenMacros;
 
 import java.io.IOException;
 
-public class MethodDeclarationGenerator implements ICodeGenRule<MethodDeclarationNode>
+public class FunctionDeclarationGenerator implements ICodeGenRule<FunctionDeclarationNode>
 {
     @Override
-    public Result<Void> generate(MethodDeclarationNode component, CodeGenContext context) throws IOException
+    public Result<Void> generate(FunctionDeclarationNode component, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
     
-        // Open Method File
-        context.openSubdirectory("functions", "methods", component.functionName());
+        // Open Function File
+        context.openSubdirectory("functions", "functions", component.functionName());
         context.openFile("main.mcfunction", file ->
         {
             MCLCodeGenMacros.writeNodeHeader(component, file);

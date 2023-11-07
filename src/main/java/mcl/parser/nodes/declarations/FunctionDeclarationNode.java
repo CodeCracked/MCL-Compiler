@@ -2,19 +2,17 @@ package mcl.parser.nodes.declarations;
 
 import compiler.core.parser.nodes.components.BlockNode;
 import compiler.core.parser.nodes.components.ParameterDeclarationNode;
-import compiler.core.parser.nodes.methods.AbstractMethodDeclarationNode;
-import compiler.core.parser.nodes.methods.MethodSignatureNode;
+import compiler.core.parser.nodes.functions.AbstractFunctionDeclarationNode;
+import compiler.core.parser.nodes.functions.FunctionSignatureNode;
 import compiler.core.util.Result;
-import mcl.parser.nodes.NamespaceNode;
-import mcl.util.Salt;
 
-public class MethodDeclarationNode extends AbstractMethodDeclarationNode
+public class FunctionDeclarationNode extends AbstractFunctionDeclarationNode
 {
     public final BlockNode body;
     
     private String functionName;
     
-    public MethodDeclarationNode(MethodSignatureNode signature, BlockNode body)
+    public FunctionDeclarationNode(FunctionSignatureNode signature, BlockNode body)
     {
         super(signature.start(), body.end(), signature);
         this.body = body;

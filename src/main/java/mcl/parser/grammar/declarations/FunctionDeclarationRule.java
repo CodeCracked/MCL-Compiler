@@ -4,26 +4,26 @@ import compiler.core.parser.DefaultRules;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.components.BlockNode;
-import compiler.core.parser.nodes.methods.MethodSignatureNode;
+import compiler.core.parser.nodes.functions.FunctionSignatureNode;
 import compiler.core.util.Result;
 import mcl.parser.MCLRules;
-import mcl.parser.nodes.declarations.MethodDeclarationNode;
+import mcl.parser.nodes.declarations.FunctionDeclarationNode;
 
-public class MethodDeclarationRule implements IGrammarRule<MethodDeclarationNode>
+public class FunctionDeclarationRule implements IGrammarRule<FunctionDeclarationNode>
 {
     @Override
-    public Result<MethodDeclarationNode> build(Parser parser)
+    public Result<FunctionDeclarationNode> build(Parser parser)
     {
-        Result<MethodDeclarationNode> result = new Result<>();
+        Result<FunctionDeclarationNode> result = new Result<>();
         
         // Signature
-        MethodSignatureNode signature = result.register(DefaultRules.METHOD_SIGNATURE.build(parser));
+        FunctionSignatureNode signature = result.register(DefaultRules.FUNCTION_SIGNATURE.build(parser));
         if (result.getFailure() != null) return result;
         
         // Body
         BlockNode body = result.register(MCLRules.FUNCTION_BODY.build(parser));
         if (result.getFailure() != null) return result;
     
-        return result.success(new MethodDeclarationNode(signature, body));
+        return result.success(new FunctionDeclarationNode(signature, body));
     }
 }

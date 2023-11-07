@@ -42,7 +42,7 @@ public class NativeBindListRule implements IGrammarRule<NativeBindListNode>
                 if (bind.parameter.value.equals("return"))
                 {
                     if (returnBind == null) returnBind = bind;
-                    else return result.failure(new CompilerException(bind.parameter.start(), bind.parameter.end(), "Native method return already has a bind!"));
+                    else return result.failure(new CompilerException(bind.parameter.start(), bind.parameter.end(), "Native function return already has a bind!"));
                 }
                 else parameterBinds.add(bind);
                 

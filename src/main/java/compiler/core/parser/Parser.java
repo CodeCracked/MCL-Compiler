@@ -45,7 +45,7 @@ public class Parser
         });
     }
     
-    //region Parse Methods
+    //region Parse Functions
     public Result<RootNode> parse(List<Token>[] tokens)
     {
         Result<RootNode> result = new Result<>();

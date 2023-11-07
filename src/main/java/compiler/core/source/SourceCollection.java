@@ -50,7 +50,7 @@ public class SourceCollection
         }
     }
     //endregion
-    //region Public Methods
+    //region Public Functions
     public void addSource(CodeSource source)
     {
         sources.add(source);

@@ -1,17 +1,17 @@
-package compiler.core.parser.nodes.methods;
+package compiler.core.parser.nodes.functions;
 
 import compiler.core.parser.AbstractNode;
 import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.Result;
 
-public class AbstractMethodDeclarationNode extends AbstractNode
+public class AbstractFunctionDeclarationNode extends AbstractNode
 {
-    public final MethodSignatureNode signature;
+    public final FunctionSignatureNode signature;
     
     protected SymbolTable childTable;
     
-    public AbstractMethodDeclarationNode(SourcePosition start, SourcePosition end, MethodSignatureNode signature)
+    public AbstractFunctionDeclarationNode(SourcePosition start, SourcePosition end, FunctionSignatureNode signature)
     {
         super(start, end);
         this.signature = signature;
@@ -20,7 +20,7 @@ public class AbstractMethodDeclarationNode extends AbstractNode
     @Override
     protected SymbolTable getChildSymbolTable(AbstractNode child)
     {
-        if (childTable == null) childTable = symbolTable().createChildTable("Method " + signature.identifier.value);
+        if (childTable == null) childTable = symbolTable().createChildTable("Function " + signature.identifier.value);
         return childTable;
     }
     

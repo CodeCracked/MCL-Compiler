@@ -14,14 +14,14 @@ import mcl.codegen.rules.nodes.natives.returns.ReturnFloat;
 import mcl.codegen.rules.nodes.natives.returns.ReturnFloat32;
 import mcl.codegen.rules.nodes.natives.returns.ReturnInt;
 import mcl.parser.nodes.natives.NativeBindSpecifierNode;
-import mcl.parser.nodes.natives.NativeMethodDeclarationNode;
+import mcl.parser.nodes.natives.NativeFunctionDeclarationNode;
 import mcl.util.MCLCodeGenMacros;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
-public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMethodDeclarationNode>
+public class NativeFunctionDeclarationGenerator implements ICodeGenRule<NativeFunctionDeclarationNode>
 {
     private final Map<String, INativeParameterBind> PARAMETER_BIND_TYPES = Map.of
     (
@@ -37,7 +37,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
     );
     
     @Override
-    public Result<Void> generate(NativeMethodDeclarationNode component, CodeGenContext context) throws IOException
+    public Result<Void> generate(NativeFunctionDeclarationNode component, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
         
@@ -71,7 +71,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         return result.success(null);
     }
     
-    private Result<Void> generateParameterBind(NativeMethodDeclarationNode nativeMethod, NativeBindSpecifierNode bind, PrintWriter file, CodeGenContext context)
+    private Result<Void> generateParameterBind(NativeFunctionDeclarationNode nativeFunction, NativeBindSpecifierNode bind, PrintWriter file, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
     
@@ -80,7 +80,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         
         // Find Parameter
         ParameterDeclarationNode parameter = null;
-        for (ParameterDeclarationNode test : nativeMethod.signature.parameters.parameters)
+        for (ParameterDeclarationNode test : nativeFunction.signature.parameters.parameters)
         {
             if (test.identifier.value.equals(bind.parameter.value))
             {
@@ -88,7 +88,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
                 break;
             }
         }
-        if (parameter == null) return result.failure(new CompilerException(bind.parameter.start(), bind.parameter.end(), "No matching method parameter found!"));
+        if (parameter == null) return result.failure(new CompilerException(bind.parameter.start(), bind.parameter.end(), "No matching function parameter found!"));
         
         // Generate Bind
         if (PARAMETER_BIND_TYPES.containsKey(bind.bindType.value))
@@ -101,7 +101,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         file.println();
         return result.success(null);
     }
-    private Result<Void> generateReturnBind(NativeMethodDeclarationNode nativeMethod, NativeBindSpecifierNode bind, PrintWriter file, CodeGenContext context)
+    private Result<Void> generateReturnBind(NativeFunctionDeclarationNode nativeFunction, NativeBindSpecifierNode bind, PrintWriter file, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
     
@@ -111,7 +111,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         // Generate Bind
         if (RETURN_BIND_TYPES.containsKey(bind.bindType.value))
         {
-            result.register(RETURN_BIND_TYPES.get(bind.bindType.value).write(bind, nativeMethod.signature.returnType, bind.bindArguments, file, context));
+            result.register(RETURN_BIND_TYPES.get(bind.bindType.value).write(bind, nativeFunction.signature.returnType, bind.bindArguments, file, context));
             if (result.getFailure() != null) return result;
         }
         else return result.failure(new CompilerException(bind.bindType.start(), bind.bindType.end(), "Unknown return bind type '" + bind.bindType.value + "'!"));

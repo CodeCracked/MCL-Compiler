@@ -16,11 +16,11 @@ import mcl.parser.grammar.components.FunctionCallRule;
 import mcl.parser.grammar.components.QualifiedIdentifierRule;
 import mcl.parser.grammar.components.VariableAccessRule;
 import mcl.parser.grammar.declarations.EventDeclarationRule;
+import mcl.parser.grammar.declarations.FunctionDeclarationRule;
 import mcl.parser.grammar.declarations.ListenerDeclarationRule;
-import mcl.parser.grammar.declarations.MethodDeclarationRule;
 import mcl.parser.grammar.natives.NativeBindListRule;
 import mcl.parser.grammar.natives.NativeBindSpecifierRule;
-import mcl.parser.grammar.natives.NativeMethodDeclarationRule;
+import mcl.parser.grammar.natives.NativeFunctionDeclarationRule;
 import mcl.parser.grammar.statements.FunctionCallStatementRule;
 import mcl.parser.grammar.statements.NativeStatementRule;
 import mcl.parser.grammar.statements.TriggerEventStatementRule;
@@ -52,14 +52,14 @@ public final class MCLRules
     
     public static final EventDeclarationRule EVENT_DECLARATION = new EventDeclarationRule();
     public static final ListenerDeclarationRule LISTENER_DECLARATION = new ListenerDeclarationRule();
-    public static final MethodDeclarationRule METHOD_DECLARATION = new MethodDeclarationRule();
-    public static NativeMethodDeclarationRule NATIVE_METHOD_DECLARATION = new NativeMethodDeclarationRule();
+    public static final FunctionDeclarationRule FUNCTION_DECLARATION = new FunctionDeclarationRule();
+    public static NativeFunctionDeclarationRule NATIVE_FUNCTION_DECLARATION = new NativeFunctionDeclarationRule();
     
     public static final IGrammarRule<AbstractNode> NAMESPACE_STATEMENT = new GrammarRuleChooser<>("Not a declaration!")
             .addRule(EVENT_DECLARATION, MCLKeyword.EVENT)
             .addRule(LISTENER_DECLARATION, MCLKeyword.LISTENER)
-            .addRule(METHOD_DECLARATION, TokenType.DATA_TYPE, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
-            .addRule(NATIVE_METHOD_DECLARATION, MCLKeyword.NATIVE);
+            .addRule(FUNCTION_DECLARATION, TokenType.DATA_TYPE, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
+            .addRule(NATIVE_FUNCTION_DECLARATION, MCLKeyword.NATIVE);
     public static final BlockBracesRule NAMESPACE_BODY = new BlockBracesRule(NAMESPACE_STATEMENT);
     public static final NamespaceRule NAMESPACE = new NamespaceRule();
     
