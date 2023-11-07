@@ -15,6 +15,11 @@ public class DataTypeNode extends AbstractNode
         assert token.type() == TokenType.DATA_TYPE;
         this.value = (DataType) token.contents();
     }
+    public DataTypeNode(Token token, DataType type)
+    {
+        super(token.start(), token.end());
+        this.value = type;
+    }
     
     @Override public String toString() { return value.keyword(); }
 }

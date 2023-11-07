@@ -11,7 +11,7 @@ import mcl.util.MCLCodeGenMacros;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class MCLVariableDeclarationGenerator implements ICodeGenRule<VariableDeclarationNode>
+public class VariableDeclarationGenerator implements ICodeGenRule<VariableDeclarationNode>
 {
     @Override
     public Result<Void> generate(VariableDeclarationNode component, CodeGenContext context) throws IOException

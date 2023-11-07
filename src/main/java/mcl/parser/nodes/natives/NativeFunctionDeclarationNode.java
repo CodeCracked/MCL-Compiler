@@ -9,11 +9,14 @@ import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.CompilerException;
 import mcl.lexer.MCLDataTypes;
+import mcl.parser.nodes.NamespaceNode;
+import mcl.parser.symbols.EventSymbol;
+import mcl.parser.symbols.FunctionSymbol;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class NativeFunctionDeclarationNode extends AbstractFunctionDeclarationNode
+public class NativeFunctionDeclarationNode extends AbstractFunctionDeclarationNode<FunctionSymbol<NativeFunctionDeclarationNode>>
 {
     public final Token nativeFunction;
     public final NativeBindListNode binds;
@@ -23,6 +26,19 @@ public class NativeFunctionDeclarationNode extends AbstractFunctionDeclarationNo
         super(keyword.start(), binds.end(), signature);
         this.nativeFunction = nativeFunction;
         this.binds = binds;
+    }
+    
+    @Override
+    protected Result<FunctionSymbol<NativeFunctionDeclarationNode>> instantiateSymbol()
+    {
+        Result<FunctionSymbol<NativeFunctionDeclarationNode>> result = new Result<>();
+    
+        // Namespace Retrieval
+        NamespaceNode namespace = result.register(findParentNode(NamespaceNode.class));
+        if (result.getFailure() != null) return result;
+    
+        // Symbol Creation
+        return result.success(new FunctionSymbol<>(this, namespace.identifier.value, signature.identifier.value));
     }
     
     @Override

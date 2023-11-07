@@ -1,4 +1,4 @@
-package mcl.util;
+package compiler.core.util;
 
 import compiler.core.parser.nodes.components.ArgumentListNode;
 import compiler.core.parser.nodes.components.ParameterDeclarationNode;

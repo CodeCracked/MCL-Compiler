@@ -5,8 +5,11 @@ import compiler.core.parser.nodes.components.ParameterDeclarationNode;
 import compiler.core.parser.nodes.functions.AbstractFunctionDeclarationNode;
 import compiler.core.parser.nodes.functions.FunctionSignatureNode;
 import compiler.core.util.Result;
+import mcl.parser.nodes.NamespaceNode;
+import mcl.parser.nodes.natives.NativeFunctionDeclarationNode;
+import mcl.parser.symbols.FunctionSymbol;
 
-public class FunctionDeclarationNode extends AbstractFunctionDeclarationNode
+public class FunctionDeclarationNode extends AbstractFunctionDeclarationNode<FunctionSymbol<FunctionDeclarationNode>>
 {
     public final BlockNode body;
     
@@ -19,6 +22,19 @@ public class FunctionDeclarationNode extends AbstractFunctionDeclarationNode
     }
     
     public String functionName() { return functionName; }
+    
+    @Override
+    protected Result<FunctionSymbol<FunctionDeclarationNode>> instantiateSymbol()
+    {
+        Result<FunctionSymbol<FunctionDeclarationNode>> result = new Result<>();
+        
+        // Namespace Retrieval
+        NamespaceNode namespace = result.register(findParentNode(NamespaceNode.class));
+        if (result.getFailure() != null) return result;
+        
+        // Symbol Creation
+        return result.success(new FunctionSymbol<>(this, namespace.identifier.value, signature.identifier.value));
+    }
     
     @Override
     protected Result<Void> retrieveSymbols()

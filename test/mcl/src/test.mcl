@@ -2,10 +2,7 @@ namespace test
 {
     listener mcl:reload()
     {
-        float a = 4.5;
-        float b = 2 * a;
-        int i = (int)b;
-        native ''tellraw @a %{i.text_component}'';
+        print_double(4);
     }
 
     void print_double(int i)

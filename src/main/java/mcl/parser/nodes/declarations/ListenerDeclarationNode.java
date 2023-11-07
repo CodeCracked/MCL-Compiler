@@ -7,14 +7,15 @@ import compiler.core.parser.nodes.components.ParameterListNode;
 import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.source.CodeSource;
 import compiler.core.util.Result;
+import compiler.core.util.Validations;
 import compiler.core.util.exceptions.CompilerException;
 import compiler.core.util.exceptions.CompilerWarning;
 import compiler.core.util.exceptions.UndefinedSymbolException;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.nodes.components.QualifiedIdentifierNode;
 import mcl.parser.symbols.EventSymbol;
+import mcl.util.Lookups;
 import mcl.util.Salt;
-import mcl.util.Validations;
 
 import java.util.Optional;
 
@@ -50,15 +51,7 @@ public class ListenerDeclarationNode extends AbstractNode
     protected Result<Void> retrieveSymbols()
     {
         Result<Void> result = new Result<>();
-        
-        // Get Namespace Table
-        Optional<SymbolTable> namespaceTable = symbolTable().root().tryGetChildTable(event.namespace.value);
-        if (namespaceTable.isEmpty()) return result.failure(new UndefinedSymbolException(event.namespace, "namespace", " '" + event.namespace.value + "'"));
-        
-        // Get Event Symbol
-        this.eventSymbol = result.register(namespaceTable.get().lookupByName(event.identifier, EventSymbol.class, event.identifier.value).single());
-        if (result.getFailure() != null) return result;
-        
+    
         // Warn about minecraft:load
         if (event.namespace.value.equals("minecraft") && event.identifier.value.equals("load"))
         {
@@ -67,6 +60,10 @@ public class ListenerDeclarationNode extends AbstractNode
                 result.addWarning(new CompilerWarning(event.start(), parameters.end(), "MCL code inside a 'minecraft:load' event listener may run before MCL has finished installation. Consider using 'mcl:reload' instead."));
             }
         }
+        
+        // Get Symbol
+        this.eventSymbol = result.register(Lookups.function(EventSymbol.class, this, event));
+        if (result.getFailure() != null) return result;
         
         // Register Listener
         NamespaceNode namespace = result.register(findParentNode(NamespaceNode.class));
@@ -86,7 +83,7 @@ public class ListenerDeclarationNode extends AbstractNode
     @Override
     protected Result<Void> validate()
     {
-        if (Validations.ensureParameterListsMatch(eventSymbol.symbol().definition().parameterList, parameters)) return Result.of(null);
+        if (Validations.ensureParameterListsMatch(eventSymbol.symbol().definition().signature.parameters, parameters)) return Result.of(null);
         else
         {
             String errorBuilder = "Cannot find event '" + eventSymbol.symbol().namespace + ':' + eventSymbol.symbol().name() + "' with matching parameter types!";

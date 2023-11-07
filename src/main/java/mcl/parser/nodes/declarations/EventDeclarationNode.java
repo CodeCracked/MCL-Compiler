@@ -2,38 +2,36 @@ package mcl.parser.nodes.declarations;
 
 import compiler.core.lexer.Token;
 import compiler.core.parser.AbstractNode;
+import compiler.core.parser.nodes.components.DataTypeNode;
 import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.parser.nodes.components.ParameterListNode;
+import compiler.core.parser.nodes.functions.AbstractFunctionDeclarationNode;
+import compiler.core.parser.nodes.functions.FunctionSignatureNode;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.DuplicateSymbolException;
+import mcl.lexer.MCLDataTypes;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.symbols.EventSymbol;
 
-public class EventDeclarationNode extends AbstractNode
+public class EventDeclarationNode extends AbstractFunctionDeclarationNode<EventSymbol>
 {
-    public final IdentifierNode identifier;
-    public final ParameterListNode parameterList;
     
-    public EventDeclarationNode(Token keyword, IdentifierNode identifier, ParameterListNode parameterList, Token semicolon)
+    public EventDeclarationNode(Token keyword, IdentifierNode identifier, ParameterListNode parameters, Token semicolon)
     {
-        super(keyword.start(), semicolon.end(), false);
-        this.identifier = identifier;
-        this.parameterList = parameterList;
+        super(keyword.start(), semicolon.end(), new FunctionSignatureNode(identifier.start(), parameters.end(), new DataTypeNode(keyword, MCLDataTypes.VOID), identifier, parameters));
+        hasCodeGen = false;
     }
     
     @Override
-    public Result<Void> createSymbols()
+    protected Result<EventSymbol> instantiateSymbol()
     {
-        Result<Void> result = new Result<>();
+        Result<EventSymbol> result = new Result<>();
         
         // Namespace Retrieval
         NamespaceNode namespace = result.register(findParentNode(NamespaceNode.class));
         if (result.getFailure() != null) return result;
-        
+    
         // Symbol Creation
-        EventSymbol symbol = new EventSymbol(this, namespace.identifier.value, identifier.value);
-        if (!symbolTable().addSymbolWithUniqueName(identifier, symbol, true)) return result.failure(new DuplicateSymbolException(identifier, symbol));
-        
-        return result.success(null);
+        return result.success(new EventSymbol(this, namespace.identifier.value, signature.identifier.value));
     }
 }

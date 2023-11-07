@@ -21,13 +21,13 @@ public abstract class AbstractNode
     
     private final SourcePosition start;
     private final SourcePosition end;
-    private final boolean hasCodeGen;
     private final List<Field> nodeFields;
     private final List<Field> nodeCollectionFields;
     private final String sourceCode;
     
     AbstractNode parent;
     private SymbolTable symbolTable;
+    protected boolean hasCodeGen;
     
     public AbstractNode(SourcePosition start, SourcePosition end) { this(start, end, true); }
     public AbstractNode(SourcePosition start, SourcePosition end, boolean hasCodeGen)
