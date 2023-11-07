@@ -8,6 +8,7 @@ public final class MCLDataTypes
     public static final DataType INTEGER = new DataType("int", LiteralTokenType.INTEGER);
     public static final DataType FLOAT = new DataType("float", LiteralTokenType.DECIMAL);
     public static final DataType STRING = new DataType("string", LiteralTokenType.STRING);
+    public static final DataType VOID = new DataType("void");
     
     static
     {

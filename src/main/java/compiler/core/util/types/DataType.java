@@ -18,6 +18,8 @@ public class DataType
     
     public static final DataType UNKNOWN = new DataType("UNKNOWN", null, null);
     
+    public DataType(String keyword) { this(keyword, keyword, null); }
+    public DataType(String name, String keyword) { this(name, keyword, null); }
     public DataType(String keyword, Enum<?> literalType) { this(keyword, keyword, literalType); }
     public DataType(String name, String keyword, Enum<?> literalType)
     {

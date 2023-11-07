@@ -15,8 +15,8 @@ public class DataTypeList
         this.literalTypeMap = new HashMap<>();
         for (DataType dataType : dataTypes)
         {
-            this.keywordMap.put(dataType.keyword(), dataType);
-            this.literalTypeMap.put(dataType.literalType(), dataType);
+            if (dataType.keyword() != null) this.keywordMap.put(dataType.keyword(), dataType);
+            if (dataType.literalType() != null) this.literalTypeMap.put(dataType.literalType(), dataType);
         }
     }
     
