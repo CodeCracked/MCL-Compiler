@@ -137,7 +137,7 @@ public abstract class CodeSource
         
         public Literal(String code)
         {
-            super(code.split("\n"));
+            super(code.split("\r?\n"));
             this.id = UUID.randomUUID();
         }
     

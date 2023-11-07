@@ -6,7 +6,7 @@ import compiler.core.codegen.ICodeGenRule;
 import compiler.core.parser.symbols.types.AbstractVariableSymbol;
 import compiler.core.util.Result;
 import mcl.parser.nodes.declarations.VariableDeclarationNode;
-import mcl.util.Headers;
+import mcl.util.MCLCodeGenMacros;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,7 +28,7 @@ public class MCLVariableDeclarationGenerator implements ICodeGenRule<VariableDec
         if (result.getFailure() != null) return result;
         
         // Write Header
-        Headers.writeNodeHeader(component, file);
+        MCLCodeGenMacros.writeNodeHeader(component, file);
     
         // Write Variable Initializer
         if (component.initialValue == null) result.register(adapter.resetVariable(variable, context));

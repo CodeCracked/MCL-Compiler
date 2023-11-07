@@ -8,8 +8,9 @@ namespace test
         native ''tellraw @a %{i.text_component}'';
     }
 
-    void test_method(int i)
+    void print_double(int i)
     {
-        native "tellraw @a %{i.text_component}";
+        int double = i * 2;
+        native "tellraw @a %{double.text_component}";
     }
 }

@@ -14,7 +14,7 @@ public class NativeStatementNode extends AbstractNode
     {
         super(keyword.start(), semicolon.end());
         
-        String[] split = nativeCommands.contents().toString().split("\n");
+        String[] split = nativeCommands.contents().toString().split("\r?\n");
         List<String> commands = new ArrayList<>();
         boolean nonEmptyStringFound = false;
         int trailingEmptyStrings = 0;
