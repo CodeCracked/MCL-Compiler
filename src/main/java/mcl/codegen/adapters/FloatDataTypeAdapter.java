@@ -16,6 +16,31 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
         super(MCLDataTypes.FLOAT);
     }
     
+    //region AbstractMCLDataTypeAdapter Implementation
+    @Override
+    protected Result<Void> copyRegisterToNBT(int register, String nbtKey, CodeGenContext context)
+    {
+        Result<Void> result = new Result<>();
+        
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+        
+        // Copy Float Registers to Math IO
+        file.printf("scoreboard players operation P0 mcl.math.io = r%1$d.s mcl.registers\n", register);
+        file.printf("scoreboard players operation P1 mcl.math.io = r%1$d.e mcl.registers\n", register);
+        file.printf("scoreboard players operation P2 mcl.math.io = r%1$d.m mcl.registers\n", register);
+        
+        // Recompose
+        file.println("function mcl:math/float/32/recompose/main");
+        
+        // Store 32-Bit Float
+        file.println("execute store result storage mcl:runtime " + nbtKey + " int 1 run scoreboard players get R0 mcl.math.io");
+        
+        return result.success(null);
+    }
+    //endregion
+    //region DataTypeAdapter Implementation
     @Override
     public Result<Void> cast(int register, DataType castTo, CodeGenContext context)
     {
@@ -50,29 +75,6 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
     
         // Write Command
         file.println("data modify storage mcl:runtime " + ((VariableSymbol) variable).getNBTKey() + " set value " + Float.floatToRawIntBits(0.0f));
-        return result.success(null);
-    }
-    
-    @Override
-    public Result<Void> copyFromRegister(int register, AbstractVariableSymbol variable, CodeGenContext context)
-    {
-        Result<Void> result = new Result<>();
-        
-        // Get Open File
-        PrintWriter file = result.register(context.getOpenFile());
-        if (result.getFailure() != null) return result;
-    
-        // Copy Float Registers to Math IO
-        file.printf("scoreboard players operation P0 mcl.math.io = r%1$d.s mcl.registers\n", register);
-        file.printf("scoreboard players operation P1 mcl.math.io = r%1$d.e mcl.registers\n", register);
-        file.printf("scoreboard players operation P2 mcl.math.io = r%1$d.m mcl.registers\n", register);
-        
-        // Recompose
-        file.println("function mcl:math/float/32/recompose/main");
-        
-        // Store 32-Bit Float
-        file.println("execute store result storage mcl:runtime " + ((VariableSymbol) variable).getNBTKey() + " int 1 run scoreboard players get R0 mcl.math.io");
-        
         return result.success(null);
     }
     
@@ -157,7 +159,7 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
     {
         return Result.fail(new UnsupportedOperationException("FloatDataTypeAdapter.compare not supported!"));
     }
-    
+    //endregion
     //region Private Helpers
     private Result<Void> writeOperation(int accumulatorRegister, int argumentRegister, String operationFunction, CodeGenContext context)
     {

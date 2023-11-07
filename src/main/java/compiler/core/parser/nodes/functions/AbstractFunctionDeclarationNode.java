@@ -6,8 +6,6 @@ import compiler.core.parser.symbols.types.AbstractFunctionSymbol;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.DuplicateSymbolException;
-import mcl.parser.nodes.NamespaceNode;
-import mcl.parser.symbols.EventSymbol;
 
 public abstract class AbstractFunctionDeclarationNode<T extends AbstractFunctionSymbol> extends AbstractNode
 {

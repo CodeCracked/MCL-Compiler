@@ -10,14 +10,11 @@ import compiler.core.util.Result;
 import compiler.core.util.Validations;
 import compiler.core.util.exceptions.CompilerException;
 import compiler.core.util.exceptions.CompilerWarning;
-import compiler.core.util.exceptions.UndefinedSymbolException;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.nodes.components.QualifiedIdentifierNode;
 import mcl.parser.symbols.EventSymbol;
 import mcl.util.Lookups;
 import mcl.util.Salt;
-
-import java.util.Optional;
 
 public class ListenerDeclarationNode extends AbstractNode
 {

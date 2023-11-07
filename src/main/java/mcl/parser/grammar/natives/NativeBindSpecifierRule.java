@@ -9,6 +9,7 @@ import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.source.SourcePosition;
 import compiler.core.util.Result;
+import mcl.lexer.MCLKeyword;
 import mcl.parser.nodes.natives.NativeBindSpecifierNode;
 
 import java.util.ArrayList;
@@ -21,9 +22,19 @@ public class NativeBindSpecifierRule implements IGrammarRule<NativeBindSpecifier
     {
         Result<NativeBindSpecifierNode> result = new Result<>();
         
-        // Parameter
-        IdentifierNode parameter = result.register(DefaultRules.IDENTIFIER.build(parser));
-        if (result.getFailure() != null) return result;
+        // Return or Parameter Identifier
+        IdentifierNode parameter;
+        if (parser.getCurrentToken().type() == MCLKeyword.RETURN)
+        {
+            parameter = new IdentifierNode(parser.getCurrentToken());
+            parser.advance();
+            result.registerAdvancement();
+        }
+        else
+        {
+            parameter = result.register(DefaultRules.IDENTIFIER.build(parser));
+            if (result.getFailure() != null) return result;
+        }
         
         // Colon
         result.register(tokenType(parser, GrammarTokenType.COLON, "':'"));

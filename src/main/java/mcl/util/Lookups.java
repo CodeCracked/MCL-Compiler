@@ -5,7 +5,6 @@ import compiler.core.parser.symbols.SymbolTable;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.UndefinedSymbolException;
 import mcl.parser.nodes.components.QualifiedIdentifierNode;
-import mcl.parser.symbols.EventSymbol;
 import mcl.parser.symbols.FunctionSymbol;
 import mcl.parser.symbols.VariableSymbol;
 

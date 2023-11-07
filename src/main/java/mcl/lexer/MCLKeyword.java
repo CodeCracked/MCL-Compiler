@@ -6,5 +6,6 @@ public enum MCLKeyword
     EVENT,
     LISTENER,
     TRIGGER,
-    NATIVE
+    NATIVE,
+    RETURN
 }

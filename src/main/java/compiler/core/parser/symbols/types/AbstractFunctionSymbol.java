@@ -23,7 +23,7 @@ public class AbstractFunctionSymbol extends AbstractSymbol<AbstractFunctionDecla
     public Optional<Integer> calculateIndirection(ArgumentListNode arguments)
     {
         // Ensure Arguments Match Signature
-        if (Validations.ensureArgumentTypesMatch(signature.parameters, arguments)) return Optional.empty();
+        if (!Validations.ensureArgumentTypesMatch(signature.parameters, arguments)) return Optional.empty();
         
         // Calculate Implicit Cast Count
         int indirection = 0;

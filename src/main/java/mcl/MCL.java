@@ -33,8 +33,7 @@ public final class MCL
         
         // Complex Tokens
         new DataTypeTokenBuilder(DATA_TYPES),
-        KeywordTokenBuilder.from(MCLKeyword.values()),
-        IdentifierTokenBuilder.camelCase()
+        IdentifierTokenBuilder.camelCase(MCLKeyword.values(), null)
     );
     private static final Parser PARSER = Parser.bracedScope(DATA_TYPES, MCLRules.SOURCE_FILE);
     private static final CodeGenerator CODE_GENERATOR = new MCLCodeGenerator();

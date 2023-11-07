@@ -1,4 +1,6 @@
 package compiler.core.util;
+import compiler.core.util.exceptions.CompilerException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,17 +82,17 @@ public class Result<T>
         for (Exception warning : warnings)
         {
             IO.Warnings.println(warning.getMessage());
-            if (includeStackTrace) warning.printStackTrace();
+            if (includeStackTrace || !(warning instanceof CompilerException)) failure.printStackTrace();
         }
         for (Exception error : errors)
         {
             IO.Errors.println(error.getMessage());
-            if (includeStackTrace) error.printStackTrace();
+            if (includeStackTrace || !(error instanceof CompilerException)) failure.printStackTrace();
         }
         if (failure != null)
         {
             IO.Errors.println(failure.getMessage() != null ? failure.getMessage() : failure.getClass().getName());
-            if (includeStackTrace) failure.printStackTrace();
+            if (includeStackTrace || !(failure instanceof CompilerException)) failure.printStackTrace();
         }
     }
 }

@@ -1,14 +1,12 @@
 package mcl.parser.nodes.declarations;
 
 import compiler.core.lexer.Token;
-import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.components.DataTypeNode;
 import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.parser.nodes.components.ParameterListNode;
 import compiler.core.parser.nodes.functions.AbstractFunctionDeclarationNode;
 import compiler.core.parser.nodes.functions.FunctionSignatureNode;
 import compiler.core.util.Result;
-import compiler.core.util.exceptions.DuplicateSymbolException;
 import mcl.lexer.MCLDataTypes;
 import mcl.parser.nodes.NamespaceNode;
 import mcl.parser.symbols.EventSymbol;

@@ -2,12 +2,16 @@ namespace test
 {
     listener mcl:reload()
     {
-        print_double(4);
+        print(double(4));
     }
 
-    void print_double(int i)
+    float double(float number)
     {
-        int double = i * 2;
+        return number * 2;
+    }
+
+    void print(int i)
+    {
         native "tellraw @a %{double.text_component}";
     }
 }

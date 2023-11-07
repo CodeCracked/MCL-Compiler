@@ -21,10 +21,7 @@ import mcl.parser.grammar.declarations.ListenerDeclarationRule;
 import mcl.parser.grammar.natives.NativeBindListRule;
 import mcl.parser.grammar.natives.NativeBindSpecifierRule;
 import mcl.parser.grammar.natives.NativeFunctionDeclarationRule;
-import mcl.parser.grammar.statements.FunctionCallStatementRule;
-import mcl.parser.grammar.statements.NativeStatementRule;
-import mcl.parser.grammar.statements.TriggerEventStatementRule;
-import mcl.parser.grammar.statements.VariableDeclarationStatementRule;
+import mcl.parser.grammar.statements.*;
 
 public final class MCLRules
 {
@@ -40,6 +37,7 @@ public final class MCLRules
     public static NativeStatementRule NATIVE_STATEMENT = new NativeStatementRule();
     public static FunctionCallStatementRule FUNCTION_CALL_STATEMENT = new FunctionCallStatementRule();
     public static VariableDeclarationStatementRule VARIABLE_DECLARATION_STATEMENT = new VariableDeclarationStatementRule();
+    public static ReturnStatementRule RETURN_STATEMENT = new ReturnStatementRule();
     
     public static IGrammarRule<?> FUNCTION_STATEMENT = new GrammarRuleChooser<>("Not a statement!")
             .addRule(TRIGGER_STATEMENT, MCLKeyword.TRIGGER)
@@ -47,7 +45,8 @@ public final class MCLRules
             .addRule(FUNCTION_CALL_STATEMENT, TokenType.IDENTIFIER, GrammarTokenType.COLON, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
             .addRule(FUNCTION_CALL_STATEMENT, TokenType.IDENTIFIER, GrammarTokenType.LPAREN)
             .addRule(VARIABLE_DECLARATION_STATEMENT, TokenType.DATA_TYPE, TokenType.IDENTIFIER, GrammarTokenType.SEMICOLON)
-            .addRule(VARIABLE_DECLARATION_STATEMENT, TokenType.DATA_TYPE, TokenType.IDENTIFIER, MathTokenType.ASSIGN);
+            .addRule(VARIABLE_DECLARATION_STATEMENT, TokenType.DATA_TYPE, TokenType.IDENTIFIER, MathTokenType.ASSIGN)
+            .addRule(RETURN_STATEMENT, MCLKeyword.RETURN);
     public static BlockBracesRule FUNCTION_BODY = new BlockBracesRule(FUNCTION_STATEMENT);
     
     public static final EventDeclarationRule EVENT_DECLARATION = new EventDeclarationRule();

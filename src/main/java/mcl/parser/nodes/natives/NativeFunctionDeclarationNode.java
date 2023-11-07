@@ -10,7 +10,6 @@ import compiler.core.util.Result;
 import compiler.core.util.exceptions.CompilerException;
 import mcl.lexer.MCLDataTypes;
 import mcl.parser.nodes.NamespaceNode;
-import mcl.parser.symbols.EventSymbol;
 import mcl.parser.symbols.FunctionSymbol;
 
 import java.util.HashSet;
