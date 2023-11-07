@@ -17,7 +17,7 @@ public class EventGenerator implements ICodeGenRule<EventSymbol>
         context.writeFile(component.name() + ".json", file ->
         {
             file.println("{");
-            file.println("    \"__MCL__\": \"" + component.definition().getMCLDescription() + "\",");
+            file.println("    \"__MCL__\": \"" + component.definition().getSourceCode().split("\n")[0] + "\",");
             file.println("    \"values\":");
             file.println("    [");
             

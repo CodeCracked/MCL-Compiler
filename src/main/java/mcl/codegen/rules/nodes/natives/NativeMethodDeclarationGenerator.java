@@ -15,6 +15,7 @@ import mcl.codegen.rules.nodes.natives.returns.ReturnFloat32;
 import mcl.codegen.rules.nodes.natives.returns.ReturnInt;
 import mcl.parser.nodes.natives.NativeBindSpecifierNode;
 import mcl.parser.nodes.natives.NativeMethodDeclarationNode;
+import mcl.util.Headers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -44,7 +45,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         context.openSubdirectory("functions", "binds");
         PrintWriter file = context.openFile(component.signature.identifier.value + ".mcfunction", write ->
         {
-            write.println("# " + component.getMCLDescription());
+            Headers.writeNodeHeader(component, write);
             write.println();
         });
         
@@ -75,7 +76,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         Result<Void> result = new Result<>();
     
         // Print Header
-        file.println("# " + bind.getMCLDescription());
+        Headers.writeNodeHeader(bind, file);
         
         // Find Parameter
         ParameterDeclarationNode parameter = null;
@@ -105,7 +106,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         Result<Void> result = new Result<>();
     
         // Print Header
-        file.println("# " + bind.getMCLDescription());
+        Headers.writeNodeHeader(bind, file);
     
         // Generate Bind
         if (RETURN_BIND_TYPES.containsKey(bind.bindType.value))

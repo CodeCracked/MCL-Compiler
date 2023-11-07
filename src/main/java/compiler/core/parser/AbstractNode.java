@@ -24,6 +24,7 @@ public abstract class AbstractNode
     private final boolean hasCodeGen;
     private final List<Field> nodeFields;
     private final List<Field> nodeCollectionFields;
+    private final String sourceCode;
     
     AbstractNode parent;
     private SymbolTable symbolTable;
@@ -37,6 +38,20 @@ public abstract class AbstractNode
         this.nodeFields = new ArrayList<>();
         this.nodeCollectionFields = new ArrayList<>();
         populateFieldLists();
+    
+        // Calculate Source Code
+        if (!start.isInSameSource(end)) sourceCode = "<Node spans multiple sources>";
+        else
+        {
+            SourcePosition current = start.copy();
+            StringBuilder builder = new StringBuilder();
+            while (current.isBefore(end) || current.equals(end))
+            {
+                builder.append(current.getCharacter());
+                if (!current.advance()) break;
+            }
+            sourceCode = builder.toString();
+        }
     }
     
     //region Symbol Tables
@@ -64,23 +79,7 @@ public abstract class AbstractNode
         if (node == null) return Result.fail(new IllegalStateException("Node does not contain an ancestor of type " + clazz.getSimpleName() + "!"));
         else return Result.of((T)node);
     }
-    public final String getMCLDescription()
-    {
-        return start.toString() + ": " + getMCLCode().split("\n")[0].trim();
-    }
-    public final String getMCLCode()
-    {
-        if (!start.isInSameSource(end)) return "<Node spans multiple sources>";
-        
-        SourcePosition current = start.copy();
-        StringBuilder builder = new StringBuilder();
-        while (current.isBefore(end) || current.equals(end))
-        {
-            builder.append(current.getCharacter());
-            if (!current.advance()) break;
-        }
-        return builder.toString();
-    }
+    public final String getSourceCode() { return sourceCode; }
     //endregion
     //region Reflection
     private void populateFieldLists()

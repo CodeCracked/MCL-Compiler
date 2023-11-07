@@ -4,6 +4,7 @@ import compiler.core.codegen.CodeGenContext;
 import compiler.core.codegen.ICodeGenRule;
 import compiler.core.util.Result;
 import mcl.parser.nodes.declarations.ListenerDeclarationNode;
+import mcl.util.Headers;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ public class ListenerDeclarationGenerator implements ICodeGenRule<ListenerDeclar
         context.openSubdirectory("functions", "listeners");
         context.openFile(component.functionName() + ".mcfunction", file ->
         {
-            file.println("# " + component.getMCLDescription());
+            Headers.writeNodeHeader(component, file);
             file.println();
         });
         
