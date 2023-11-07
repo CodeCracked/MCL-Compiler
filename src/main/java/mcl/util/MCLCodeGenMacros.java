@@ -7,8 +7,10 @@ import compiler.core.parser.nodes.components.ArgumentListNode;
 import compiler.core.parser.nodes.components.ParameterDeclarationNode;
 import compiler.core.parser.nodes.components.ParameterListNode;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
+import compiler.core.util.Ref;
 import compiler.core.util.Result;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 
 public final class MCLCodeGenMacros
@@ -42,7 +44,7 @@ public final class MCLCodeGenMacros
         file.println();
     }
     
-    public static Result<Void> setParameters(ParameterListNode parameters, ArgumentListNode arguments, PrintWriter file, CodeGenContext context)
+    public static Result<Void> setParameters(Ref<Integer> startingRegister, ParameterListNode parameters, ArgumentListNode arguments, PrintWriter file, CodeGenContext context) throws IOException
     {
         Result<Void> result = new Result<>();
         
@@ -54,11 +56,11 @@ public final class MCLCodeGenMacros
             
             // Write Header
             String[] argumentLines = argument.getSourceCode().split("\r?\n");
-            file.print("# " + parameter.identifier.value + " = " + argumentLines[0].stripTrailing());
+            file.println("# " + parameter.identifier.value + " = " + argumentLines[0].stripTrailing());
             for (int j = 1; j < argumentLines.length; j++) file.println("# " + argumentLines[j]);
             
             // Write Argument Expression
-            result.register(context.generate(argument));
+            result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, argument, context));
             if (result.getFailure() != null) return result;
             
             // Write implicit cast, if necessary
@@ -80,6 +82,9 @@ public final class MCLCodeGenMacros
             // Write Parameter Assignment
             result.register(parameterAdapter.copyFromRegister(0, parameter.getSymbol(), context));
             if (result.getFailure() != null) return result;
+            
+            // Empty Line
+            file.println();
         }
         
         return result.success(null);

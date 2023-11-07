@@ -24,6 +24,8 @@ public class FunctionCallNode extends AbstractValueNode
         this.arguments = arguments;
     }
     
+    public FunctionSymbol getSymbol() { return functionSymbol.symbol(); }
+    
     @Override
     public Optional<Object> getValue()
     {

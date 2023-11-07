@@ -6,7 +6,6 @@ import compiler.core.parser.nodes.functions.AbstractFunctionDeclarationNode;
 import compiler.core.parser.nodes.functions.FunctionSignatureNode;
 import compiler.core.util.Result;
 import mcl.parser.nodes.NamespaceNode;
-import mcl.parser.nodes.natives.NativeFunctionDeclarationNode;
 import mcl.parser.symbols.FunctionSymbol;
 
 public class FunctionDeclarationNode extends AbstractFunctionDeclarationNode<FunctionSymbol<FunctionDeclarationNode>>
