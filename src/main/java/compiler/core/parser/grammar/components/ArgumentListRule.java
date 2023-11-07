@@ -55,12 +55,20 @@ public class ArgumentListRule implements IGrammarRule<ArgumentListNode>
         
         // Build Arguments
         List<AbstractValueNode> arguments = new ArrayList<>();
-        do
+        while (true)
         {
+            // Build Parameter
             arguments.add(result.register(expressionRule.build(parser)));
             if (result.getFailure() != null) return result;
+        
+            // Check for Comma
+            if (parser.getCurrentToken().type() == GrammarTokenType.COMMA)
+            {
+                parser.advance();
+                result.registerAdvancement();
+            }
+            else break;
         }
-        while (parser.getCurrentToken().type() == GrammarTokenType.COMMA);
         
         return result.success(arguments);
     }

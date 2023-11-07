@@ -12,7 +12,7 @@ public final class Validations
         {
             ParameterDeclarationNode expectedParameter = expected.parameters.get(i);
             ParameterDeclarationNode foundParameter = found.parameters.get(i);
-            if (expectedParameter.dataType.value != foundParameter.dataType.value) return false;
+            if (expectedParameter.type.value != foundParameter.type.value) return false;
         }
         return true;
     }

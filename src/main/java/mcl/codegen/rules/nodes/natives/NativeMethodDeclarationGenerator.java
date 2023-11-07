@@ -42,7 +42,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         
         // Open Bind File
         context.openSubdirectory("functions", "binds");
-        PrintWriter file = context.openFile(component.identifier.value + ".mcfunction", write ->
+        PrintWriter file = context.openFile(component.signature.identifier.value + ".mcfunction", write ->
         {
             write.println("# " + component.getMCLDescription());
             write.println();
@@ -79,7 +79,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         
         // Find Parameter
         ParameterDeclarationNode parameter = null;
-        for (ParameterDeclarationNode test : nativeMethod.parameters.parameters)
+        for (ParameterDeclarationNode test : nativeMethod.signature.parameters.parameters)
         {
             if (test.identifier.value.equals(bind.parameter.value))
             {
@@ -110,7 +110,7 @@ public class NativeMethodDeclarationGenerator implements ICodeGenRule<NativeMeth
         // Generate Bind
         if (RETURN_BIND_TYPES.containsKey(bind.bindType.value))
         {
-            result.register(RETURN_BIND_TYPES.get(bind.bindType.value).write(bind, nativeMethod.returnType, bind.bindArguments, file, context));
+            result.register(RETURN_BIND_TYPES.get(bind.bindType.value).write(bind, nativeMethod.signature.returnType, bind.bindArguments, file, context));
             if (result.getFailure() != null) return result;
         }
         else return result.failure(new CompilerException(bind.bindType.start(), bind.bindType.end(), "Unknown return bind type '" + bind.bindType.value + "'!"));

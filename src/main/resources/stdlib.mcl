@@ -20,7 +20,6 @@ namespace mcl
             function #mcl:reload
         '';
     }
-
     listener mcl:install()
     {
         native
@@ -51,4 +50,26 @@ namespace mcl
 			data remove storage mcl:runtime PersistentCallStack
 		'';
 	}
+
+	native float sin(float degrees): "mcl:math/extended_float/32/sin/main"
+    {
+        degrees: bind_float("P0", "P1", "P2", "mcl.math.io"),
+        return:  return_float("R0", "R1", "R2", "mcl.math.io")
+    }
+    native float cos(float degrees): "mcl:math/extended_float/32/cos/main"
+    {
+        degrees: bind_float("P0", "P1", "P2", "mcl.math.io"),
+        return:  return_float("R0", "R1", "R2", "mcl.math.io")
+    }
+    native float tan(float degrees): "mcl:math/extended_float/32/tan/main"
+    {
+        degrees: bind_float("P0", "P1", "P2", "mcl.math.io"),
+        return:  return_float("R0", "R1", "R2", "mcl.math.io")
+    }
+    native float pow(float base, float exponent): "mcl:math/extended_float/32/power/main"
+    {
+        base:     bind_float("P0", "P1", "P2", "mcl.math.io"),
+        exponent: bind_float("P3", "P4", "P5", "mcl.math.io"),
+        return:   return_float("R0", "R1", "R2", "mcl.math.io")
+    }
 }

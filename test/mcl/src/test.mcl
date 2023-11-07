@@ -8,9 +8,8 @@ namespace test
         native ''tellraw @a %{i.text_component}'';
     }
 
-    native float sin(float degrees): "mcl:math/extended_float/32/sin/main"
+    void test_method(int i)
     {
-        degrees: bind_float("P0", "P1", "P2", "mcl.math.io"),
-        return:  return_float("R0", "R1", "R2", "mcl.math.io")
+        native "tellraw @a %{i.text_component}";
     }
 }

@@ -9,6 +9,7 @@ import compiler.core.parser.Parser;
 import compiler.core.parser.nodes.components.DataTypeNode;
 import compiler.core.parser.nodes.components.IdentifierNode;
 import compiler.core.parser.nodes.components.ParameterListNode;
+import compiler.core.parser.nodes.methods.MethodSignatureNode;
 import compiler.core.util.Result;
 import mcl.lexer.MCLKeyword;
 import mcl.parser.MCLRules;
@@ -26,16 +27,8 @@ public class NativeMethodDeclarationRule implements IGrammarRule<NativeMethodDec
         Token keyword = result.register(tokenType(parser, MCLKeyword.NATIVE, "'native'"));
         if (result.getFailure() != null) return result;
         
-        // Return Type
-        DataTypeNode returnType = result.register(DefaultRules.DATA_TYPE.build(parser));
-        if (result.getFailure() != null) return result;
-        
-        // Identifier
-        IdentifierNode identifier = result.register(DefaultRules.IDENTIFIER.build(parser));
-        if (result.getFailure() != null) return result;
-        
-        // Parameter List
-        ParameterListNode parameters = result.register(DefaultRules.PARAMETER_LIST.build(parser));
+        // Signature
+        MethodSignatureNode signature = result.register(DefaultRules.METHOD_SIGNATURE.build(parser));
         if (result.getFailure() != null) return result;
         
         // Colon
@@ -50,6 +43,6 @@ public class NativeMethodDeclarationRule implements IGrammarRule<NativeMethodDec
         NativeBindListNode binds = result.register(MCLRules.NATIVE_BIND_LIST.build(parser));
         if (result.getFailure() != null) return result;
     
-        return result.success(new NativeMethodDeclarationNode(keyword, returnType, identifier, parameters, nativeFunction, binds));
+        return result.success(new NativeMethodDeclarationNode(keyword, signature, nativeFunction, binds));
     }
 }

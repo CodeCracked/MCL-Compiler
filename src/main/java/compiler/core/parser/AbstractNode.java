@@ -92,6 +92,9 @@ public abstract class AbstractNode
             // Process each field in the class
             for (Field field : currentClass.getFields())
             {
+                // Ensure field is being declared in the current class to prevent duplicate entries
+                if (!field.getDeclaringClass().equals(currentClass)) continue;
+                
                 // If field is a single node
                 if (AbstractNode.class.isAssignableFrom(field.getType())) nodeFields.add(field);
                 

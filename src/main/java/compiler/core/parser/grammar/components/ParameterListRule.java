@@ -50,12 +50,20 @@ public class ParameterListRule implements IGrammarRule<ParameterListNode>
         
         // Build Parameters
         List<ParameterDeclarationNode> parameters = new ArrayList<>();
-        do
+        while (true)
         {
+            // Build Parameter
             parameters.add(result.register(buildParameter(parser)));
             if (result.getFailure() != null) return result;
+            
+            // Check for Comma
+            if (parser.getCurrentToken().type() == GrammarTokenType.COMMA)
+            {
+                parser.advance();
+                result.registerAdvancement();
+            }
+            else break;
         }
-        while (parser.getCurrentToken().type() == GrammarTokenType.COMMA);
         
         return result.success(parameters);
     }

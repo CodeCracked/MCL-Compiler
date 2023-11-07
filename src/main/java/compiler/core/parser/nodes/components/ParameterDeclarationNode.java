@@ -6,14 +6,9 @@ import mcl.parser.symbols.VariableSymbol;
 
 public class ParameterDeclarationNode extends AbstractVariableDeclarationNode<VariableSymbol>
 {
-    public final DataTypeNode dataType;
-    public final IdentifierNode identifier;
-    
     public ParameterDeclarationNode(DataTypeNode dataType, IdentifierNode identifier)
     {
         super(dataType.start(), identifier.end(), dataType, identifier, null, false);
-        this.dataType = dataType;
-        this.identifier = identifier;
     }
     
     @Override
