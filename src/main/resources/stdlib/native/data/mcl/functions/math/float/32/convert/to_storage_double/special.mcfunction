@@ -1,0 +1,1 @@
+execute if score P0 mcl.math.io matches 0 if score P2 mcl.math.io matches 0 run data modify storage mcl:math R0 set value -Infinityf

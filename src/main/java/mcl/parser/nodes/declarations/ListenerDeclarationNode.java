@@ -5,7 +5,6 @@ import compiler.core.parser.AbstractNode;
 import compiler.core.parser.nodes.components.BlockNode;
 import compiler.core.parser.nodes.components.ParameterListNode;
 import compiler.core.parser.symbols.SymbolTable;
-import compiler.core.source.CodeSource;
 import compiler.core.util.Result;
 import compiler.core.util.Validations;
 import compiler.core.util.exceptions.CompilerException;
@@ -52,7 +51,7 @@ public class ListenerDeclarationNode extends AbstractNode
         // Warn about minecraft:load
         if (event.namespace.value.equals("minecraft") && event.identifier.value.equals("load"))
         {
-            if (!(start().getSource() instanceof CodeSource.Resource resource && resource.resourceName().startsWith("stdlib")))
+            if (!start().getSource().isLibrary())
             {
                 result.addWarning(new CompilerWarning(event.start(), parameters.end(), "MCL code inside a 'minecraft:load' event listener may run before MCL has finished installation. Consider using 'mcl:reload' instead."));
             }

@@ -2,6 +2,7 @@ package compiler.core.source;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,6 +57,11 @@ public abstract class CodeSource
      * @return The character at the given position
      */
     abstract char charAt(SourcePosition position);
+    
+    /**
+     * @return True if this code source is part of a library, false otherwise
+     */
+    public boolean isLibrary() { return false; }
     //endregion
     //region Implementations
     private static class Lines extends CodeSource
@@ -170,6 +176,31 @@ public abstract class CodeSource
         }
     }
     
+    public static class Stream extends Literal
+    {
+        private final String name;
+        
+        public Stream(String name, InputStream stream) throws IOException
+        {
+            super(collectStream(stream));
+            this.name = name;
+        }
+        private static String collectStream(InputStream stream) throws IOException
+        {
+            try (BufferedReader resource = new BufferedReader(new InputStreamReader(stream)))
+            {
+                return resource.lines().collect(Collectors.joining(System.lineSeparator()));
+            }
+        }
+    
+        public final String name() { return name; }
+    
+        @Override
+        public String toString()
+        {
+            return "Stream '" + name + "'";
+        }
+    }
     public static class Resource extends Literal
     {
         private final String resourceName;

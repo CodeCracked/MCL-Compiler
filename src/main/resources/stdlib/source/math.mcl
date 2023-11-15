@@ -1,0 +1,18 @@
+namespace mcl
+{
+    native float sin(float degrees): "mcl:math/extended_float/32/sin/main"
+    {
+        degrees: bind_float("P0", "P1", "P2", "mcl.math.io"),
+        return:  return_float("R0", "R1", "R2", "mcl.math.io")
+    }
+    native float cos(float degrees): "mcl:math/extended_float/32/cos/main"
+    {
+        degrees: bind_float("P0", "P1", "P2", "mcl.math.io"),
+        return:  return_float("R0", "R1", "R2", "mcl.math.io")
+    }
+    native float tan(float degrees): "mcl:math/extended_float/32/tan/main"
+    {
+        degrees: bind_float("P0", "P1", "P2", "mcl.math.io"),
+        return:  return_float("R0", "R1", "R2", "mcl.math.io")
+    }
+}

@@ -1,0 +1,57 @@
+namespace minecraft
+{
+    event load();
+    event tick();
+}
+
+namespace mcl
+{
+    event reload();
+    event install();
+	event uninstall();
+
+    listener minecraft:load()
+    {
+        native
+        ''
+            scoreboard objectives add mcl.lifecycle dummy
+            data modify storage mcl:runtime TransientCallStack set value [{}]
+            execute unless score Initialized mcl.lifecycle matches 1.. run function #mcl:install
+            function #mcl:reload
+        '';
+    }
+    listener mcl:install()
+    {
+        native
+        ''
+            # Setup Core Module
+            scoreboard objectives add mcl.registers dummy
+            data modify storage mcl:runtime PersistentCallStack set value [{}]
+
+            # Setup Math Module
+            function mcl:math/main/setup
+
+            # Flag Setup Complete
+            scoreboard players set Initialized mcl.lifecycle 1
+        '';
+    }
+	listener mcl:uninstall()
+	{
+		native
+		''
+		    # Remove Math Module
+			function mcl:math/main/uninstall
+			function mcl:math/float/uninstall
+            function mcl:math/extended_float/uninstall
+            function mcl:math/bitwise/uninstall
+			data remove storage mcl:math R0
+
+            # Remove Core Module
+			scoreboard objectives remove mcl.lifecycle
+			scoreboard objectives remove mcl.registers
+			data remove storage mcl:runtime TransientCallStack
+			data remove storage mcl:runtime PersistentCallStack
+			data remove storage mcl:runtime Return
+		'';
+	}
+}
