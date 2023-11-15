@@ -40,6 +40,8 @@ public class BinaryOperationNode extends AbstractValueNode
         DataType leftType = left.getValueType();
         DataType rightType = right.getValueType();
         if (leftType == rightType) return leftType;
+        else if (rightType.canImplicitCast(leftType)) return leftType;
+        else if (leftType.canImplicitCast(rightType)) return rightType;
         else return DataType.UNKNOWN;
     }
     

@@ -4,10 +4,7 @@ import compiler.core.lexer.types.ComparisonTokenType;
 import compiler.core.lexer.types.MathTokenType;
 import compiler.core.parser.IGrammarRule;
 import compiler.core.parser.Parser;
-import compiler.core.parser.grammar.expressions.rules.BinaryOperationRule;
-import compiler.core.parser.grammar.expressions.rules.CastOperationRule;
-import compiler.core.parser.grammar.expressions.rules.LiteralRule;
-import compiler.core.parser.grammar.expressions.rules.ParenthesisOperationRule;
+import compiler.core.parser.grammar.expressions.rules.*;
 import compiler.core.parser.nodes.expression.AbstractValueNode;
 import compiler.core.util.Result;
 import compiler.core.util.exceptions.UnexpectedTokenException;
@@ -58,6 +55,7 @@ public class ExpressionRule implements IGrammarRule<AbstractValueNode>, IExpress
                 .addOperation(new BinaryOperationRule(ComparisonTokenType.values()))
                 .addOperation(new BinaryOperationRule(MathTokenType.ADD, MathTokenType.SUBTRACT))
                 .addOperation(new BinaryOperationRule(MathTokenType.MULTIPLY, MathTokenType.DIVIDE, MathTokenType.MODULUS))
+                .addOperation(UnaryOperationRule.leading(MathTokenType.SUBTRACT))
                 .addOperation(new CastOperationRule())
                 .addOperation(new LiteralRule())
                 .addOperation(new ParenthesisOperationRule())
@@ -66,7 +64,7 @@ public class ExpressionRule implements IGrammarRule<AbstractValueNode>, IExpress
     //endregion
     //region Implementations
     @Override
-    public boolean canBuild(Parser parser)
+    public boolean canBuild(Parser parser, ExpressionRule expressionRule)
     {
         parser.markPosition();
         boolean canBuild = build(parser).getFailure() == null;
@@ -104,7 +102,7 @@ public class ExpressionRule implements IGrammarRule<AbstractValueNode>, IExpress
     }
     private Result<AbstractValueNode> build(Parser parser, IExpressionGrammarRule component)
     {
-        if (component.canBuild(parser)) return component.build(parser, this);
+        if (component.canBuild(parser, this)) return component.build(parser, this);
         else return buildArgument(parser, component);
     }
     //endregion

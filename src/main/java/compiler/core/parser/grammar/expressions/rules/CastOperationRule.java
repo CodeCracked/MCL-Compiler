@@ -14,7 +14,7 @@ import compiler.core.util.Result;
 public class CastOperationRule implements IExpressionGrammarRule
 {
     @Override
-    public boolean canBuild(Parser parser)
+    public boolean canBuild(Parser parser, ExpressionRule expressionRule)
     {
         return expectTokenTypes(parser, GrammarTokenType.LPAREN, TokenType.DATA_TYPE, GrammarTokenType.RPAREN);
     }

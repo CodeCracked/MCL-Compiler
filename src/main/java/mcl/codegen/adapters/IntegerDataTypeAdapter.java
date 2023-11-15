@@ -123,6 +123,12 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
     }
     
     @Override
+    public Result<Void> negate(int accumulatorRegister, CodeGenContext context)
+    {
+        return writeCommand(context, "scoreboard players operation r%1$d mcl.registers *= -1 mcl.math.constant", accumulatorRegister);
+    }
+    
+    @Override
     public Result<Void> compare(int argument1Register, int argument2Register, int destinationRegister, CodeGenContext context)
     {
         Result<Void> result = new Result<>();

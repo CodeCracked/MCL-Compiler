@@ -24,5 +24,6 @@ public abstract class DataTypeAdapter
     public abstract Result<Void> multiply(int accumulatorRegister, int argumentRegister, CodeGenContext context);
     public abstract Result<Void> divide(int accumulatorRegister, int argumentRegister, CodeGenContext context);
     public abstract Result<Void> modulo(int accumulatorRegister, int argumentRegister, CodeGenContext context);
+    public abstract Result<Void> negate(int accumulatorRegister, CodeGenContext context);
     public abstract Result<Void> compare(int argument1Register, int argument2Register, int destinationRegister, CodeGenContext context);
 }

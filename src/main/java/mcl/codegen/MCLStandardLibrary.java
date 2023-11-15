@@ -19,7 +19,7 @@ public final class MCLStandardLibrary
     {
         try
         {
-            source.addSource(new CodeSource.Resource(MCLStandardLibrary.class, "/" + NAME + ".mcl"));
+            source.prependSource(new CodeSource.Resource(MCLStandardLibrary.class, "/" + NAME + ".mcl"));
             return Result.of(source);
         }
         catch (Exception e) { return Result.fail(e); }

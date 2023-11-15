@@ -51,10 +51,8 @@ public class SourceCollection
     }
     //endregion
     //region Public Functions
-    public void addSource(CodeSource source)
-    {
-        sources.add(source);
-    }
+    public void prependSource(CodeSource source) { sources.add(0, source); }
+    public void appendSource(CodeSource source) { sources.add(source); }
     public SourcePosition[] starts()
     {
         SourcePosition[] starts = new SourcePosition[sources.size()];

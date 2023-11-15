@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 
 public interface IExpressionGrammarRule extends IParserRule
 {
-    boolean canBuild(Parser parser);
+    boolean canBuild(Parser parser, ExpressionRule expressionRule);
     Result<AbstractValueNode> build(Parser parser, ExpressionRule expressionRule);
     
     default boolean expectTokenTypes(Parser parser, Enum<?>... types)

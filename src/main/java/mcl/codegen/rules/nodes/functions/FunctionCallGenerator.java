@@ -33,7 +33,8 @@ public class FunctionCallGenerator implements IExpressionGenRule<FunctionCallNod
         
         // Push Stack Frame
         MCLCodeGenMacros.pushStackFrame(file);
-        MCLCodeGenMacros.setParameters(startingRegister, component.getSymbol().signature.parameters, component.arguments, file, context);
+        result.register(MCLCodeGenMacros.setParameters(startingRegister, component.getSymbol().signature.parameters, component.arguments, file, context));
+        if (result.getFailure() != null) return result;
         
         // Call Function
         file.println("# Call Function");

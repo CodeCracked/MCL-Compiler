@@ -13,7 +13,7 @@ import compiler.core.util.types.DataType;
 public class LiteralRule implements IExpressionGrammarRule
 {
     @Override
-    public boolean canBuild(Parser parser)
+    public boolean canBuild(Parser parser, ExpressionRule expressionRule)
     {
         return parser.getDataTypes().lookupLiteralType(parser.getCurrentToken().type()) != DataType.UNKNOWN;
     }

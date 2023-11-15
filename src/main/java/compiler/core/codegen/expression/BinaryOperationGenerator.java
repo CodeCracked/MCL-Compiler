@@ -18,7 +18,9 @@ public class BinaryOperationGenerator implements IExpressionGenRule<BinaryOperat
     
         // Arguments
         Integer leftRegister = result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, component.left, context));
+        if (result.getFailure() != null) return result;
         Integer rightRegister = result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, component.right, context));
+        if (result.getFailure() != null) return result;
     
         // Get Type Adapter
         DataTypeAdapter adapter = result.register(context.getGenerator().getTypeAdapter(component.getValueType()));

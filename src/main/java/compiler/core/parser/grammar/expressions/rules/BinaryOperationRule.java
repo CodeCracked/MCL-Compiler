@@ -18,7 +18,7 @@ public class BinaryOperationRule implements IExpressionGrammarRule
     }
     
     @Override
-    public boolean canBuild(Parser parser)
+    public boolean canBuild(Parser parser, ExpressionRule expressionRule)
     {
         return true;
     }

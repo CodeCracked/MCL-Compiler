@@ -61,7 +61,7 @@ public final class MCLCodeGenMacros
             for (int j = 1; j < argumentLines.length; j++) file.println("# " + argumentLines[j]);
             
             // Write Argument Expression
-            int argumentRegister = result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, argument, context));
+            Integer argumentRegister = result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, argument, context));
             if (result.getFailure() != null) return result;
             
             // Write implicit cast, if necessary

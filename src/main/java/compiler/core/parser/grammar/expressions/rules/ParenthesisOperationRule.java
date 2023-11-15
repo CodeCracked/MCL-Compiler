@@ -10,7 +10,7 @@ import compiler.core.util.Result;
 public class ParenthesisOperationRule implements IExpressionGrammarRule
 {
     @Override
-    public boolean canBuild(Parser parser)
+    public boolean canBuild(Parser parser, ExpressionRule expressionRule)
     {
         return parser.getCurrentToken().type() == GrammarTokenType.LPAREN;
     }

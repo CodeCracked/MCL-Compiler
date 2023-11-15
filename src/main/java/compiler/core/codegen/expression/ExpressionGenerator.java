@@ -2,10 +2,7 @@ package compiler.core.codegen.expression;
 
 import compiler.core.codegen.CodeGenContext;
 import compiler.core.parser.AbstractNode;
-import compiler.core.parser.nodes.expression.AbstractValueNode;
-import compiler.core.parser.nodes.expression.BinaryOperationNode;
-import compiler.core.parser.nodes.expression.CastOperationNode;
-import compiler.core.parser.nodes.expression.LiteralNode;
+import compiler.core.parser.nodes.expression.*;
 import compiler.core.util.Pair;
 import compiler.core.util.Ref;
 import compiler.core.util.Result;
@@ -25,6 +22,7 @@ public class ExpressionGenerator
         addRule(LiteralNode.class, new LiteralGenerator());
         addRule(BinaryOperationNode.class, new BinaryOperationGenerator());
         addRule(CastOperationNode.class, new CastOperationGenerator());
+        addRule(UnaryOperationNode.class, new UnaryOperationGenerator());
     }
     
     public Result<Void> generate(AbstractNode expression, CodeGenContext context) throws IOException

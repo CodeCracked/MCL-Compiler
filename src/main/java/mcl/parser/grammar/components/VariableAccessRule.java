@@ -14,7 +14,7 @@ import mcl.parser.nodes.components.VariableAccessNode;
 public class VariableAccessRule implements IExpressionGrammarRule
 {
     @Override
-    public boolean canBuild(Parser parser)
+    public boolean canBuild(Parser parser, ExpressionRule expressionRule)
     {
         return parser.getCurrentToken().type() == TokenType.IDENTIFIER && parser.peekNextToken().type() != GrammarTokenType.LPAREN;
     }

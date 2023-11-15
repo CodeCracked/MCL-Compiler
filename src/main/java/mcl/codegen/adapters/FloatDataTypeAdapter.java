@@ -179,6 +179,22 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
     }
     
     @Override
+    public Result<Void> negate(int accumulatorRegister, CodeGenContext context)
+    {
+        Result<Void> result = new Result<>();
+    
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+        
+        // Flip Sign Component
+        file.printf("scoreboard players remove r%1$d.s mcl.registers 1\n", accumulatorRegister);
+        file.printf("execute if score r%1$d.s mcl.registers matches ..-1 run scoreboard players set r%1$d.s mcl.registers 1\n", accumulatorRegister);
+        
+        return result.success(null);
+    }
+    
+    @Override
     public Result<Void> compare(int argument1Register, int argument2Register, int destinationRegister, CodeGenContext context)
     {
         return Result.fail(new UnsupportedOperationException("FloatDataTypeAdapter.compare not supported!"));

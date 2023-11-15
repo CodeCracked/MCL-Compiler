@@ -16,7 +16,7 @@ import mcl.parser.nodes.components.QualifiedIdentifierNode;
 public class FunctionCallRule implements IGrammarRule<FunctionCallNode>, IExpressionGrammarRule
 {
     @Override
-    public boolean canBuild(Parser parser)
+    public boolean canBuild(Parser parser, ExpressionRule expressionRule)
     {
         return expectTokenTypes(parser, TokenType.IDENTIFIER, GrammarTokenType.COLON, TokenType.IDENTIFIER, GrammarTokenType.LPAREN) ||
                 expectTokenTypes(parser, TokenType.IDENTIFIER, GrammarTokenType.LPAREN);
