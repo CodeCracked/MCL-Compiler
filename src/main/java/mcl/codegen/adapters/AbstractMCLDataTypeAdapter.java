@@ -16,7 +16,8 @@ public abstract class AbstractMCLDataTypeAdapter extends DataTypeAdapter
         super(type);
     }
     
-    protected abstract Result<Void> copyRegisterToNBT(int register, String nbtKey, CodeGenContext context);
+    protected abstract Result<Void> copyRegisterToNbt(int register, String nbtKey, CodeGenContext context);
+    protected abstract Result<Void> copyNbtToRegister(int register, String nbtKey, CodeGenContext context);
     
     protected Result<Void> writeCommand(CodeGenContext context, String format, Object... args)
     {
@@ -34,14 +35,20 @@ public abstract class AbstractMCLDataTypeAdapter extends DataTypeAdapter
     }
     
     @Override
-    public Result<Void> copyFromRegister(int register, AbstractVariableSymbol variable, CodeGenContext context)
+    public Result<Void> copyRegisterToVariable(int register, AbstractVariableSymbol variable, CodeGenContext context)
     {
-        return copyRegisterToNBT(register, ((VariableSymbol) variable).getNBTKey(), context);
+        return copyRegisterToNbt(register, ((VariableSymbol) variable).getNBTKey(), context);
     }
     
     @Override
-    public Result<Void> returnRegister(int register, CodeGenContext context)
+    public Result<Void> copyRegisterToReturn(int register, CodeGenContext context)
     {
-        return copyRegisterToNBT(register, "Return", context);
+        return copyRegisterToNbt(register, "Return", context);
+    }
+    
+    @Override
+    public Result<Void> copyReturnToRegister(int register, CodeGenContext context)
+    {
+        return copyNbtToRegister(register, "Return", context);
     }
 }

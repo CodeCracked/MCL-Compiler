@@ -18,7 +18,7 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
     
     //region AbstractMCLDataTypeAdapter Implementation
     @Override
-    protected Result<Void> copyRegisterToNBT(int register, String nbtKey, CodeGenContext context)
+    protected Result<Void> copyRegisterToNbt(int register, String nbtKey, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
         
@@ -39,6 +39,30 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
         
         return result.success(null);
     }
+    
+    @Override
+    protected Result<Void> copyNbtToRegister(int register, String nbtKey, CodeGenContext context)
+    {
+        Result<Void> result = new Result<>();
+    
+        // Get Open File
+        PrintWriter file = result.register(context.getOpenFile());
+        if (result.getFailure() != null) return result;
+        
+        // Retrieve 32-Bit Float
+        file.printf("execute store result score P0 mcl.math.io run data get storage mcl:runtime %1$s 1\n", nbtKey);
+        
+        // Decompose
+        file.printf("function mcl:math/float/32/decompose/main\n");
+        
+        // Copy Math IO to Float Registers
+        file.printf("scoreboard players operation r%1$d.s mcl.registers = R0 mcl.math.io\n", register);
+        file.printf("scoreboard players operation r%1$d.e mcl.registers = R1 mcl.math.io\n", register);
+        file.printf("scoreboard players operation r%1$d.m mcl.registers = R2 mcl.math.io\n", register);
+        
+        return result.success(null);
+    }
+    
     //endregion
     //region DataTypeAdapter Implementation
     @Override
@@ -79,7 +103,7 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
     }
     
     @Override
-    public Result<Void> copyToRegister(int register, AbstractVariableSymbol variable, CodeGenContext context)
+    public Result<Void> copyVariableToRegister(int register, AbstractVariableSymbol variable, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
     
@@ -102,7 +126,7 @@ public class FloatDataTypeAdapter extends AbstractMCLDataTypeAdapter
     }
     
     @Override
-    public Result<Void> copyToRegister(int register, Object literal, CodeGenContext context)
+    public Result<Void> copyLiteralToRegister(int register, Object literal, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
     

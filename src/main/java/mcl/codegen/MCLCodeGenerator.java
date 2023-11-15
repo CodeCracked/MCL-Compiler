@@ -11,6 +11,8 @@ import mcl.codegen.rules.nodes.functions.FunctionCallStatementGenerator;
 import mcl.codegen.rules.nodes.functions.FunctionDeclarationGenerator;
 import mcl.codegen.rules.nodes.natives.NativeFunctionDeclarationGenerator;
 import mcl.codegen.rules.nodes.natives.NativeStatementGenerator;
+import mcl.codegen.rules.nodes.statements.ReturnStatementGenerator;
+import mcl.codegen.rules.nodes.statements.VariableDeclarationGenerator;
 import mcl.codegen.rules.symbols.EventGenerator;
 import mcl.lexer.MCLDataTypes;
 import mcl.parser.nodes.MCLSourceNode;
@@ -23,6 +25,7 @@ import mcl.parser.nodes.declarations.VariableDeclarationNode;
 import mcl.parser.nodes.natives.NativeFunctionDeclarationNode;
 import mcl.parser.nodes.natives.NativeStatementNode;
 import mcl.parser.nodes.statements.FunctionCallStatementNode;
+import mcl.parser.nodes.statements.ReturnStatementNode;
 import mcl.parser.symbols.EventSymbol;
 
 public class MCLCodeGenerator extends CodeGenerator
@@ -40,6 +43,7 @@ public class MCLCodeGenerator extends CodeGenerator
         addNodeRule(NativeStatementNode.class, new NativeStatementGenerator());
         addNodeRule(VariableDeclarationNode.class, new VariableDeclarationGenerator());
         addNodeRule(FunctionCallStatementNode.class, new FunctionCallStatementGenerator());
+        addNodeRule(ReturnStatementNode.class, new ReturnStatementGenerator());
         
         addSymbolRule(EventSymbol.class, new EventGenerator());
         

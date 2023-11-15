@@ -27,7 +27,7 @@ public class VariableAccessGenerator implements IExpressionGenRule<VariableAcces
         if (result.getFailure() != null) return result;
     
         // Write Variable Access
-        result.register(adapter.copyToRegister(register, component.getSymbol(), context));
+        result.register(adapter.copyVariableToRegister(register, component.getSymbol(), context));
         
         if (result.getFailure() != null) return result;
         return result.success(register);

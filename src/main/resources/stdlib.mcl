@@ -39,15 +39,19 @@ namespace mcl
 	{
 		native
 		''
+		    # Remove Math Module
+			function mcl:math/main/uninstall
+			function mcl:math/float/uninstall
+            function mcl:math/extended_float/uninstall
+            function mcl:math/bitwise/uninstall
+			data remove storage mcl:math R0
+
+            # Remove Core Module
 			scoreboard objectives remove mcl.lifecycle
 			scoreboard objectives remove mcl.registers
-			scoreboard objectives remove mcl.math.constant
-			scoreboard objectives remove mcl.math.io
-			scoreboard objectives remove mcl.math.temp
-			
-			data remove storage mcl:math R0
 			data remove storage mcl:runtime TransientCallStack
 			data remove storage mcl:runtime PersistentCallStack
+			data remove storage mcl:runtime Return
 		'';
 	}
 

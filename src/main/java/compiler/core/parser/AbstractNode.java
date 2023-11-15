@@ -67,12 +67,14 @@ public abstract class AbstractNode
     protected Result<Void> validate() { return Result.of(null); }
     //endregion
     //region Public Helpers
-    public <T> Result<T> findParentNode(Class<T> clazz)
+    public <T> Result<T> findParentNode(Class<T> clazz) { return findParentNode(clazz, false); }
+    public <T> Result<T> findParentNode(Class<T> clazz, boolean allowChildClasses)
     {
         AbstractNode node = parent;
         while (node != null)
         {
             if (node.getClass() == clazz) break;
+            else if (allowChildClasses && clazz.isAssignableFrom(node.getClass())) break;
             else node = node.parent;
         }
         

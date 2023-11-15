@@ -20,18 +20,15 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
     
     //region AbstractMCLDataTypeAdapter Implementation
     @Override
-    protected Result<Void> copyRegisterToNBT(int register, String nbtKey, CodeGenContext context)
+    protected Result<Void> copyRegisterToNbt(int register, String nbtKey, CodeGenContext context)
     {
-        Result<Void> result = new Result<>();
+        return writeCommand(context, "execute store result storage mcl:runtime %1$s int 1 run scoreboard players get r%2$d mcl.registers", nbtKey, register);
+    }
     
-        // Get Open File
-        PrintWriter file = result.register(context.getOpenFile());
-        if (result.getFailure() != null) return result;
-    
-        // Write Command
-        file.println("execute store result storage mcl:runtime " + nbtKey + " int 1 run scoreboard players get r" + register + " mcl.registers");
-        
-        return result.success(null);
+    @Override
+    protected Result<Void> copyNbtToRegister(int register, String nbtKey, CodeGenContext context)
+    {
+        return writeCommand(context, "execute store result score r%1$d mcl.registers run data get storage mcl:runtime %2$s 1", register, nbtKey);
     }
     //endregion
     //region DataTypeAdapter Implementation
@@ -49,9 +46,9 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
         {
             file.printf("scoreboard players operation P0 mcl.math.io = r%1$d mcl.registers\n", register);
             file.printf("function mcl:math/float/32/convert/from_int/main\n");
-            file.printf("scoreboard players operation r%1$d.s = R0 mcl.math.io\n", register);
-            file.printf("scoreboard players operation r%1$d.e = R1 mcl.math.io\n", register);
-            file.printf("scoreboard players operation r%1$d.m = R2 mcl.math.io\n", register);
+            file.printf("scoreboard players operation r%1$d.s mcl.registers = R0 mcl.math.io\n", register);
+            file.printf("scoreboard players operation r%1$d.e mcl.registers = R1 mcl.math.io\n", register);
+            file.printf("scoreboard players operation r%1$d.m mcl.registers = R2 mcl.math.io\n", register);
             return result.success(null);
         }
     
@@ -74,7 +71,7 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
     }
     
     @Override
-    public Result<Void> copyToRegister(int register, AbstractVariableSymbol variable, CodeGenContext context)
+    public Result<Void> copyVariableToRegister(int register, AbstractVariableSymbol variable, CodeGenContext context)
     {
         Result<Void> result = new Result<>();
         
@@ -90,7 +87,7 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
     }
     
     @Override
-    public Result<Void> copyToRegister(int register, Object literal, CodeGenContext context)
+    public Result<Void> copyLiteralToRegister(int register, Object literal, CodeGenContext context)
     {
         return writeCommand(context, "scoreboard players set r%1$d mcl.registers %2$d", register, literal);
     }
@@ -110,7 +107,7 @@ public class IntegerDataTypeAdapter extends AbstractMCLDataTypeAdapter
     @Override
     public Result<Void> multiply(int accumulatorRegister, int argumentRegister, CodeGenContext context)
     {
-        return writeOperation(context, "+=", accumulatorRegister, argumentRegister);
+        return writeOperation(context, "*=", accumulatorRegister, argumentRegister);
     }
     
     @Override

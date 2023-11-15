@@ -21,9 +21,13 @@ public class ReturnStatementRule implements IGrammarRule<ReturnStatementNode>
         Token keyword = result.register(tokenType(parser, MCLKeyword.RETURN, "'return'"));
         if (result.getFailure() != null) return result;
         
-        // Expression
-        AbstractValueNode expression = result.register(MCLRules.EXPRESSION.build(parser));
-        if (result.getFailure() != null) return result;
+        // Optional Expression
+        AbstractValueNode expression = null;
+        if (parser.getCurrentToken().type() != GrammarTokenType.SEMICOLON)
+        {
+            expression = result.register(MCLRules.EXPRESSION.build(parser));
+            if (result.getFailure() != null) return result;
+        }
         
         // Semicolon
         Token semicolon = result.register(tokenType(parser, GrammarTokenType.SEMICOLON, "';'"));

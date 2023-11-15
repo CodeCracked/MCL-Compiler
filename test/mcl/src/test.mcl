@@ -2,16 +2,16 @@ namespace test
 {
     listener mcl:reload()
     {
-        print(double(4));
+        print(mcl:pow(16, 0.5));
+        print(mcl:pow(4, 2));
     }
 
-    float double(float number)
-    {
-        return number * 2;
-    }
+    float add(float a, float b) { return a + b; }
+    float multiply(float a, float b) { return a * b; }
 
-    void print(int i)
+    void print(float number)
     {
-        native "tellraw @a %{double.text_component}";
+        int i = (int) number;
+        native "tellraw @a %{i.text_component}";
     }
 }

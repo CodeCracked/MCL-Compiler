@@ -39,6 +39,8 @@ public abstract class AbstractFunctionDeclarationNode<T extends AbstractFunction
         
         // Create Function Symbol
         T symbol = result.register(instantiateSymbol());
+        if (result.getFailure() != null) return result;
+        else if (symbol == null) return result.success(null);
         
         // TODO: Allow Function Overloading
         if (!symbolTable().addSymbolWithUniqueName(signature.identifier, symbol, false)) return result.failure(new DuplicateSymbolException(signature.identifier, symbol));

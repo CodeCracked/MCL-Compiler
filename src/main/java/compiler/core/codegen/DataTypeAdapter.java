@@ -14,10 +14,11 @@ public abstract class DataTypeAdapter
     
     public abstract Result<Void> cast(int register, DataType castTo, CodeGenContext context);
     public abstract Result<Void> resetVariable(AbstractVariableSymbol variable, CodeGenContext context);
-    public abstract Result<Void> copyFromRegister(int register, AbstractVariableSymbol variable, CodeGenContext context);
-    public abstract Result<Void> returnRegister(int register, CodeGenContext context);
-    public abstract Result<Void> copyToRegister(int register, AbstractVariableSymbol variable, CodeGenContext context);
-    public abstract Result<Void> copyToRegister(int register, Object literal, CodeGenContext context);
+    public abstract Result<Void> copyRegisterToVariable(int register, AbstractVariableSymbol variable, CodeGenContext context);
+    public abstract Result<Void> copyRegisterToReturn(int register, CodeGenContext context);
+    public abstract Result<Void> copyVariableToRegister(int register, AbstractVariableSymbol variable, CodeGenContext context);
+    public abstract Result<Void> copyLiteralToRegister(int register, Object literal, CodeGenContext context);
+    public abstract Result<Void> copyReturnToRegister(int register, CodeGenContext context);
     public abstract Result<Void> add(int accumulatorRegister, int argumentRegister, CodeGenContext context);
     public abstract Result<Void> subtract(int accumulatorRegister, int argumentRegister, CodeGenContext context);
     public abstract Result<Void> multiply(int accumulatorRegister, int argumentRegister, CodeGenContext context);

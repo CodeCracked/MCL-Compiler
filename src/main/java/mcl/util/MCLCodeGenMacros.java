@@ -32,8 +32,9 @@ public final class MCLCodeGenMacros
     {
         // Push new stack frame
         file.println("# Push Stack Frame");
-        file.println("data modify storage mcl:runtime TransientCallStack modify prepend from storage mcl:runtime TransientCallStack[0]");
-        file.println("data modify storage mcl:runtime PersistentCallStack modify prepend from storage mcl:runtime PersistentCallStack[0]");
+        file.println("data modify storage mcl:runtime TransientCallStack prepend from storage mcl:runtime TransientCallStack[0]");
+        file.println("data modify storage mcl:runtime PersistentCallStack prepend from storage mcl:runtime PersistentCallStack[0]");
+        file.println("data remove storage mcl:runtime Return");
         file.println();
     }
     public static void popStackFrame(PrintWriter file)
@@ -60,7 +61,7 @@ public final class MCLCodeGenMacros
             for (int j = 1; j < argumentLines.length; j++) file.println("# " + argumentLines[j]);
             
             // Write Argument Expression
-            result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, argument, context));
+            int argumentRegister = result.register(context.getGenerator().getExpressionGenerator().generate(startingRegister, argument, context));
             if (result.getFailure() != null) return result;
             
             // Write implicit cast, if necessary
@@ -71,7 +72,7 @@ public final class MCLCodeGenMacros
                 if (result.getFailure() != null) return result;
                 
                 // Write Argument Cast
-                result.register(argumentAdapter.cast(0, parameter.type.value, context));
+                result.register(argumentAdapter.cast(argumentRegister, parameter.type.value, context));
                 if (result.getFailure() != null) return result;
             }
             
@@ -80,7 +81,7 @@ public final class MCLCodeGenMacros
             if (result.getFailure() != null) return result;
     
             // Write Parameter Assignment
-            result.register(parameterAdapter.copyFromRegister(0, parameter.getSymbol(), context));
+            result.register(parameterAdapter.copyRegisterToVariable(argumentRegister, parameter.getSymbol(), context));
             if (result.getFailure() != null) return result;
             
             // Empty Line

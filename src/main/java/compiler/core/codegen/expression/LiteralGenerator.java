@@ -24,7 +24,7 @@ public class LiteralGenerator implements IExpressionGenRule<LiteralNode>
         if (result.getFailure() != null) return result;
         
         // Register Load
-        result.register(adapter.copyToRegister(register, component.value, context));
+        result.register(adapter.copyLiteralToRegister(register, component.value, context));
         if (result.getFailure() != null) return result;
         
         return result.success(register);

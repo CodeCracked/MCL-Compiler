@@ -1,4 +1,4 @@
-package mcl.codegen.rules;
+package mcl.codegen.rules.nodes.statements;
 
 import compiler.core.codegen.CodeGenContext;
 import compiler.core.codegen.DataTypeAdapter;
@@ -39,7 +39,7 @@ public class VariableDeclarationGenerator implements ICodeGenRule<VariableDeclar
             if (result.getFailure() != null) return result;
             
             // Generate Variable Assignment
-            result.register(adapter.copyFromRegister(0, variable, context));
+            result.register(adapter.copyRegisterToVariable(0, variable, context));
         }
         if (result.getFailure() != null) return result;
         
